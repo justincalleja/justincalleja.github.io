@@ -8,8 +8,7 @@ categories: [ "programming" ]
 
 # Intro
 
-This post will walk you through the basic usage of [Viper](https://github.com/spf13/viper "Viper").
-It is intended for people who are new to the [Go](https://golang.org/ "Go programming language") programming language (I am just starting out myself). This is because the purpose isn't Viper per se, but the process of doing some of the basics in Go.
+This post will walk you through the basic usage of [Viper](https://github.com/spf13/viper "Viper"). It is intended for people who are new to the [Go](https://golang.org/ "Go programming language") programming language (I am just starting out myself). This is because the purpose isn't Viper per se, but the process of doing some of the basics in Go.
 
 ## Assumptions
 
