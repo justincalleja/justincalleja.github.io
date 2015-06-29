@@ -19,17 +19,9 @@ It is intended for people who are new to the [Go](https://golang.org/ "Go progra
 
 First of all, we need to create a directory to house our work i.e. we need to create a workspace:
 
-> Go code must be kept inside a workspace. A workspace is a directory hierarchy with three directories at its root:
+<blockquote><p>Go code must be kept inside a workspace. A workspace is a directory hierarchy with three directories at its root:</p><ul><li>src</li><li>pkg</li><li>bin</li></ul><footer><cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite></footer></blockquote>
 
-> * src
-> * pkg
-> * bin
-
-<footer>
-  <cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite>
-</footer>
-
-``` bash
+```bash
 $ mkdir useviper_workspace
 
 $ cd useviper_workspace
@@ -39,33 +31,19 @@ useviper_workspace$ mkdir src bin pkg
 
 Next, lets create the directory which will actually house our source code for this post / your project. In doing so, it's handy to keep the following best practice in mind:
 
-> The packages from the standard library are given short paths such as "fmt" and "net/http". For your own packages, you must choose a base path that is unlikely to collide with future additions to the standard library or other external libraries.
+<blockquote><p>The packages from the standard library are given short paths such as "fmt" and "net/http". For your own packages, you must choose a base path that is unlikely to collide with future additions to the standard library or other external libraries.</p><p>If you keep your code in a source repository somewhere, then you should use the root of that source repository as your base path. For instance, if you have a GitHub account at github.com/user, that should be your base path.</p><p>Note that you don't need to publish your code to a remote repository before you can build it. It's just a good habit to organize your code as if you will publish it someday. In practice you can choose any arbitrary path name, as long as it is unique to the standard library and greater Go ecosystem.</p><footer><cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite></footer></blockquote>
 
-> If you keep your code in a source repository somewhere, then you should use the root of that source repository as your base path. For instance, if you have a GitHub account at github.com/user, that should be your base path.
-
-> Note that you don't need to publish your code to a remote repository before you can build it. It's just a good habit to organize your code as if you will publish it someday. In practice you can choose any arbitrary path name, as long as it is unique to the standard library and greater Go ecosystem.
-
-<footer>
-  <cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite>
-</footer>
-
-``` bash
+```bash
 useviper_workspace$ mkdir -p src/github.com/justincalleja/useviper
 ```
 
-I'll go with **github.com/justincalleja/useviper** and leave it at that for the moment as I am not too familiar with the `go` tool to tell you the whys and hows. Shortly, we will see that `go` can be used to fetch 3rd party source code which is publicly hosted and that the directory structure plays a role in this i.e. if you're planning to push your code to some public repo, you'll want to reflect that in the directory structure leading to the root of your project's source code (e.g. **github.com/\<you\>/\<project-name\>**).
+I'll go with **github.com/justincalleja/useviper**. Shortly, we will see that `go` can be used to fetch 3rd party source code which is publicly hosted and that the directory structure plays a role in this i.e. if you're planning to push your code to some public repo, you'll want to reflect that in the directory structure leading to the root of your project's source code (e.g. **github.com/username/projectname**).
 
 Before continuing, you'll want to set your **GOPATH** environment variable:
 
-> The GOPATH environment variable specifies the location of your workspace.
+<blockquote><p>The GOPATH environment variable specifies the location of your workspace.</p><p>Your workspace can be located wherever you like &hellip; Note that this must not be the same path as your Go installation.</p><footer><cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite></footer></blockquote>
 
-> Your workspace can be located wherever you like &hellip; Note that this must not be the same path as your Go installation.
-
-<footer>
-  <cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite>
-</footer>
-
-``` bash
+```bash
 useviper_workspace$ echo $GOPATH
 /Users/justin/go-stuff/useviper_workspace
 
@@ -82,7 +60,7 @@ I already have my **GOPATH** set using the `set_gopath` bash function which is s
 
 # Running some code
 
-Finally, we can get to writing some code. If you want to, initialize a git repo at **src/github.com/\<user\>/useviper** and go ahead and add **useviper.go** in there:
+Finally, we can get to writing some code. If you want to, initialize a git repo at **src/github.com/< your-username >/useviper** and go ahead and add **useviper.go** in there:
 
 ```go
 package main
