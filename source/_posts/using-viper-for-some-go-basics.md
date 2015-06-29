@@ -20,7 +20,7 @@ First of all, we need to create a directory to house our work i.e. we need to cr
 
 <blockquote><p>Go code must be kept inside a workspace. A workspace is a directory hierarchy with three directories at its root:</p><ul><li>src</li><li>pkg</li><li>bin</li></ul><footer><cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite></footer></blockquote>
 
-```bash
+``` bash
 $ mkdir useviper_workspace
 
 $ cd useviper_workspace
@@ -32,7 +32,7 @@ Next, lets create the directory which will actually house our source code for th
 
 <blockquote><p>The packages from the standard library are given short paths such as "fmt" and "net/http". For your own packages, you must choose a base path that is unlikely to collide with future additions to the standard library or other external libraries.</p><p>If you keep your code in a source repository somewhere, then you should use the root of that source repository as your base path. For instance, if you have a GitHub account at github.com/user, that should be your base path.</p><p>Note that you don't need to publish your code to a remote repository before you can build it. It's just a good habit to organize your code as if you will publish it someday. In practice you can choose any arbitrary path name, as long as it is unique to the standard library and greater Go ecosystem.</p><footer><cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite></footer></blockquote>
 
-```bash
+``` bash
 useviper_workspace$ mkdir -p src/github.com/justincalleja/useviper
 ```
 
@@ -42,7 +42,7 @@ Before continuing, you'll want to set your **GOPATH** environment variable:
 
 <blockquote><p>The GOPATH environment variable specifies the location of your workspace.</p><p>Your workspace can be located wherever you like &hellip; Note that this must not be the same path as your Go installation.</p><footer><cite><a href="https://golang.org/doc/code.html">How to Write Go Code</a></cite></footer></blockquote>
 
-```bash
+``` bash
 useviper_workspace$ echo $GOPATH
 /Users/justin/go-stuff/useviper_workspace
 
@@ -131,7 +131,7 @@ func main() {
 
 In order to install (build and put in **bin**), we find ourselves in the same sort of situation as we did with `go get`. We can either rely on being in the directory our source files are in and run `go install`, or we can specify what to install explicitly. I like having the **goinstall.sh** script around in my workspace root (shown below).
 
-```bash
+``` bash
 #!/bin/bash
 if [ $# -eq 0 ]
 then
