@@ -1,0 +1,81 @@
+---
+date: "2014-12-14"
+title: "To mock a Mongoose"
+tags: [ "mongoose", "node", "mockgoose" ]
+categories: [ "programming" ]
+
+---
+
+# Purpose
+
+Use [Mongoose](https://github.com/learnboost/mongoose "Mongoose") in a test without having to have MongoDB running. Mocking done with [Mockgoose](https://github.com/mccormicka/Mockgoose "Mockgoose").
+
+# Setting up
+
+Setting up can take a while sometimes so I decided to give a different approach a go this time round. I have created a simple [grunt-init](https://github.com/gruntjs/grunt-init "grunt-init") [template](https://github.com/justin-calleja/mongoose-blog-template-1 "mongoose-blog-template-1") which will do most of the grunt work for us (such pun!). Install grunt-init globally with `npm i -g grunt-init` if you don't already have it. To use the template, simply clone it into your *~/.grunt-init/* directory (creating the directory if need be):
+
+``` bash
+~$ mkdir .grunt-init && cd .grunt-init
+~$ git clone https://github.com/justin-calleja/mongoose-blog-template-1
+```
+
+Automation time - simply cd into an empty directory and type the magic words:
+
+``` bash
+to-mock-a-mongoose$ grunt-init mongoose-blog-template-1
+to-mock-a-mongoose$ npm install
+```
+
+# What have we got here?
+
+First off, install mocha globally if you don't already have it: `npm i -g mocha`. Then run `mocha` and see some green (no not money... probably something you can trust more these days - a passing test).
+
+Open up *model/db.js*. This is where we're establishing our db connection (and registering some event handlers). The connection will actually be mocked out in our *test/test.js*. That's pretty useful. Now we don't need MongoDB to be running to make some assertions on our code, code that would normally be interacting with the database.
+
+To get the mocking done right, make sure you mock Mongoose before setting it up:
+
+``` javascript
+var mockgoose = require('mockgoose');
+var mongoose = require('mongoose');
+
+// mock mongoose before requiring the script which establishes the connection (to mock the connection)
+mockgoose(mongoose);
+require('../model/db');
+```
+
+*model/item.js* defines the structure (the schema) of an Item document which we'd like to store in our db. We're also creating a model from our schema. This is basically a constructor we can use to create Item objects which will map to documents in our db. i.e. instances created from our Item model will be important to us if we care about interacting with our db.
+
+*test/test.js*, after mocking our Mongoose, simply requires and makes use (I saw you rolling your eyes :P)
+
+``` javascript
+// code abbreviated... see generated test.js
+
+// get a reference to our Item schema/model
+var item = require('../model/item');
+
+beforeEach(function(done) {
+  mockgoose.reset();
+  // create and insert two dummy docs
+  item.model.create({ text: 'write blog on A' }, { text: 'write blog on B' }, function(err, blogOnA, blogOnB) {
+    if(err) {
+      console.log('Error creating documents in beforeEach: ' + error);
+      throw(err);
+    }
+    done();
+  });
+});
+
+describe('Blah', function() {
+  describe('Bleh', function() {
+    it('item.model.find() should give 2 documents back', function(done) {
+      var query = item.model.find();
+      query.exec(function(err, docs) {
+        // expect to find the documents inserted in beforeEach
+        expect(docs.length).to.equal(2);
+        done();
+      });
+    });
+  });
+});
+```
+
