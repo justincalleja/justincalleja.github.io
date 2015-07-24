@@ -3,10 +3,11 @@ date: "2014-12-26"
 title: "Setting up Karma with Mocha, Chai, and RequireJS"
 tags: [ "node", "karma", "mocha", "requirejs", "chai" ]
 categories: [ "programming" ]
+tocEnabled: true
 
 ---
 
-<!-- toc -->
+# Following along
 
 If you want to follow along with the end result at hand, the repo is up on [Github](https://github.com/justin-calleja/setting-up-karma-with-mocha-chai-requirejs "setting-up-karma-with-mocha-chai-requirejs"). You will need to install dependencies with `npm install && bower install`
 

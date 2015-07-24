@@ -3,10 +3,9 @@ date: "2015-03-08"
 title: "Sequential control flow with Lo-Dash or Underscore.js"
 tags: [ "node", "control flow", "lodash" ]
 categories: [ "programming" ]
+tocEnabled: true
 
 ---
-
-<!-- toc -->
 
 # Intro
 

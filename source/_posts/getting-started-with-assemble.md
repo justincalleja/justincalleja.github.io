@@ -3,10 +3,9 @@ date: "2015-01-10"
 title: "Getting started with Assemble"
 tags: [ "node", "assemble", "grunt" ]
 categories: [ "programming"]
+tocEnabled: true
 
 ---
-
-<!-- toc -->
 
 Version of Assemble at time of writing: 0.4.42
 

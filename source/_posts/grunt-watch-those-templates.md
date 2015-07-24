@@ -3,10 +3,9 @@ date: "2015-01-18"
 title: "Grunt watch those templates"
 tags: [ "grunt" ]
 categories: [ "programming" ]
+tocEnabled: true
 
 ---
-
-<!-- toc -->
 
 # Purpose
 

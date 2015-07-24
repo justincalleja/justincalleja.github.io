@@ -3,10 +3,9 @@ date: "2015-02-08"
 title: "Marionette CompositeView an example"
 tags: [ "marionette.js", "requirejs" ]
 categories: [ "programming" ]
+tocEnabled: true
 
 ---
-
-<!-- toc -->
 
 # Intro
 

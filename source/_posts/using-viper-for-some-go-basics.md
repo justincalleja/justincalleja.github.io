@@ -3,6 +3,7 @@ date: "2014-10-25"
 title: "Using Viper for some Go basics"
 tags: [ "go", "viper" ]
 categories: [ "programming" ]
+tocEnabled: true
 
 ---
 

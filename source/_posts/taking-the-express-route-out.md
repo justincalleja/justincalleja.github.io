@@ -3,6 +3,7 @@ date: "2014-12-06"
 title: "Taking the Express route out"
 tags: [ "node", "express" ]
 categories: [ "programming" ]
+tocEnabled: true
 
 ---
 
