@@ -39,7 +39,7 @@ The idea is to run Assemble as part of a [Grunt](http://gruntjs.com/ "Grunt") bu
 
 1. `npm init && npm i --save-dev grunt grunt-contrib-clean assemble`
 2. `vim _config.yml`
-```yml
+```json
 root:             public
 dest:             <%= site.root %>
 assets:           <%= site.dest %>/assets
