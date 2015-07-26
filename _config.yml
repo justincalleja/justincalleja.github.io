@@ -73,3 +73,5 @@ deploy:
   repository: https://github.com/justincalleja/justincalleja.github.io.git
   branch: master
 
+sitemap:
+    path: sitemap.xml
