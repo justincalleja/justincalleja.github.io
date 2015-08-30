@@ -28,7 +28,7 @@ to-mock-a-mongoose$ npm install
 
 # What have we got here?
 
-First off, install mocha globally if you don't already have it: `npm i -g mocha`. Then run `mocha` and see some green (no not money... probably something you can trust more these days - a passing test).
+First off, install mocha globally if you don't already have it: `npm i -g mocha` and run `mocha`.
 
 Open up *model/db.js*. This is where we're establishing our db connection (and registering some event handlers). The connection will actually be mocked out in our *test/test.js*. That's pretty useful. Now we don't need MongoDB to be running to make some assertions on our code, code that would normally be interacting with the database.
 
@@ -45,7 +45,7 @@ require('../model/db');
 
 *model/item.js* defines the structure (the schema) of an Item document which we'd like to store in our db. We're also creating a model from our schema. This is basically a constructor we can use to create Item objects which will map to documents in our db. i.e. instances created from our Item model will be important to us if we care about interacting with our db.
 
-*test/test.js*, after mocking our Mongoose, simply requires and makes use (I saw you rolling your eyes :P)
+*test/test.js*, after mocking our Mongoose, simply requires and makes use.
 
 ``` javascript
 // code abbreviated... see generated test.js
