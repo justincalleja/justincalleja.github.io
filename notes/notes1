@@ -1,0 +1,11 @@
+`hexo server` to start local hexo server
+
+In order to stop loading disqus while writing a post, go to:
+
+themes/tranquilpeak/layout/_partial/post.ejs
+
+and comment out this (line 51):
+
+          <!-- <%- partial('post/disqus') %> -->
+
+Remember to uncomment it before deploying...
