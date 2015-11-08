@@ -1,5 +1,5 @@
 ---
-date: "2015-11-07"
+date: "2015-11-08"
 title: "Vanilla CSS grid"
 tags: [ "css" ]
 categories: [ "programming" ]
