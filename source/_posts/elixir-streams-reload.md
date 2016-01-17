@@ -9,17 +9,18 @@ tocEnabled: true
 
 # Intro
 
-This post is based on [Drew Olson](http://drewolson.org/)'s [Elixir Streams](http://blog.drewolson.org/elixir-streams/). Since I'm just getting started with [Elixir](http://elixir-lang.org/), I came across a few issues understanding the "Building an API with Streams" section in Drew's post. This post is my attempt at breaking it down.
+This post is based on [Drew Olson](http://drewolson.org/)'s [Elixir Streams](http://blog.drewolson.org/elixir-streams/). Since I'm just getting started with [Elixir](http://elixir-lang.org/), I came across a few issues understanding the ["Building an API with Streams"](http://blog.drewolson.org/elixir-streams/#buildinganapiwithstreams) section in Drew's post. This post is my attempt at breaking it down while learning about Elixir.
 
-I'm using Elixir 1.2.0 (and Erlang 18.1).
+I'm using [Elixir](http://elixir-lang.org/) 1.2.0 (and [Erlang](http://www.erlang.org/) 18.1).
 
-## Maybe worth mentioning
+## Worth mentioning (I guess…)
 
 * I will not be using the exact Github endpoint (e.g. https://github.com/api/v3/orgs/elixir-lang/repos) used in Drew's post because:
   * I'm not familiar with the Github API
   * Couldn't get the given endpoint to work after generating an access token
   * Got the data I wanted anyway using the endpoint in this post (no need for access tokens)
   * It cuts down on code :)
+* This post is primarily a "learning devise", by which I mean I intend to side track from the main intention below to explain (or mention and link to) Elixir basics. i.e. this post is not really about Elixir Streams although it features them. The original idea for this post was to learn some Elixir basics in the context of the app in Drew's ["Building an API with Streams"](http://blog.drewolson.org/elixir-streams/#buildinganapiwithstreams) section.
 
 # The intention
 
@@ -54,7 +55,8 @@ Opening your browser's dev tools, you'll also be able to look at the HTTP respon
 Maybe there's a parameter to limit the number of returned repos - in which case, you'd be able to trigger pagination like that. But I'm too lazy to look into that so I'll just pick something like: [https://api.github.com/orgs/nodejs/repos](https://api.github.com/orgs/nodejs/repos), which gives back this `Link` header:
 
 ```
-Link: <https://api.github.com/organizations/9950313/repos?page=2>; rel="next", <https://api.github.com/organizations/9950313/repos?page=3>; rel="last"
+Link: <https://api.github.com/organizations/9950313/repos?page=2>; rel="next",
+      <https://api.github.com/organizations/9950313/repos?page=3>; rel="last"
 ```
 
 Using a tool like [jq](https://stedolan.github.io/jq/), we can easily count how many repos we just got back:
@@ -172,7 +174,7 @@ It seems that some processes need to be running before using HTTPoison and addin
 
 In HTTPoison's case, Erlang's [application:ensure\_all\_started/1](http://www.erlang.org/doc/apps/kernel/application.html#ensure_started-1) seems to be what's making this happen.
 
-In any case, starting iex and loading our app with `iex -S mix`, we can now start experimenting a bit:
+In any case, starting iex and loading our app with [iex -S mix](https://github.com/elixir-lang/elixir/wiki/FAQ#3-how-do-i-start-a-shell-iex-with-my-project-and-all-its-dependencies-loaded-and-started) (which starts a shell with the project and all of its dependencies loaded and started), we can now start experimenting a bit:
 
 ```elixir
 iex(1)> HTTPoison.get! "https://api.github.com/orgs/elixir-lang/repos"
@@ -186,10 +188,309 @@ iex(2)> %HTTPoison.Response{body: body, headers: headers, status_code: status_co
 # ...
 ```
 
-Above, we're getting the evaluation of expression 1 in iex (i.e. the result of `iex(1)>`) and extracting its individual parts using [pattern matching](http://elixir-lang.org/getting-started/pattern-matching.html) (we're using the [v(n \\\\ -1)](http://elixir-lang.org/docs/master/iex/IEx.Helpers.html#v/1) iex helper function to do this). We now have the following bound variables which you can play around with in iex: `body`, `headers`, and `status_code`.
+Above, we're getting the evaluation of expression 1 in iex (i.e. the result of `iex(1)>`) and extracting its individual parts using [pattern matching](http://elixir-lang.org/getting-started/pattern-matching.html) (we're using the [v(n \\\\ -1)](http://elixir-lang.org/docs/master/iex/IEx.Helpers.html#v/1) iex helper function to do this - and note that the double backslash syntax in the helper function's doc is for [default arguments](http://elixir-lang.org/getting-started/modules.html#default-arguments)). We now have the following bound variables in our iex session: `body`, `headers`, and `status_code`.
 
+Next, add `lib/github_gateway.ex`:
+
+```elixir
+defmodule Github.Gateway do
+  use HTTPoison.Base
+
+  @endpoint "https://api.github.com"
+
+  def endpoint do
+    @endpoint
+  end
+
+  defp process_url(url) do
+    @endpoint <> url
+  end
+end
+```
+
+There's a couple of things to note here. The easiest to explain is the definition of the `@endpoint` [module attribute](http://elixir-lang.org/getting-started/module-attributes.html#as-constants) which serves as a constant. At compile time, usage of this attribute is changed to the Github endpoint we've set it to.
+
+We're also using `use HTTPoison.Base`, and as we can see from the [online doc](http://elixir-lang.org/getting-started/alias-require-and-import.html#use), this is compiled to something like:
+
+```elixir
+defmodule Github.Gateway do
+  require HTTPoison.Base
+  HTTPoison.Base.__using__ []
+  # ...
+end
+```
+
+<blockquote>Behind the scenes, `use` requires the given module and then calls the `__using__/1` callback on it allowing the module to inject some code into the current context.<footer><cite><a href="http://elixir-lang.org/getting-started/alias-require-and-import.html#use">Getting started guide</a></cite></footer></blockquote>
+
+`require`ing seems to be necessary to "guarantee" that `HTTPoison.Base` is available during compilation:
+
+<blockquote>Macros are chunks of code that are executed and expanded at compilation time. This means, in order to use a macro, we need to guarantee its module and implementation are available during compilation. This is done with the `require` directive<footer><cite><a href="http://elixir-lang.org/getting-started/alias-require-and-import.html#require">Getting started guide</a></cite></footer></blockquote>
+
+However, "code injection", or "macro expansion", doesn't happen until we actually call a macro, in our case, the [HTTPoison.Base.\_\_using\_\_/1](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L74) macro.
+
+You can confirm this by removing the `use HTTPoison.Base` expression in `Github.Gateway` (or replacing `use` with `require` without calling the `__using__/1` macro). If you then `iex -S mix` and hit the `<TAB>` key after `Github.Gateway.`, it will expand to the only thing available in that module at this point, the public `endpoint` function. If you `use HTTPoison.Base` and try the same thing, you'll get a list of the injected code:
+
+```elixir
+iex(1)> Github.Gateway.
+delete!/3     delete/3      endpoint/0    get!/3        get/3
+head!/3       head/3        options!/3    options/3     patch!/4
+patch/4       post!/4       post/4        put!/4        put/4
+request!/5    request/5     start/0
+```
+
+As you can see, we now have [get!/3](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L194), the same function we used from `HTTPoison` just a minute ago. [In fact](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison.ex#L44-L67):
+
+<blockquote>Under the hood, the [HTTPoison](http://hexdocs.pm/httpoison/HTTPoison.html#content) module just uses [HTTPoison.Base](http://hexdocs.pm/httpoison/HTTPoison.Base.html)… without overriding any default function.<footer><cite><a href="http://hexdocs.pm/httpoison/HTTPoison.html#content">HTTPoison docs</a></cite></footer></blockquote>
+
+However, since we've defined our own `process_url/1` function, we don't need to specify the full URL to make a similar request to the one we've made before:
+
+```elixir
+iex(1)> Github.Gateway.get! "/orgs/elixir-lang/repos"
+# ...
+```
+
+In fact, we *can't* specify the full URL as a parameter since we've changed the [default](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L83-L85) [implementation](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L354-L361) of `process_url/1` to:
+
+```elixir
+  defp process_url(url) do
+    @endpoint <> url
+  end
+```
+
+and we'd have an invalid URL if we did.
+
+The HTTPoison documentation is clear about this "overriding" feature:
+
+<blockquote>HTTPoison.Base defines the following list of functions, all of which can be overridden (by redefining them)…<footer><cite><a href="http://hexdocs.pm/httpoison/HTTPoison.Base.html">HTTPoison.Base docs</a></cite></footer></blockquote>
+
+OK… but it's not like this is [OOP](https://en.wikipedia.org/wiki/Object-oriented_programming) and looking into `use`ing a module doesn't explain anything about function overriding. So how does this work?
+
+To better understand what's going on, we need to dig a bit deeper. We know that `HTTPoison.Base.__using__/1` macro is expanded at compile time when `use`ing `HTTPoison.Base`, and if we look into it, we come across this [line](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L329) in the macro's definition:
+
+```elixir
+defoverridable Module.definitions_in(__MODULE__)
+```
+
+[Module.definitions\_in/1](https://github.com/elixir-lang/elixir/blob/v1.2/lib/elixir/lib/module.ex#L731-L746) is being passed the [\_\_MODULE\_\_/0](http://elixir-lang.org/docs/v1.2/elixir/Kernel.SpecialForms.html#__MODULE__/0) pseudo variable, the evaluation of which seems to be listing all functions defined in `HTTPoison.Base`.
+
+<blockquote>Pseudo variables return information about Elixir’s compilation environment and can only be read, never assigned to.<footer><cite><a href="http://elixir-lang.org/docs/v1.2/elixir/Kernel.SpecialForms.html">Pseudo variables</a></cite></footer></blockquote>
+
+If we now take a look at the [Kernel.defoverridable/1](https://github.com/elixir-lang/elixir/blob/v1.2/lib/elixir/lib/kernel.ex#L3501-L3537) macro, we'll find out that this is what's responsible for the overridability feature:
+
+<blockquote>Makes the given functions in the current module overridable.
+An overridable function is lazily defined, allowing a developer to override it.<footer><cite><a href="https://github.com/elixir-lang/elixir/blob/v1.2/lib/elixir/lib/kernel.ex#L3501-L3537">Kernel.defoverridable/1 doc</a></cite></footer></blockquote>
+
+It's also interesting to note the example which comes with the doc for that macro:
+
+``` elixir
+defmodule DefaultMod do
+  defmacro __using__(_opts) do
+    quote do
+      def test(x, y) do
+        x + y
+      end
+      defoverridable [test: 2]
+    end
+  end
+end
+
+defmodule InheritMod do
+  use DefaultMod
+  def test(x, y) do
+    x * y + super(x, y)
+  end
+end
+```
+
+Apart from noticing that `defoverridable/1` takes a [keyword list](http://elixir-lang.org/getting-started/maps-and-dicts.html#keyword-lists) as an argument, implying that `Module.definitions_in/1` returns a keyword list, we can see usage of `super` to call the default implementation of `test` in the example.
+
+Lets see this `super` call in action by using it in our `process_url/1`:
+
+```elixir
+defp process_url(url) do
+  case url |> String.slice(0, 8) |> String.downcase do
+    "http://" <> _ -> super url
+    "https://" <> _ -> super url
+    _ -> @endpoint <> url
+  end
+end
+```
+
+(Read up on the use of the pipe operator, [|>](http://elixir-lang.org/docs/v1.2/elixir/Kernel.html#%7C%3E/2), if you're not familiar with it). Now, both of the following will give us a `200` status code:
+
+```elixir
+iex(1)> Github.Gateway.get! "https://api.github.com/orgs/elixir-lang/repos"
+# ...
+iex(2)> Github.Gateway.get! "/orgs/elixir-lang/repos"
+# ...
+```
+
+Of course, the same prefix check is happening in [super](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L354-L361) in this case, but the point is it works as expected.
 
 ## Poison
 
+Moving on to [JSON](http://www.json.org/) parsing with [Poison](https://github.com/devinus/poison). We're already depending on it so if we `iex -S mix`, we can start exploring its basic usage (and how to get to specific bits of data):
 
+```elixir
+iex(1)> %HTTPoison.Response{ body: body } = Github.Gateway.get! "/orgs/elixir-lang/repos"
+# ...
+iex(2)> i body
+# ...
+Data type
+  BitString
+Byte size
+  58284
+Description
+  This is a string: a UTF-8 encoded binary. It's printed surrounded by
+  "double quotes" because all UTF-8 encoded codepoints in it are printable.
+iex(3)> parsed_body = Poison.Parser.parse! body
+# ...
+iex(4)> i parsed_body
+# ...
+Data type
+  List
+iex(5)> length parsed_body
+12
+iex(6)> parsed_body |> List.first |> Map.get("name")
+"elixir"
+iex(7)> :lists.nth(4, parsed_body)["name"]
+"ex_doc"
+iex(8)> elixir_repo = parsed_body |> Enum.at(0)
+# ...
+iex(9)> i elixir_repo
+# ...
+Data type
+  Map
+iex(10)> elixir_repo["full_name"]
+"elixir-lang/elixir"
+iex(11)> [_, _, _, %{ "full_name" => ex_doc_repo_full_name } | _] = parsed_body
+# ...
+iex(12)> ex_doc_repo_full_name
+"elixir-lang/ex_doc"
+```
 
+I'm digressing a bit here to show off different ways in which you can manipulate the parsed data:
+
+* `iex(1)` is old news by now, we've already seen that we can do this to get the body of our HTTP request.
+* `iex(2)` is using the [i iex helper function](http://elixir-lang.org/docs/v1.2/iex/IEx.Helpers.html#i/1) which shows us that `body` is a BitString.
+* `iex(3)` is parsing the `body` with [Poison.Parser.parse!/2](https://github.com/devinus/poison/blob/1.5.2/lib/poison/parser.ex#L48-L58) and binding the result to `parsed_body`. Note: For more info on variable naming conventions and the significance of the "trailing bang" in `Poison.Parser.parse!`, you can read up on these in the [online doc for naming conventions](http://elixir-lang.org/docs/master/elixir/naming-conventions.html).
+* `iex(5)` shows us the length of `parsed_body` List via the built-in (i.e. imported by default in your modules and [defined in the Kernel module](https://github.com/elixir-lang/elixir/blob/v1.2.0/lib/elixir/lib/kernel.ex#L440-L454)) [length](http://elixir-lang.org/docs/v1.2/elixir/Kernel.html#length/1) function.
+* `iex(6)` is piping to [List.first/1](http://elixir-lang.org/docs/v1.2/elixir/List.html#first/1) to get the first element in `parsed_body` and then piping again to [Map.get/3](http://elixir-lang.org/docs/v1.2/elixir/Map.html#get/3) to get the value for the `"name"` String key. Note that `Map.get/3` has an optional 3rd argument (with a default value) and [|>](http://elixir-lang.org/docs/v1.2/elixir/Kernel.html#%7C%3E/2) is supplying the first argument.
+* `iex(7)` is similarly getting the value for the `"name"` String key in the 4th element in `parsed_body` using [Erlang's lists:nth/2](http://www.erlang.org/doc/man/lists.html#nth-2) function. Note that we cannot pipe `parsed_body` into this function as it takes the index for its first argument (as opposed to the List). Also note that the index for `lists:nth/2` starts from 1 not 0.
+* `iex(8)` demonstrates another way of picking elements from a list using [Enum.at/3](http://elixir-lang.org/docs/v1.2/elixir/Enum.html#at/3).
+* `iex(11)` uses [pattern matching](http://elixir-lang.org/getting-started/pattern-matching.html) to get to the value of the `"full_name"` key in the Map which is the 4th element in the `parsed_body` List.
+
+So we've parsed some JSON into a list of maps and singled out bits of data from it. We're now ready to write that data back out, or "encode" it back to JSON:
+
+```elixir
+iex(13)> Poison.encode(elixir_repo)
+{:ok,
+"{\"teams_url\":\"https://api.github.com/repos/elixir-lang/elixir/teams\",
+# ...
+iex(14)> elem(Poison.encode(elixir_repo), 1)
+"{\"teams_url\":\"https://api.github.com/repos/elixir-lang/elixir/teams\",
+# ...
+iex(15)> IO.puts elem(Poison.encode(elixir_repo), 1)
+{"teams_url":"https://api.github.com/repos/elixir-lang/elixir/teams",
+# ...
+iex(16)> IO.puts elem(Poison.encode(elixir_repo, [pretty: 2]), 1)
+{
+  "teams_url": "https://api.github.com/repos/elixir-lang/elixir/teams",
+  "branches_url": "https://api.github.com/repos/elixir-lang/elixir/branches{/branch}",
+# ...
+iex(17)> File.write("./elixir_repo.json", elem(Poison.encode(elixir_repo, [pretty: 2]), 1))
+:ok
+iex(18)> elixir_repo |> Poison.encode([pretty: 2]) |> elem(1) |> IO.puts
+# ... same as iex(16)
+```
+
+* `iex(13)` uses [Poison.encode/2](https://github.com/devinus/poison/blob/master/lib/poison.ex#L6-L19) without `options` (thus defaulting to an empty List) to encode the `elixir_repo` Map to JSON. This returns a tuple with `:ok` as the first element and the encoded JSON as the second.
+* `iex(14)` uses [elem/2](http://elixir-lang.org/docs/v1.2/elixir/Kernel.html#elem/2) to extract the JSON from the tuple.
+* `iex(15)` prints `iex(14)` to stdout.
+* `iex(16)` uses the `[pretty: 2]` [option](https://github.com/devinus/poison/blob/1.5.2/lib/poison/encoder.ex#L31-L60) when encoding to print the JSON in a more readable fashion.
+* `iex(17)` does the same thing but writes to the `"./elixir_repo.json"` file instead of stdout.
+* `iex(18)` is just `iex(16)` using pipes.
+
+While we're at it, and since we have a large enough Map to demo it, consider the following:
+
+```elixir
+iex(19)> Map.keys elixir_repo
+["statuses_url", "git_refs_url", "issue_comment_url", "watchers", "mirror_url",
+ "languages_url", "stargazers_count", "forks", "default_branch", "comments_url",
+ "commits_url", "id", "clone_url", "homepage", "stargazers_url", "events_url",
+ "blobs_url", "forks_count", "pushed_at", "git_url", "hooks_url", "owner",
+ "trees_url", "git_commits_url", "collaborators_url", "watchers_count",
+ "tags_url", "merges_url", "releases_url", "subscribers_url", "ssh_url",
+ "created_at", "name", "has_issues", "private", "git_tags_url", "archive_url",
+ "has_wiki", "open_issues_count", "milestones_url", "forks_url", "url",
+ "downloads_url", "open_issues", "keys_url", "description", "contents_url",
+ "language", "permissions", "contributors_url", ...]
+iex(20)> elixir_repo |> Map.keys |> length
+68
+iex(21)> Inspect.Opts.__struct__
+%Inspect.Opts{base: :decimal, binaries: :infer, char_lists: :infer, limit: 50,
+ pretty: false, safe: true, structs: true, width: 80}
+iex(22)> Inspect.Opts.__struct__.limit
+50
+iex(23)> elixir_repo |> Map.keys |> Enum.take(50)
+["statuses_url", "git_refs_url", "issue_comment_url", "watchers", "mirror_url",
+ "languages_url", "stargazers_count", "forks", "default_branch", "comments_url",
+ "commits_url", "id", "clone_url", "homepage", "stargazers_url", "events_url",
+ "blobs_url", "forks_count", "pushed_at", "git_url", "hooks_url", "owner",
+ "trees_url", "git_commits_url", "collaborators_url", "watchers_count",
+ "tags_url", "merges_url", "releases_url", "subscribers_url", "ssh_url",
+ "created_at", "name", "has_issues", "private", "git_tags_url", "archive_url",
+ "has_wiki", "open_issues_count", "milestones_url", "forks_url", "url",
+ "downloads_url", "open_issues", "keys_url", "description", "contents_url",
+ "language", "permissions", "contributors_url"]
+iex(24)> IEx.configure(inspect: [limit: 70])
+:ok
+iex(25)> Map.keys elixir_repo
+["statuses_url", "git_refs_url", "issue_comment_url", "watchers", "mirror_url",
+ "languages_url", "stargazers_count", "forks", "default_branch", "comments_url",
+ "commits_url", "id", "clone_url", "homepage", "stargazers_url", "events_url",
+ "blobs_url", "forks_count", "pushed_at", "git_url", "hooks_url", "owner",
+ "trees_url", "git_commits_url", "collaborators_url", "watchers_count",
+ "tags_url", "merges_url", "releases_url", "subscribers_url", "ssh_url",
+ "created_at", "name", "has_issues", "private", "git_tags_url", "archive_url",
+ "has_wiki", "open_issues_count", "milestones_url", "forks_url", "url",
+ "downloads_url", "open_issues", "keys_url", "description", "contents_url",
+ "language", "permissions", "contributors_url", "pulls_url", "labels_url",
+ "html_url", "svn_url", "issue_events_url", "notifications_url",
+ "has_downloads", "compare_url", "full_name", "subscription_url",
+ "assignees_url", "issues_url", "size", "has_pages", "fork", "updated_at",
+ "branches_url", "teams_url"]
+```
+
+* `iex(19)` prints out the keys in the `elixir_repo` Map - but note the trailing ellipsis after the `"contributors_url"` key, i.e. the shell doesn't print all the keys since it is configured to print up to a limit of number of elements for certain data types, such as lists in this case.
+* `iex(20)` shows us how many keys the `elixir_repo` Map has (68).
+* `iex(21)` shows the current settings of [Inspect.Opts](http://elixir-lang.org/docs/v1.2/elixir/Inspect.Opts.html) which are used by the shell when inspecting values (and "inspecting values" is used when printing our expression results to the shell - and also, for e.g., when using the `i` helper).
+* `iex(22)` highlights the setting we're currently interested in, the `:limit` field:
+
+<blockquote>:limit - limits the number of items that are printed for tuples, bitstrings, and lists, does not apply to strings nor char lists, defaults to 50.<footer><cite><a href="http://elixir-lang.org/docs/v1.2/elixir/Inspect.Opts.html">Inspect.Opts doc</a></cite></footer></blockquote>
+
+* `iex(23)` just shows that if we take 50 from the List of keys, we do indeed end up with all the keys printed in `iex(19)` (no ellipsis).
+* `iex(24)` is setting the inspection limit to 70 (by supplying a [keyword list](http://elixir-lang.org/getting-started/maps-and-dicts.html#keyword-lists) argument). More specifically, it is setting the IEx configuration for inspection via the `:inspect` keyword list element, whose value takes yet another keyword list made up of the [Inspect.Opts](http://elixir-lang.org/docs/v1.2/elixir/Inspect.Opts.html) fields we've just seen:
+
+<blockquote>A keyword list containing inspect options used by the shell when printing results of expression evaluation. Default to pretty formatting with a limit of 50 entries.
+See [Inspect.Opts](http://elixir-lang.org/docs/v1.2/elixir/Inspect.Opts.html) for the full list of options.
+<footer><cite><a href="http://elixir-lang.org/docs/stable/iex/IEx.html#configure/1">IEx.configure/1 :inspect option</a></cite></footer></blockquote>
+
+* `iex(25)` shows the result of this configuration. We are now able to print out all 68 keys.
+
+You might want to read [The .iex.exs file](http://elixir-lang.org/docs/stable/iex/IEx.html) section in the IEx docs if you're interested in setting IEx configuration on shell startup (or just setting up IEx with pre-bound variables etc…). Kudos to [Gary Rennie](https://groups.google.com/forum/?utm_medium=email&utm_source=footer#!topic/elixir-lang-talk/2wQOc5S0z1o) for helping me find this when I was first looking for it.
+
+# Building an API with Streams
+
+---
+
+# TODO:
+
+* mix help compile.app
+  * in section about `application` startup (HTTPoison).
+
+# Credits
+
+* [Drew Olson](http://drewolson.org/) wrote the [post](http://blog.drewolson.org/elixir-streams/) on which this is based.
+* René Föhring showed me how to write a ["do nothing" function](https://groups.google.com/forum/?utm_medium=email&utm_source=footer#!msg/elixir-lang-talk/CQcWAkbmg9o/jkDq2_h8DAAJ) (which is used in this post).
+* Of course, many more people have helped create this post e.g. whoever is involved writing documentation, library authors, core committers etc… - but you all know who you are ;) - thanks!
