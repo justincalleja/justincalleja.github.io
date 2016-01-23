@@ -21,6 +21,7 @@ I'm using [Elixir](http://elixir-lang.org/) 1.2.0 (and [Erlang](http://www.erlan
   * Got the data I wanted anyway using the endpoint in this post (no need for access tokens)
   * It cuts down on code :)
 * This post is primarily a "learning devise", by which I mean I intend to side track from the main intention below to explain (or mention and link to) Elixir basics. i.e. this post is not really about Elixir Streams although it features them. The original idea for this post was to learn some Elixir basics in the context of the app in Drew's ["Building an API with Streams"](http://blog.drewolson.org/elixir-streams/#buildinganapiwithstreams) section.
+* Code example in the "Building an API with Streams" section in Drew's post has been tweaked to work with Elixir version 1.2.0.
 
 # The intention
 
@@ -113,7 +114,7 @@ x is 3
 [2, 4, 6]
 ```
 
-In our first expression (`iex(1)>`), we are creating a stream from a list and a function, using `Stream.map/2`. The REPL shows us that we got back a stream from `Stream.map/2`. It shows us a human readable string [based on](https://github.com/elixir-lang/elixir/blob/v1.2/lib/elixir/lib/stream.ex#L1268-L1274) the [Inspect](http://elixir-lang.org/docs/v1.2/elixir/Inspect.html) protocol. As a side note:
+In our first expression (`iex(1)>`), we are creating a stream from a list and a function, using [Stream.map/2](http://elixir-lang.org/docs/v1.2/elixir/Stream.html#map/2). The REPL shows us that we got back a stream from `Stream.map/2`. It shows us a human readable string [based on](https://github.com/elixir-lang/elixir/blob/v1.2/lib/elixir/lib/stream.ex#L1268-L1274) the [Inspect](http://elixir-lang.org/docs/v1.2/elixir/Inspect.html) protocol. As a side note:
 
 <blockquote>Keep in mind that, by convention, whenever the inspected value starts with #, it is representing a data structure in non-valid Elixir syntax.<footer><cite><a href="http://elixir-lang.org/getting-started/protocols.html">Protocols</a></cite></footer></blockquote>
 
@@ -138,9 +139,9 @@ iex(4)> Enum.take([4, 5, 6], 1)
 [4]
 ```
 
-Aren't we also able to just take 1 element using a list? The difference is that the data you `take/2` from `stream` doesn't actually exist until you take it, whereas that from `[4, 5, 6]` exists in memory before ever calling `take/2` on it.  Our `stream` could be getting this data from a database or a REST API.
+What's different here? The difference is that the data you `take/2` from `stream` doesn't actually exist until you take it, whereas that from `[4, 5, 6]` exists in memory before ever calling `take/2` on it. Granted, in this case, `stream` is lazily producing data from a list data source which exists in memory (i.e. `[1, 2, 3]`). This might make the distinction a little more nuanced for this particular example, but what's important to keep in mind is that the actual values the `stream` produces (`1`, `2`, and `3`) *don't exist* in memory until the stream is actually consumed. Our `stream` could just as easily be feeding our program data from a database or a REST API instead of an in-memory data structure.
 
-For example, it could be giving `Enum.take/2` data it got from its first HTTP request to Github's REST API. If `take/2` doesn't want more than 30 repos, than `stream` only ever needs to make 1 HTTP request. If `take/2` wants more, `stream` would have to paginate as necessary but at least `take/2` doesn't have to wait until `stream` makes enough requests to exhaust the number of repos for a particular organization before it starts receiving data from `stream`.
+For example, it could be giving `Enum.take/2` data it got from its first HTTP request to Github's REST API. If `take/2` doesn't want more than 30 repos, then `stream` only ever needs to make 1 HTTP request. If `take/2` wants more, `stream` would have to paginate as necessary but at least `take/2` doesn't have to wait until `stream` makes enough requests to exhaust the number of repos for a particular organization before it starts receiving data from `stream`.
 
 That is exactly what we want for the Elixir API we'll be writing.
 
@@ -222,11 +223,17 @@ end
 
 <blockquote>Behind the scenes, `use` requires the given module and then calls the `__using__/1` callback on it allowing the module to inject some code into the current context.<footer><cite><a href="http://elixir-lang.org/getting-started/alias-require-and-import.html#use">Getting started guide</a></cite></footer></blockquote>
 
+(note: I'm passing `__using__/1` an empty list as an argument above. This list is an empty [keyword list](http://elixir-lang.org/getting-started/maps-and-dicts.html#keyword-lists), which means that if it weren't empty (i.e. if we had passed any options to the module we were `use`ing), they would be present in this list when the `use` macro is expanded in the form of 2-element tuples with an atom for the first element).
+
 `require`ing seems to be necessary to "guarantee" that `HTTPoison.Base` is available during compilation:
 
 <blockquote>Macros are chunks of code that are executed and expanded at compilation time. This means, in order to use a macro, we need to guarantee its module and implementation are available during compilation. This is done with the `require` directive<footer><cite><a href="http://elixir-lang.org/getting-started/alias-require-and-import.html#require">Getting started guide</a></cite></footer></blockquote>
 
-However, "code injection", or "macro expansion", doesn't happen until we actually call a macro, in our case, the [HTTPoison.Base.\_\_using\_\_/1](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L74) macro.
+However, when the compiler is processing this, "code injection" (or "macro expansion") isn't over after just the first step above (the expansion of the `use` macro) because [HTTPoison.Base.\_\_using\_\_/1](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L74) is itself a macro, so it needs to be expanded too.
+
+If you have just a quick look at [HTTPoison.Base.\_\_using\_\_/1](https://github.com/edgurgel/httpoison/blob/v0.8.0/lib/httpoison/base.ex#L74), you'll see that it's defining a bunch of functions within a [quote](http://elixir-lang.org/getting-started/meta/quote-and-unquote.html#quoting) block. Basically, we can write normal Elixir code within `quote` blocks and all that code will be transformed into a data structure which is understood by, and fed to, the Elixir compiler during macro expansion.
+
+Effectively, it's as if the functions in this `quote` block were defined in our module, `Github.Gateway`.
 
 You can confirm this by removing the `use HTTPoison.Base` expression in `Github.Gateway` (or replacing `use` with `require` without calling the `__using__/1` macro). If you then `iex -S mix` and hit the `<TAB>` key after `Github.Gateway.`, it will expand to the only thing available in that module at this point, the public `endpoint` function. If you `use HTTPoison.Base` and try the same thing, you'll get a list of the injected code:
 
@@ -481,6 +488,142 @@ See [Inspect.Opts](http://elixir-lang.org/docs/v1.2/elixir/Inspect.Opts.html) fo
 You might want to read [The .iex.exs file](http://elixir-lang.org/docs/stable/iex/IEx.html) section in the IEx docs if you're interested in setting IEx configuration on shell startup (or just setting up IEx with pre-bound variables etc…). Kudos to [Gary Rennie](https://groups.google.com/forum/?utm_medium=email&utm_source=footer#!topic/elixir-lang-talk/2wQOc5S0z1o) for helping me find this when I was first looking for it.
 
 # Building an API with Streams
+
+Back to our "intention" here. With all this background you should now be better equipped to digest most of the code in Drew's original post. However, the `Github.ResultStream` module below is worth breaking down as it features a couple of things we haven't yet discussed:
+
+```elixir
+defmodule Github.ResultStream do
+  alias Github.Gateway
+
+  def new(url) do
+    Stream.resource(
+      fn -> fetch_page(url) end,
+      &process_page/1,
+      fn _ -> nil end
+    )
+  end
+
+  defp fetch_page(url) do
+    response = Gateway.get!(url)
+    items = Poison.decode!(response.body)
+    links = parse_links(response.headers["Link"])
+
+    {items, links["next"]}
+  end
+
+  def parse_links(nil) do
+    %{}
+  end
+
+  def parse_links(links_string) do
+    links = String.split(links_string, ", ")
+
+    Enum.map(links, fn link ->
+      [_,name] = Regex.run(~r{rel="([a-z]+)"}, link)
+      [_,url] = Regex.run(~r{<([^>]+)>}, link)
+      short_url = String.replace(url, Gateway.endpoint, "")
+
+      {name, short_url}
+    end) |> Enum.into(%{})
+  end
+
+  defp process_page({nil, nil}) do
+    {:halt, nil}
+  end
+
+  defp process_page({nil, next_page_url}) do
+    next_page_url
+    |> fetch_page
+    |> process_page
+  end
+
+  defp process_page({items, next_page_url}) do
+    {items, {nil, next_page_url}}
+  end
+end
+```
+
+## [Stream.resource/3](http://elixir-lang.org/docs/v1.2/elixir/Stream.html#resource/3)
+
+To make sense of this, it's probably best to just jump straight to the example given in the online docs:
+
+```elixir
+# Stream.resource(start_fun, next_fun, after_fun)
+# @spec resource((() -> acc), (acc -> {element, acc} | {:halt, acc}), (acc -> term)) :: Enumerable.t
+Stream.resource(fn -> File.open!("sample") end,
+                fn file ->
+                  case IO.read(file, :line) do
+                    data when is_binary(data) -> {[data], file}
+                    _ -> {:halt, file}
+                  end
+                end,
+                fn file -> File.close(file) end)
+```
+
+So `Stream.resource/3` takes 3 functions, `start_fun`, `next_fun`, and `after_fun`.
+
+The result of `start_fun` is fed as an argument to `next_fun` which is responsible for generating the stream's values. In this case, that result is a [process](http://elixir-lang.org/getting-started/processes.html) id (or PID):
+
+```elixir
+# we're using the file we wrote in iex(17) above
+iex(26)> File.open!("./elixir_repo.json")
+#PID<0.64.0>
+```
+
+<blockquote>Every time a file is opened, Elixir spawns a new process.<footer><cite><a href="http://elixir-lang.org/docs/v1.2/elixir/File.html">File module doc</a></cite></footer></blockquote>
+
+Note that the result of [File.open!/2](http://elixir-lang.org/docs/v1.2/elixir/File.html#open!/2) is different from that of [File.open/2](http://elixir-lang.org/docs/v1.2/elixir/File.html#open/2) (also note that the second arg is optional in both cases):
+
+```elixir
+iex(27)> File.open("./elixir_repo.json")
+{:ok, #PID<0.66.0>}
+```
+
+i.e. it's wrapped in a tuple. You can read up on this in the "Trailing bang" section in the [naming conventions](http://elixir-lang.org/docs/master/elixir/naming-conventions.html) doc. The [File module](http://elixir-lang.org/docs/v1.2/elixir/File.html)'s doc also mentions this in the "API" section.
+
+This PID is called an `io_device` in the doc for the File module, and an `io_device` can be used as an argument to the [IO module](http://elixir-lang.org/docs/v1.2/elixir/IO.html) functions.
+
+That is exactly what's happening in `next_fun` above, which is passing `file` (bound to a PID), to [IO.read/2](http://elixir-lang.org/docs/v1.2/elixir/IO.html#read/2) to read a line from the `io_device`:
+
+```elixir
+iex(28)> file = v(26)
+#PID<0.64.0>
+iex(29)> IO.read(file, :line)
+"{\n"
+iex(30)> IO.read(file, :line)
+"  \"teams_url\": \"https://api.github.com/repos/elixir-lang/elixir/teams\",\n"
+iex(31)> IO.read(file, :line)
+"  \"branches_url\": \"https://api.github.com/repos/elixir-lang/elixir/branches{/branch}\",\n"
+iex(32)> is_binary IO.read(file, :line)
+true
+```
+
+With the `:line` option, `IO.read/2` will keep giving us binary data until we read the whole file, at which point it will return an `:eof` atom which will match our second clause in our `next_fun`'s `case` expression. So from this we can see that `next_fun` either returns `{[data], file}` or `{:halt, file}` - i.e. either the next line in the file as a string wrapped in a list or `:halt` to mark the end of the stream, in both cases accompanied by `file` our accumulator (the thing by which we're able to keep streaming values).
+
+<blockquote>Successive values are generated by calling `next_fun` with the previous accumulator (the initial value being the result returned by `start_fun`) and it must return a tuple containing a **list of items** to be emitted and the next accumulator.
+
+<footer>Why do we wrap the read line in a list?<cite><a href="http://elixir-lang.org/docs/v1.2/elixir/Stream.html#resource/3">Stream.resource/3 doc</a></cite></footer></blockquote>
+
+Finally, the `after_fun` is called with the accumulator (`file`) in order to give us an opportunity to clean up after ourselves, in this case, closing the file.
+
+With that, we now know the control flow abstracted by `Stream.resource/3`. If we take another look at it's usage in `Github.ResultStream`:
+
+```elixir
+  def new(url) do
+    Stream.resource(
+      fn -> fetch_page(url) end,
+      &process_page/1,
+      fn _ -> nil end
+    )
+  end
+```
+
+the other things to note before diving into the meat of its implementation (`process_page/1`), are the use of [Elixir partials](http://elixir-lang.org/crash-course.html#partials-in-elixir) to refer to `process_page/1` to act as `Stream.resource/3`'s `next_fun`, and the definition of a "do nothing" function for the `after_fun` (since we have nothing to clean up). Originally, the "do nothing" function was defined as: `fn _ -> end` in Drew's post but the compiler gives a warning for this syntax as of Elixir 1.2, so we need to evaluate to `nil` (which is what used to happen anyway when no expression was given). Kudos to [René Föhring](https://groups.google.com/forum/?utm_medium=email&utm_source=footer#!msg/elixir-lang-talk/CQcWAkbmg9o/jkDq2_h8DAAJ) for pointing this out.
+
+<blockquote>[Kernel] Warn when right hand side of -> does not provide any expression<footer><cite><a href="https://github.com/elixir-lang/elixir/releases/tag/v1.2.0">v1.2.0 release notes</a></cite></footer></blockquote>
+
+## The rest of Github.ResultStream
+
 
 ---
 
