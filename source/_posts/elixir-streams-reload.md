@@ -22,6 +22,7 @@ I'm using [Elixir](http://elixir-lang.org/) 1.2.0 (and [Erlang](http://www.erlan
   * It cuts down on code :)
 * This post is primarily a "learning devise", by which I mean I intend to side track from the main intention below to explain (or mention and link to) Elixir basics. i.e. this post is not really about Elixir Streams although it features them. The original idea for this post was to learn some Elixir basics in the context of the app in Drew's ["Building an API with Streams"](http://blog.drewolson.org/elixir-streams/#buildinganapiwithstreams) section.
 * Code example in the "Building an API with Streams" section in Drew's post has been tweaked to work with Elixir version 1.2.0.
+* **This is a long and winding one…** - you have been warned :)
 
 # The intention
 
@@ -31,7 +32,7 @@ It's probably best to go over this intention in more detail.
 
 ## How to fetch Github organization repos and their pagination
 
-We will only be concerned with a single endpoint from Github's API in this post, namely, *listing the repositories of a specific organization*. So lets start off with the [elixir-lang](https://github.com/elixir-lang) organization. If you open the following in a browser: [https://api.github.com/orgs/elixir-lang/repos](https://api.github.com/orgs/elixir-lang/repos), you should get back something like:
+We will only be concerned with a single endpoint from Github's API in this post, namely, *listing the repositories of a specific organization*. So let's start off with the [elixir-lang](https://github.com/elixir-lang) organization. If you open the following in a browser: [https://api.github.com/orgs/elixir-lang/repos](https://api.github.com/orgs/elixir-lang/repos), you should get back something like:
 
 ```json
 [
@@ -506,6 +507,9 @@ defmodule Github.ResultStream do
   defp fetch_page(url) do
     response = Gateway.get!(url)
     items = Poison.decode!(response.body)
+    # TODO: fix access to "Link" header
+    # Works "by accident" in v1.1 of Elixir
+    # Fixed (i.e. doesn't work) in v1.2:
     links = parse_links(response.headers["Link"])
 
     {items, links["next"]}
@@ -624,16 +628,165 @@ the other things to note before diving into the meat of its implementation (`pro
 
 ## The rest of Github.ResultStream
 
+We're good to move on… so let's tackle the "TODO" comment in the snippet below:
+
+```elixir
+  defp fetch_page(url) do
+    response = Gateway.get!(url)
+    items = Poison.decode!(response.body)
+    # TODO: fix access to "Link" header
+    # Works "by accident" in v1.1 of Elixir
+    # Fixed (i.e. doesn't work) in v1.2:
+    links = parse_links(response.headers["Link"])
+
+    {items, links["next"]}
+  end
+```
+
+Back when I was going through Drew's post I was using Elixir v1.1.1 (there was no v1.2 yet). Lets try the following with v1.1.1:
+
+```elixir
+iex(1)> headers = [{"Server", "GitHub.com"}]
+[{"Server", "GitHub.com"}]
+iex(2)> headers["Server"]
+"GitHub.com"
+```
+
+When I started writing this post (a couple of days before the beginning of the year), v1.2 came out so I switched to the new hotness. Running the same thing in v1.2 gives:
+
+```elixir
+iex(1)> headers = [{"Server", "GitHub.com"}]
+[{"Server", "GitHub.com"}]
+iex(2)> headers["Server"]
+** (ArgumentError) the Access calls for keywords expect the key to be an atom, got: "Server"
+    (elixir) lib/access.ex:64: Access.fetch/2
+    (elixir) lib/access.ex:77: Access.get/3
+```
+
+At first, I thought something was broken in v1.2 but as [José Valim](https://groups.google.com/forum/?utm_medium=email&utm_source=footer#!msg/elixir-lang-talk/Ydx4E_bmAP8/bugKvIg5EwAJ) points out, it looks like the behaviour in v1.1.1 was accidental! You can't use that syntax on `headers` in this case because `headers` isn't a keyword list or map. It's a list of 2-element tuples but the first element in the tuple is not an atom (which would make it a keyword list) so this syntax won't work. I thought I'd leave this bit in as I guess it's "good to know".
+
+So we're going to have to extract the "Link" header in some other way, which is just as well as it gives us the opportunity to look at a nice little trick I picked up from the blog post [Writing assertive code with Elixir](http://blog.plataformatec.com.br/2014/09/writing-assertive-code-with-elixir/) by [José Valim](https://twitter.com/josevalim?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor):
+
+```elixir
+  defp fetch_page(url) do
+    response = Gateway.get!(url)
+    items = Poison.decode!(response.body)
+    links_map = 
+      response.headers
+      |> Enum.find_value(fn({k, v}) -> k == "Link" && v end)
+      |> parse_links
+    {items, links_map["next"]}
+  end
+```
+
+First off, note the behaviour of the following:
+
+```elixir
+iex(1)> true && "hello"
+"hello"
+iex(2)> "hello" && true
+true
+iex(3)> false && "hello"
+false
+iex(4)> "hello" && false
+false
+iex(5)> "hello" && "world"
+"world"
+```
+
+<blockquote>Provides a short-circuit operator that evaluates and returns the second expression only if the first one evaluates to true (i.e., it is not nil nor false). Returns the first expression otherwise.<footer><cite><a href="http://elixir-lang.org/docs/v1.2/elixir/Kernel.html#&&/2">Kernel.&&/2 macro doc</a></cite></footer></blockquote>
+
+This means that whenever `k == "Link"` evaluates to `false`, `k == "Link" && v` will always evaluate to `false`. Should it ever evaluate to `true`, then `k == "Link" && v` would evaluate to `v`
+
+[Enum.find_value/3](http://elixir-lang.org/docs/v1.2/elixir/Enum.html#find_value/3) is similar to [Enum.find/3](http://elixir-lang.org/docs/v1.2/elixir/Enum.html#find/3), which I assume you're already familiar with. The only difference is that instead of returning the element in the enumerable (list) for which the function you pass in evaluates to "not `false` or `nil`", `Enum.find_value/3` returns the function's "truthy" value instead (where "truthy" is "not `false` or `nil`").
+
+(One gotcha that comes to mind would be if, for e.g., the list we're querying has something like {"Link", nil}. Since `nil` is also `Enum.find_value/3`'s default return value if the function you pass in never evaluates to truthy, you wouldn't be able to tell if the `nil` you get back from `find_value/3` was a match or not).
+
+This works well for our use case. Another approach suggested by [Michał Muskała](https://groups.google.com/forum/#!msg/elixir-lang-talk/Ydx4E_bmAP8/A-LixvVmEwAJ) uses [List.keyfind/4](http://elixir-lang.org/docs/v1.2/elixir/List.html#keyfind/4) and works just as well:
+
+```elixir
+  defp fetch_page(url) do
+    response = Gateway.get!(url)
+    items = Poison.decode!(response.body)
+    links_map = 
+      response.headers
+      |> List.keyfind("Link", 0, {nil, nil})
+      |> elem(1)
+      |> parse_links
+    {items, links_map["next"]}
+  end
+```
+
+I wanted to mention it anyway because it's "good to know" the functions in the standard lib. For e.g. before finding out about `List.keyfind/4`, I would use `Enum.find/3` but the former has a simpler API if you're working with a list of tuples.
+
+However, note that to get the same behaviour, you need to default to something like `{nil, nil}` in our case because if `List.keyfind/4` doesn't find the key and returns `nil` (by default), then [elem/2](http://elixir-lang.org/docs/master/elixir/Kernel.html#elem/2) will throw an exception. We need to use `elem/2` to get the value part of the "Link" header in this case as `List.keyfind/4` gives us back the whole tuple.
+
+So I'll stick to `Enum.find_value/3` for this case. You might want to read that Google Group thread for another interesting approach suggested by [Ben Wilson](https://groups.google.com/forum/?utm_medium=email&utm_source=footer#!msg/elixir-lang-talk/Ydx4E_bmAP8/OVgPBHx1EwAJ) which caters for multiple similar "keys" (i.e. first element of tuple) in the list. In our case, we know we'll only have at most one "Link" header (possibly none), so it's best not to use that approach here as the code would be longer (in both converting to a map and accessing the "Link" key which might not be there, and whose value would then be a list if it were there).
+
+Ok ok… back on track:
+
+```elixir
+#  defp fetch_page(url) do
+#    response = Gateway.get!(url)
+#    items = Poison.decode!(response.body)
+#    links_map = 
+#      response.headers
+#      |> Enum.find_value(fn({k, v}) -> k == "Link" && v end)
+#      |> parse_links
+#    {items, links_map["next"]}
+#  end
+iex(1)> Github.ResultStream.parse_links("<https://api.github.com/organizations/9950313/repos?page=2>; rel=\"next\", <https://api.github.com/organizations/9950313/repos?page=3>; rel=\"last\"")
+%{"last" => "/organizations/9950313/repos?page=3",
+  "next" => "/organizations/9950313/repos?page=2"}
+iex(2)> v(1)["next"]
+"/organizations/9950313/repos?page=2"
+iex(3)> Github.ResultStream.parse_links(nil)
+%{}
+iex(4)> %{}["next"]
+nil
+```
+
+With that, you should now know how our `Stream.resource/3`'s `start_fun` works and what our first `acc` (for `next_fun`) will look like. Our first `acc` will be `{items, nil | BitString}` where `items` is the list of maps decoded by `Poison` (i.e. the repos data), and the second element in the tuple is either `nil` if there's no more data to get through pagination, or the link to follow if there is.
+
+Now, the only thing left is understanding our `next_fun`:
+
+```elixir
+  defp process_page({nil, nil}) do
+    {:halt, nil}
+  end
+
+  defp process_page({nil, next_page_url}) do
+    next_page_url
+    |> fetch_page
+    |> process_page
+  end
+
+  defp process_page({items, next_page_url}) do
+    {items, {nil, next_page_url}}
+  end
+```
+
+First off, know that this is pattern matching at work again and that pattern matching happens top-to-bottom. So if we pass `process_page/1` no data and no next link - `{nil, nil}` - the first clause will match and it'll give us back `{:halt, nil}` (this will always happen at some point because this thing's recursive and that's the base case).
+
+Let's take the case of `fetch_page("/orgs/elixir-lang/repos")`, which as we saw before, doesn't have enough data to need pagination - hopefully that will change soon ;)
+
+In *elixir-lang*'s case, it's `{items, nil}` where `items` isn't `nil` (thankfully!). This means the 3rd clause will match and our first evaluation of `process_page/1` gives `{items, {nil, nil}}`.
+
+Remember from our discussion of [Stream.resource/3 above](#Stream-resource/3) that the first element in the tuple returned by `Stream.resource/3`'s `next_fun`, if not `:halt`, is a list of data, the data which our stream produces. We're basically passing that data to `Stream.resource/3` and using the second element in the tuple (the accumulator) to keep getting more data (until exhaustion), through `next_fun` - which is now invoked again with `{nil, nil}` and we already know what will happen next.
+
+But what if we were querying something like "/orgs/nodejs/repos"? In that case, `next_page_url` would not be `nil` and our `acc` would be `{nil, url}`. The next time our stream is forced for more data, `next_fun` will be called with this `acc` which would match the 2nd clause. This will hit Github's API for the next paginated data, and return `{:halt, nil}` if no data comes back, or `{items, {nil, nil | next_page_url}}` if there is data (note that it would be problematic if Github's API would, for some weird reason (a.k.a bug), return no data but also include a "Link" header with a next URL to follow in its reply as we would basically end up in an infinite loop).
+
+In the spirit of being explicit about anything that might be ambiguous (a.k.a might as well go all the way), if Github comes back with data *and* a "Link" header with a next URL to follow, then when our stream is forced for more data, `process_page/1` will be called with `{nil, next_page_url}`
+
+If Github returns no "Link" header with a next URL to follow, then when our stream is next forced for more data, `process_page/1` will be called with `{nil, nil}`, but *in both cases* the data Github returned is fed back to `Stream.resource/3` via `items`.
+
+That, I hope, dispels any confusion you might have had when first reading Drew's example (I think I'm satisfied lol). Crystal clear Elixir anyone? :)
 
 ---
 
 # TODO:
 
+* installing Elixir
 * mix help compile.app
   * in section about `application` startup (HTTPoison).
 
-# Credits
-
-* [Drew Olson](http://drewolson.org/) wrote the [post](http://blog.drewolson.org/elixir-streams/) on which this is based.
-* René Föhring showed me how to write a ["do nothing" function](https://groups.google.com/forum/?utm_medium=email&utm_source=footer#!msg/elixir-lang-talk/CQcWAkbmg9o/jkDq2_h8DAAJ) (which is used in this post).
-* Of course, many more people have helped create this post e.g. whoever is involved writing documentation, library authors, core committers etc… - but you all know who you are ;) - thanks!
