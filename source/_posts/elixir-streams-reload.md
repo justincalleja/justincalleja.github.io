@@ -1,8 +1,8 @@
 ---
-date: "2016-01-02"
+date: "2016-01-26"
 title: "Elixir Streams reload"
 tags: [ "elixir" ]
-categories: [ "programming"]
+categories: [ "programming" ]
 tocEnabled: true
 
 ---
@@ -13,8 +13,10 @@ This post is based on [Drew Olson](http://drewolson.org/)'s [Elixir Streams](htt
 
 I'm using [Elixir](http://elixir-lang.org/) 1.2.0 (and [Erlang](http://www.erlang.org/) 18.1).
 
-## Worth mentioning (I guess…)
+## Intro some more
 
+* The code for the main example is up on [Github](https://github.com/justin-calleja/elixir-streams-reload)
+* There is a [How to install Elixir with asdf](#How_to_install_Elixir_with_asdf) section at the end if you don't have Elixir and want a quick way of installing it
 * I will not be using the exact Github endpoint (e.g. https://github.com/api/v3/orgs/elixir-lang/repos) used in Drew's post because:
   * I'm not familiar with the Github API
   * Couldn't get the given endpoint to work after generating an access token
@@ -195,6 +197,7 @@ Above, we're getting the evaluation of expression 1 in iex (i.e. the result of `
 Next, add `lib/github_gateway.ex`:
 
 ```elixir
+# lib/github_gateway.ex
 defmodule Github.Gateway do
   use HTTPoison.Base
 
@@ -493,6 +496,7 @@ You might want to read [The .iex.exs file](http://elixir-lang.org/docs/stable/ie
 Back to our "intention" here. With all this background you should now be better equipped to digest most of the code in Drew's original post. However, the `Github.ResultStream` module below is worth breaking down as it features a couple of things we haven't yet discussed:
 
 ```elixir
+# lib/github_resultstream.ex
 defmodule Github.ResultStream do
   alias Github.Gateway
 
@@ -780,13 +784,81 @@ In the spirit of being explicit about anything that might be ambiguous (a.k.a mi
 
 If Github returns no "Link" header with a next URL to follow, then when our stream is next forced for more data, `process_page/1` will be called with `{nil, nil}`, but *in both cases* the data Github returned is fed back to `Stream.resource/3` via `items`.
 
-That, I hope, dispels any confusion you might have had when first reading Drew's example (I think I'm satisfied lol). Crystal clear Elixir anyone? :)
+# Test drive
 
----
+The `Github` module below exposes a clean API to our users:
 
-# TODO:
+```elixir
+# lib/github.ex
+defmodule Github do
+  alias Github.ResultStream
 
-* installing Elixir
-* mix help compile.app
-  * in section about `application` startup (HTTPoison).
+  def repos(organization) do
+    ResultStream.new("/orgs/#{organization}/repos")
+  end
+end
+```
 
+Below taking this thing for a spin, go ahead and add `IO.puts("Url: #{url}")` to `Github.Gateway.process_url/1` so we can confirm how many requests are being made (as we've seen before, HTTPoison uses this function internally):
+
+```elixir
+iex(1)> repo_stream = "nodejs" |> Github.repos |>
+...(1)>   Stream.map(fn repo_map -> {repo_map["full_name"], repo_map["forks"]} end)
+#Stream<[enum: #Function<46.94256892/2 in Stream.resource/3>,
+ funs: [#Function<29.94256892/1 in Stream.map/2>]]>
+iex(2)> repo_stream |> Enum.take(4)
+Url: /orgs/nodejs/repos
+[{"nodejs/http-parser", 641}, {"nodejs/node-v0.x-archive", 8508},
+ {"nodejs/node-gyp", 354}, {"nodejs/readable-stream", 67}]
+iex(3)> repo_stream |> Enum.take(40)
+Url: /orgs/nodejs/repos
+Url: /organizations/9950313/repos?page=2
+[{"nodejs/http-parser", 641}, {"nodejs/node-v0.x-archive", 8508},
+ {"nodejs/node-gyp", 354}, {"nodejs/readable-stream", 67},
+ {"nodejs/node-addon-examples", 140}, {"nodejs/nan", 180},
+ {"nodejs/nodejs.org-archive", 83}, {"nodejs/build", 26},
+ {"nodejs/roadmap", 34}, {"nodejs/build-containers", 5}, {"nodejs/node", 2382},
+ {"nodejs/iojs.org", 138}, {"nodejs/logos", 40}, {"nodejs/docker-node", 72},
+ {"nodejs/build-container-sync", 2}, {"nodejs/doc-tool", 7},
+ {"nodejs/docker-iojs", 28}, {"nodejs/tracing-wg", 8}, {"nodejs/nodejs-es", 3},
+ {"nodejs/nodejs-ko", 31}, {"nodejs/nodejs-nl", 2}, {"nodejs/nodejs-de", 4},
+ {"nodejs/nodejs-pt", 6}, {"nodejs/nodejs-ru", 14}, {"nodejs/nodejs-fr", 6},
+ {"nodejs/nodejs-da", 1}, {"nodejs/nodejs-hi", 2}, {"nodejs/nodejs-ja", 9},
+ {"nodejs/nodejs-no", 5}, {"nodejs/nodejs-hu", 4}, {"nodejs/nodejs-he", 1},
+ {"nodejs/nodejs-it", 1}, {"nodejs/nodejs-sv", 0}, {"nodejs/nodejs-tr", 4},
+ {"nodejs/nodejs-ka", 0}, {"nodejs/nodejs-mk", 0}, {"nodejs/nodejs-pl", 0},
+ {"nodejs/nodejs-el", 1}, {"nodejs/nodejs-id", 6}, {"nodejs/nodejs-cs", 0}]
+```
+
+As we saw with `curl` + `jq` in the [How to fetch Github organization repos and their pagination](#How_to_fetch_Github_organization_repos_and_their_pagination), Github will only ever give us a max of 30 repos per request, so when we `Enum.take(40)` in `iex(2)` above, we get the second request's URL printed out as our stream needs to paginate. In comparison, only one request ever happens in `iex(1)` which only ever takes 4 repos from the stream.
+
+# How to install Elixir with asdf
+
+[asfd](https://github.com/HashNuke/asdf) is an extendable version manager for a couple of platforms (currently, [Ruby](https://github.com/HashNuke/asdf-ruby), [Node.js](https://github.com/HashNuke/asdf-nodejs), [Elixir](https://github.com/HashNuke/asdf-elixir), [Erlang](https://github.com/HashNuke/asdf-erlang), and [Lua](https://github.com/Stratus3D/asdf-lua)) i.e. you can use it to install, uninstall, and change between different versions of the supported platforms.
+
+To install it on your system, simply `git clone https://github.com/HashNuke/asdf.git ~/.asdf` and source it from a startup script like `.bashrc` or `.bash_profile` or similar, by running:
+
+`echo '. $HOME/.asdf/asdf.sh' >> ~/.bash_profile`
+
+i.e. append `. $HOME/.asdf/asdf.sh` to `~/.bash_profile`.
+
+To get started using Elixir, you then need to install both Erlang and Elixir on your system using the respective asdf plugin for each:
+
+```
+$ asdf plugin-add erlang https://github.com/HashNuke/asdf-erlang.git
+# ...
+$ asdf list-all erlang
+18.1
+# ...
+$ asdf install erlang 18.1
+# ...
+$ asdf plugin-add elixir https://github.com/HashNuke/asdf-elixir.git
+# ...
+$ asdf list-all elixir
+# 1.1.1
+# .... Note: don't worry if 1.2.0 is not listed, install it anyway (the list is hard-coded)
+$ asdf install elixir 1.2.0
+# ...
+```
+
+One last thing I'd like to point out about asdf is its [.tool-versions](https://github.com/HashNuke/asdf#the-tool-versions-file) feature which you can use to set default versions of the tools you use, both globally (by using it in your home directory), as well as on a per-project basis.
