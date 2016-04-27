@@ -154,7 +154,7 @@ useviper_workspace$ goinstall.sh useviper
 useviper$ go install
 ```
 
-If you `useviper` now you you should get: "Config not found...". But if you create a file named **config.yaml** in the directory in which you're going to run `useviper` with the following contents:
+If you `useviper` now you should get: "Config not found...". But if you create a file named **config.yaml** in the directory in which you're going to run `useviper` with the following contents:
 
 ```yaml
 name: viper
