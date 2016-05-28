@@ -334,6 +334,8 @@ declare global {
 }
 ```
 
+Note: if the use of an empty export to ensure the file is treated as a module doesn't make sense to you, read [this](https://basarat.gitbooks.io/typescript/content/docs/project/modules.html).
+
 You should now have no compiler errors and be able to run the 2 scripts as shown in the demo at the start of this post.
 
 # Conclusion
