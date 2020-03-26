@@ -9,3 +9,13 @@ themes/tranquilpeak/layout/_partial/script.ejs and comment out the disqus script
 Remember to uncomment it before deploying...
 
 ---
+
+You need to clone https://github.com/justincalleja/tranquilpeak-hexo-theme.git
+
+into your themes/ directory as `tranquilpeak`:
+
+```
+themes $ git clone https://github.com/justincalleja/tranquilpeak-hexo-theme.git tranquilpeak
+```
+
+Install hexo globally with `npm i -g hexo-cli`
