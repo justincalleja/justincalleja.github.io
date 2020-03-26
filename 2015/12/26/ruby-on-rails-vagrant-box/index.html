@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Creating a Ruby on Rails Vagrant box - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="IntroIn this post we’ll see how to create a virtual machine running Ubuntu which has everything installed to start developing Rails applications.
+PrerequisitesYou’ll need to have VirtualBox and Vagran">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Creating a Ruby on Rails Vagrant box">
+<meta property="og:url" content="http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="IntroIn this post we’ll see how to create a virtual machine running Ubuntu which has everything installed to start developing Rails applications.
+PrerequisitesYou’ll need to have VirtualBox and Vagran">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.757Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Creating a Ruby on Rails Vagrant box">
+<meta name="twitter:description" content="IntroIn this post we’ll see how to create a virtual machine running Ubuntu which has everything installed to start developing Rails applications.
+PrerequisitesYou’ll need to have VirtualBox and Vagran">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Creating a Ruby on Rails Vagrant box</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sat Dec 26 2015 01:00:00 GMT+0100">
+        Dec 26, 2015
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Prerequisites"><span class="toc-number">1.1.</span> <span class="toc-text">Prerequisites</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Starting-up-a-VM-with-Vagrant"><span class="toc-number">2.</span> <span class="toc-text">Starting up a VM with Vagrant</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Installing-software"><span class="toc-number">3.</span> <span class="toc-text">Installing software</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Installing-a-Javascript-runtime"><span class="toc-number">3.1.</span> <span class="toc-text">Installing a Javascript runtime</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#nvm"><span class="toc-number">3.1.1.</span> <span class="toc-text">nvm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#asdf"><span class="toc-number">3.1.2.</span> <span class="toc-text">asdf</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Packaging-up-our-box"><span class="toc-number">4.</span> <span class="toc-text">Packaging up our box</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Accessing-Rails-from-the-host-OS"><span class="toc-number">5.</span> <span class="toc-text">Accessing Rails from the host OS</span></a></li></ol>
+          
+            <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p>In this post we’ll see how to create a virtual machine running <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> which has everything installed to start developing <a href="http://rubyonrails.org/" target="_blank" rel="external">Rails</a> applications.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>You’ll need to have <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="external">VirtualBox</a> and <a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">Vagrant</a> installed before starting (if you intend to follow along). I’m using VirtualBox version 5.0.10 r104061 and Vagrant version 1.7.4.</p>
+<h1 id="Starting-up-a-VM-with-Vagrant"><a href="#Starting-up-a-VM-with-Vagrant" class="headerlink" title="Starting up a VM with Vagrant"></a>Starting up a VM with Vagrant</h1><p>Start off by creating an empty directory, e.g. <code>rails-box</code>, and <code>cd</code> into it. This is where we’ll be building our template box containing everything we need to start writing a new Rails application. After building it, we’ll be able to install the template on our system and use it whenever we want an Ubuntu VM pre-installed with the software we need to start writing Rails apps.</p>
+<p>In order to kick off the process, go ahead and run <code>vagrant init ubuntu/trusty64</code> which will give us a <code>Vagrantfile</code> specifying which box we want to use (in our case, it’s <code>ubuntu/trusty64</code>). A box whose name is in the format <strong>vendor/name</strong> means Vagrant will look for this box on <a href="https://atlas.hashicorp.com/boxes/search" target="_blank" rel="external">Hashicorp</a>‘s servers if it fails to find it on your host machine.</p>
+<p>Note, if you don’t fancy all the comments in the generated Vagrantfile, feel free to delete the file and generate it again using the <strong>-m</strong> flag: <code>vagrant init -m ubuntu/trusty64</code>.</p>
+<p>With our Vagrantfile in place, go ahead and start the VM with <code>vagrant up</code>. This can take quite some time if you don’t already have a template for <code>ubuntu/trusty64</code> on your machine. In this case, Vagrant will need to download the box from Hashicorp’s servers and store it in your <a href="https://docs.vagrantup.com/v2/other/environmental-variables.html" target="_blank" rel="external">$VAGRANT_HOME</a> which by default is <code>~/.vagrant.d</code>.</p>
+<p>Downloading the box will be the longest part of <code>vagrant up</code>. After which, it also needs to extract and install the template box in VirtualBox. Apart from the stdout log output, you’ll be able to see when this is done in VirtualBox’s GUI Manager as another entry for the new box will be listed (with status “Running”).</p>
+<h1 id="Installing-software"><a href="#Installing-software" class="headerlink" title="Installing software"></a>Installing software</h1><p>Now that Ubuntu’s running, go ahead and log into the box via ssh with: <code>vagrant ssh</code> (run this in the same directory containing your Vagrantfile). Once logged in, if you run <code>ruby -v</code> you’ll see that it’s a bit old (for me it’s <code>ruby 1.9.3p484</code>).</p>
+<p>So the first thing we’ll do is upgrade our Ruby. There’s a couple of ways of doing this. In the past, I remember (successfully) using <a href="https://rvm.io/" target="_blank" rel="external">RVM</a> for this (and more). As I’m just returning to Ruby land after 2 years of meddling in other things, I’m following along <a href="https://www.manning.com/books/rails-4-in-action" target="_blank" rel="external">Rails 4 in Action</a>, so we’ll be using the approach suggested there.</p>
+<p>To get started, we need a copy of <a href="https://github.com/postmodern/ruby-install" target="_blank" rel="external">ruby-install</a>, which you can get by running the following in your ssh session at the command prompt:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~$ wget -O ruby-install-<span class="number">0.5</span>.<span class="number">0</span><span class="class">.tar</span><span class="class">.gz</span> https:<span class="comment">//github.com/postmodern/ruby-install/archive/v0.5.0.tar.gz</span></span><br></pre></td></tr></table></figure>
+<p>I’m using the latest at the time of writing but feel free to get any updated version. You can then simply extract and install:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~$ tar -xzvf ruby-install-<span class="number">0.5</span><span class="number">.0</span>.tar.gz</span><br><span class="line">...</span><br><span class="line">~$ cd ruby-install-<span class="number">0.5</span><span class="number">.0</span>/</span><br><span class="line">~/ruby-install-<span class="number">0.5</span><span class="number">.0</span>$ sudo make install</span><br></pre></td></tr></table></figure>
+<p>You should now have <code>ruby-install</code> on your PATH and be able to execute it at the command prompt. Go ahead and install the version of Ruby you want with: <code>ruby-install ruby 2.2.1</code> (and yes, this does take a while). When it’s done, you’ll get something like:</p>
+<blockquote>
+<p>>>> Successfully installed ruby 2.2.1 into /home/vagrant/.rubies/ruby-2.2.1</p>
+</blockquote>
+<p>Cool, but if you <code>ruby -v</code>, you’ll still see the old version. First off, since this is going to be a template box, it’s probably best to clean up after ourselves now that <code>ruby-install</code> is, well, installed:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/ruby-install-<span class="number">0.5</span><span class="number">.0</span>$ cd ~</span><br><span class="line">~$ rm -rf ruby-install-<span class="number">0.5</span><span class="number">.0</span> src ruby-install-<span class="number">0.5</span><span class="number">.0</span>.tar.gz</span><br></pre></td></tr></table></figure>
+<p>Now, moving on to setting which version of Ruby we want to use. For this we’ll use <a href="https://github.com/postmodern/chruby" target="_blank" rel="external">chruby</a>, and the process is quite similar:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~$ wget -O chruby-<span class="number">0.3</span><span class="number">.9</span>.tar.gz https:<span class="comment">//github.com/postmodern/chruby/archive/v0.3.9.tar.gz</span></span><br><span class="line">~$ tar -xzvf chruby-<span class="number">0.3</span><span class="number">.9</span>.tar.gz</span><br><span class="line">~$ cd chruby-<span class="number">0.3</span><span class="number">.9</span>/</span><br><span class="line">~/chruby-<span class="number">0.3</span><span class="number">.9</span>$ sudo make install</span><br><span class="line">~/chruby-<span class="number">0.3</span><span class="number">.9</span>$ cd ..</span><br><span class="line">~$ rm -rf ./chruby-<span class="number">0.3</span><span class="number">.9</span> chruby-<span class="number">0.3</span><span class="number">.9</span>.tar.gz</span><br></pre></td></tr></table></figure>
+<p>After installing chruby in your system, you’ll need to source it from one of your startup scripts:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~$ <span class="built_in">echo</span> <span class="operator">-e</span> <span class="string">"\nsource /usr/local/share/chruby/chruby.sh"</span> &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>You can also source the <code>auto.sh</code> script if you want to enable the automatic switching of Ruby versions based off of the presence/contents of a <code>.ruby-version</code> file:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="variable">$ </span>echo <span class="string">"source /usr/local/share/chruby/auto.sh"</span> <span class="prompt">&gt;&gt; </span>~<span class="regexp">/.bashrc</span></span><br></pre></td></tr></table></figure>
+<p>This isn’t strictly necessary, but why not. It comes in handy if you’re working on a project which requires the use of a particular version of Ruby. You could save a <code>.ruby-version</code> file with that particular version as content (in your project’s root). Now, every time you <code>cd</code> into that project, you don’t have to remember to switch to that particular version of Ruby as it’s done automatically for you.</p>
+<p>Moving on, you can <code>exit</code> your ssh session and log in again with <code>vagrant ssh</code> to actually source these files. You now have <code>chruby</code> on your PATH and running it will list out the Ruby versions you have installed. To finally actually use the version we previously installed, run: <code>chruby ruby-2.2.1</code>.</p>
+<p>Now you can verify we’re using that version of Ruby with <code>ruby -v</code>. Since you don’t want to manually have to stay doing this every time you log in, add this to your <code>.bashrc</code> file or make use of the <code>auto.sh</code> feature we enabled:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~$ <span class="keyword">echo</span> <span class="string">"chruby ruby-2.2.1"</span> &gt;&gt; ~/.bashrc</span><br><span class="line">~$ # <span class="built_in">and</span>/<span class="built_in">or</span></span><br><span class="line">~$ sudo <span class="keyword">sh</span> -<span class="keyword">c</span> <span class="string">'echo "ruby-2.2.1" &gt;&gt; /.ruby-version'</span></span><br></pre></td></tr></table></figure>
+<p>It’s easiest for us to stick with the <code>.bashrc</code> approach but if you opt to use <code>.ruby-version</code>, put it in the root directory as shown above. We’ll later be using Rails in <code>/vagrant</code> which is outside <code>/home/vagrant</code> so a <code>.ruby-version</code> there wouldn’t be picked up by <code>chruby</code>.</p>
+<p>Now it’s Rails’s turn:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~$ gem install rails -v <span class="number">4.2</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+<p>Confirm everything’s in order with <code>rails -v</code>.</p>
+<p>Again, following along the Rails 4 in Action book, install the following header files via apt-get:</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~$ sudo apt-<span class="built_in">get</span> <span class="keyword">update</span> -y &amp;&amp; sudo apt-<span class="built_in">get</span> install -y libsqlite3-<span class="built_in">dev</span> libpq-<span class="built_in">dev</span> libmysqlclient-<span class="built_in">dev</span></span><br></pre></td></tr></table></figure>
+<h2 id="Installing-a-Javascript-runtime"><a href="#Installing-a-Javascript-runtime" class="headerlink" title="Installing a Javascript runtime"></a>Installing a Javascript runtime</h2><p>The last piece of software we’ll need to install is a Javascript runtime. I’ll be going with <a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js</a> as that’s what I’m more familiar with. However, if I <code>apt-cache policy nodejs</code> to see which version of Node I’d get if I were to <code>apt-get install</code> it, I get back <code>0.10.25</code>… not exactly the latest and greatest.</p>
+<p>As we’ve done with Ruby, we’ll use tools which will take care of installing and managing our versions of Node. I’m personally somewhat familiar with 2 of these: <a href="https://github.com/creationix/nvm" target="_blank" rel="external">nvm</a> and <a href="https://github.com/HashNuke/asdf" target="_blank" rel="external">asdf</a>, and I’d like to quickly cover basic usage of both here. However, nvm is the more mature of the two from its Github stats (and through personal usage). It is also more specialized in that it’s only concerned with catering for Node.js.</p>
+<p>asdf’s appeal is in its pluggability, as playfully put in the <a href="https://github.com/HashNuke/asdf/blob/master/ballad-of-asdf.md" target="_blank" rel="external">ballad-of-asdf.md</a>.</p>
+<h3 id="nvm"><a href="#nvm" class="headerlink" title="nvm"></a>nvm</h3><p>To install nvm run the following (you will find the URL to the latest version of nvm in its Github <a href="https://github.com/creationix/nvm" target="_blank" rel="external">README.md</a>):</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="variable">$ </span>curl -o- <span class="symbol">https:</span>/<span class="regexp">/raw.githubusercontent.com/creationix</span><span class="regexp">/nvm/v</span>0.<span class="number">29.0</span>/install.sh | bash</span><br></pre></td></tr></table></figure>
+<p>Log out and back into a new ssh session and you should be good with <code>nvm</code> on your PATH. To install Node via nvm, you’d run something like:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~$ nvm install <span class="number">5.3</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<p>You can find the latest version number for Node from <a href="https://nodejs.org/dist/" target="_blank" rel="external">here</a>. You should be able to <code>node -v</code> and get the version now, but if at this point you were to log out and back in to the machine, your session wouldn’t have Node on the PATH. In order to fix this, create a <code>.nvmrc</code> file like so:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="variable">$ </span>echo <span class="string">"5.3.0"</span> <span class="prompt">&gt;&gt; </span>~<span class="regexp">/.nvmrc</span></span><br></pre></td></tr></table></figure>
+<h3 id="asdf"><a href="#asdf" class="headerlink" title="asdf"></a>asdf</h3><p>If you’ve followed the nvm instructions, you’re good to go. You could install asdf anyway, and even install versions of Node with it - i.e. you can have both nvm and asdf on your system and then choose which one you want to use by sourcing the tool of choice from your <code>.bashrc</code>. Uninstalling either of them is simply a matter of not sourcing in <code>.bashrc</code> and deleting their home directory (<code>~/.nvm</code> or <code>~/.asdf</code>).</p>
+<p>To get started, install git, clone asdf, and source its script file from your init script:</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~$ sudo apt-get install git -<span class="literal">y</span></span><br><span class="line">~$ git clone https:<span class="comment">//github.com/HashNuke/asdf.git ~/.asdf</span></span><br><span class="line">~$ echo -<span class="keyword">e</span> '\<span class="keyword">n</span>. <span class="label">$HOME</span>/.asdf/asdf.<span class="keyword">sh</span>' &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>Log out and back in. You’ll then need to install the Node.js plugin with:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~$ asdf plugin-<span class="built_in">add</span> nodejs http<span class="variable">s:</span>//github.<span class="keyword">com</span>/HashNuke/asdf-nodejs.git</span><br></pre></td></tr></table></figure>
+<p>and then Node itself with:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~$ asdf install nodejs <span class="number">5.3</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<p>The same file based setting of version number can be achieved with:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="variable">$ </span>echo <span class="string">"nodejs 5.3.0"</span> <span class="prompt">&gt;&gt; </span>~<span class="regexp">/.tool-versions</span></span><br></pre></td></tr></table></figure>
+<h1 id="Packaging-up-our-box"><a href="#Packaging-up-our-box" class="headerlink" title="Packaging up our box"></a>Packaging up our box</h1><p>At this point, our box seems to be well equipped for Rails development so we’ll create a template out of it.</p>
+<p>In your host OS (in <code>Vagrantfile</code> dir), stop the running VM and package it up with:</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant halt</span><br><span class="line"><span class="variable">$ </span>vagrant package --output rails.box</span><br></pre></td></tr></table></figure>
+<p>When it’s done, you’ll get <code>rails.box</code>, a template box from which you can later re-create the exact same VM with all the software we’ve installed in it.</p>
+<p>This box isn’t yet installed in Vagrant - something you can verify with <code>vagrant box list</code>. You can install it with:</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant <span class="built_in">box</span> <span class="built_in">add</span> rails ./rails.<span class="built_in">box</span></span><br></pre></td></tr></table></figure>
+<p>which will add the generated box under the name <code>rails</code>.</p>
+<p>To use the installed box, go to an empty directory (where you intend to start developing your Rails app), and initialize + start it with:</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/rails-projects$ vagrant init -m rails</span><br><span class="line">~/rails</span>-projects<span class="variable">$ </span>vagrant up</span><br></pre></td></tr></table></figure>
+<p>If you now ssh into the new box with <code>vagrant ssh</code> you can verify that you have all the software we’ve previously installed.</p>
+<h1 id="Accessing-Rails-from-the-host-OS"><a href="#Accessing-Rails-from-the-host-OS" class="headerlink" title="Accessing Rails from the host OS"></a>Accessing Rails from the host OS</h1><p>So far so good. We can now go on any machine, install Virtual Box, Vagrant, and the box we just created, and get a VM with all the software we need to start a Rails project.</p>
+<p>That said, lets kick off a vanilla Rails app to demo the first issue you’ll have with this setup, namely, accessing your Rails app from a browser running on your host OS.</p>
+<p>In your guest OS, go to the default shared directory on any stock Vagrant box, <code>/vagrant</code>. In it you will find the <code>Vagrantfile</code> we generated with <code>vagrant init -m rails</code> above:</p>
+<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~<span class="char">$ </span>cd /vagrant/</span><br><span class="line">/vagrant<span class="char">$ </span>cat <span class="class">Vagrantfile</span></span><br><span class="line"><span class="class">Vagrant</span>.configure(<span class="number">2</span>) do <span class="localvars">|config|</span></span><br><span class="line">  config.vm.box = <span class="comment">"rails"</span></span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>Working here allows us to use our guest OS to execute any Rails commands, and our host OS to author the app with the software we already have installed.</p>
+<p>Go ahead and generate a new Rails app with:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/vagrant$ rails <span class="keyword">new</span> tmpapp</span><br></pre></td></tr></table></figure>
+<p>and then start it with:</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/vagrant<span class="variable">$ </span>cd tmpapp</span><br><span class="line">/vagrant/tmpapp<span class="variable">$ </span>rails server</span><br></pre></td></tr></table></figure>
+<p>You will notice that Rails 4.2.1 starts up on <code>http://localhost:3000</code>. <code>localhost</code> is the guest OS’s loopback address, so there’s no way you’re going to access that endpoint from a browser on your host OS. Even if you were to start Rails listening on <code>0.0.0.0</code> for “listen on all IP addresses on this machine”, you still wouldn’t be able to access Rails from a browser on your host OS because the two aren’t on the same network. </p>
+<p>To get around this, you <em>could</em> stay port forwarding the ports you’re interested in (say, 8080 on the host maps to 3000 on the guest), but that gets annoying really quickly if you later need to open other ports. I’ll opt for putting the two on the same private network.</p>
+<p>The configuration required to tell Vagrant to set up this private network for us is actually commented out when you generate a <code>Vagrantfile</code> without the <code>-m</code> option (go ahead and <code>vagrant init</code> in an empty directory to generate it again). The line you want uncommented is:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a private network, which allows host-only access to the machine</span></span><br><span class="line"><span class="comment"># using a specific IP.</span></span><br><span class="line">config.vm.network <span class="string">"private_network"</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.10"</span></span><br></pre></td></tr></table></figure>
+<p>You could go for a <code>public_network</code> instead, in which case your VM would be accessible from other devices on the network (not just your host), but I’m not sure whether you can set a static IP for the machine with this option. As you can see below, no IP address is given for this option (this means you’d have to stay checking which IP address is assigned to the VM every time you boot it):</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a public network, which generally matched to bridged network.</span></span><br><span class="line"><span class="comment"># Bridged networks make the machine appear as another physical device on</span></span><br><span class="line"><span class="comment"># your network.</span></span><br><span class="line"><span class="comment"># config.vm.network "public_network"</span></span><br></pre></td></tr></table></figure>
+<p>After adding the private network, our <code>Vagrantfile</code> looks like this:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Vagrant</span>.configure(<span class="number">2</span>) <span class="keyword">do</span> |config|</span><br><span class="line">  config.vm.box = <span class="string">"rails"</span></span><br><span class="line">  config.vm.network <span class="string">"private_network"</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.10"</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>To put this change into effect, you’ll need to restart the VM with <code>vagrant reload</code> (run it in the same directory containing your <code>Vagrantfile</code> in your host OS).</p>
+<p>After logging in again with <code>vagrant ssh</code>, running <code>ifconfig</code> should show us the new IP address. In fact, you should be able to successfully <code>ping 192.168.33.10</code> from the host OS.</p>
+<p>If you now <code>cd</code> into the Rails app, you can start Rails listening on that IP address (or on 0.0.0.0) with: <code>rails s -b 192.168.33.10</code>. After doing this, you should be able to access Rails from your host OS by browsing to <code>http://192.168.33.10:3000/</code>.</p>
+<p>One last thing. If you read the Rails log output after hitting Rails from your host OS’s browser, you’ll find:</p>
+<blockquote>
+<p>Cannot render console from 192.168.33.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255</p>
+</blockquote>
+<p>Our guest’s IP address is <code>192.168.33.10</code>, and our host’s is (automatically set to) <code>192.168.33.1</code> i.e. the host’s IP address is the same but with <code>1</code> for the final octet of the address. If you <code>ifconfig | grep -C 2 .33.1</code> on the host OS (assuming you’re on a Unixy host), you’ll verify this (it’s probably <code>ipconfig</code> on Windows). Or you could just <code>ping 192.168.33.1</code> from the guest.</p>
+<p>In any case, Rails seems to be complaining that we’re accessing it from the host (<code>192.168.33.1</code>), but it renders the console just fine in our browser so that message is just noise to us.</p>
+<p>To get rid of it, you can follow the advise in this <a href="http://stackoverflow.com/questions/29417328/how-to-disable-cannot-render-console-from-on-rails" target="_blank" rel="external">SO question</a>, i.e. add this to <code>config/environments/development.rb</code>:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config.web_console.whitelisted_ips = <span class="string">'192.168.33.1'</span></span><br></pre></td></tr></table></figure>
+<p>Unfortunately, this is something you’ll need to remember to do everytime you start a new Rails project with this setup.</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/rails/">rails</a> <a class="tag tag--primary tag--small t-link" href="/tags/ruby/">ruby</a> <a class="tag tag--primary tag--small t-link" href="/tags/vagrant/">vagrant</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/01/26/elixir-streams-reload/"  data-tooltip="Elixir Streams reload">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/11/08/vanilla-css-grid/" data-tooltip="Vanilla CSS grid">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/01/26/elixir-streams-reload/"  data-tooltip="Elixir Streams reload">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/11/08/vanilla-css-grid/" data-tooltip="Vanilla CSS grid">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

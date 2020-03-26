@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Getting started with Assemble - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="Version of Assemble at time of writing: 0.4.42
+If you want to follow along with the end result at hand, the repo is up on Github.
+IntroAssemble, in their own words, is a static site generator for Grun">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Getting started with Assemble">
+<meta property="og:url" content="http://justincalleja.com/2015/01/10/getting-started-with-assemble/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="Version of Assemble at time of writing: 0.4.42
+If you want to follow along with the end result at hand, the repo is up on Github.
+IntroAssemble, in their own words, is a static site generator for Grun">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.755Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Getting started with Assemble">
+<meta name="twitter:description" content="Version of Assemble at time of writing: 0.4.42
+If you want to follow along with the end result at hand, the repo is up on Github.
+IntroAssemble, in their own words, is a static site generator for Grun">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Getting started with Assemble</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sat Jan 10 2015 01:00:00 GMT+0100">
+        Jan 10, 2015
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#grunt-init-assemble"><span class="toc-number">1.1.</span> <span class="toc-text">grunt-init-assemble</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Starting-from-scratch"><span class="toc-number">2.</span> <span class="toc-text">Starting from scratch</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#config-yml-and-Gruntfile-js"><span class="toc-number">2.1.</span> <span class="toc-text">_config.yml and Gruntfile.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Layouts-and-Partials"><span class="toc-number">2.2.</span> <span class="toc-text">Layouts and Partials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-example-hbs-page"><span class="toc-number">2.3.</span> <span class="toc-text">The example.hbs page</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spicing-up-example-hbs"><span class="toc-number">2.4.</span> <span class="toc-text">Spicing up example.hbs</span></a></li></ol></li></ol>
+          
+            <p>Version of Assemble at time of writing: 0.4.42</p>
+<p>If you want to follow along with the end result at hand, the repo is up on <a href="https://github.com/justin-calleja/getting-started-with-assemble" title="getting-started-with-assemble" target="_blank" rel="external">Github</a>.</p>
+<h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p><a href="https://github.com/assemble/assemble" title="Assemble" target="_blank" rel="external">Assemble</a>, in their own words, is a static site generator for Grunt.js, Yeoman and Node.js. This blog post is a record of the approach taken and material covered during my first time usage of Assemble.</p>
+<h2 id="grunt-init-assemble"><a href="#grunt-init-assemble" class="headerlink" title="grunt-init-assemble"></a>grunt-init-assemble</h2><p>The first approach I took was to have a go at the <a href="https://github.com/gruntjs/grunt-init" title="grunt-init" target="_blank" rel="external">grunt-init</a> template for Assemble, <a href="https://github.com/ghost-town/grunt-init-assemble" title="grunt-init-assemble" target="_blank" rel="external">grunt-init-assemble</a>:</p>
+<ol>
+<li><code>npm i -g grunt-cli grunt-init</code> if you don’t already have them installed.</li>
+<li><code>git clone https://github.com/ghost-town/grunt-init-assemble ~/.grunt-init/assemble</code><ul>
+<li>Allows us to scaffold a new Assemble project using grunt-init.</li>
+</ul>
+</li>
+<li>cd into an empty directory and <code>grunt-init assemble</code><ul>
+<li>This will look in ~/.grunt-init by default.</li>
+</ul>
+</li>
+<li><code>npm install &amp;&amp; bower install</code> to bring in Node and Bower packages.</li>
+<li><code>grunt setup</code> runs a task which is defined in the generated Gruntfile.js.</li>
+<li>Go though your Gruntfile.js and delete the sections marked for deletion in the comments (they were there just for running <code>grunt setup</code> and should be removed after executing this task).</li>
+</ol>
+<p>This leaves us with a bootstrapped Assemble project. If you’re not familiar with Assemble, it’s a good idea to have a look at the generated project. The rest of this post builds an example project from scratch i.e. without starting off using <em>grunt-init-assemble</em>, however, I am using the generated project as a guide - “cherry picking” if you will.</p>
+<h1 id="Starting-from-scratch"><a href="#Starting-from-scratch" class="headerlink" title="Starting from scratch"></a>Starting from scratch</h1><p>The idea is to run Assemble as part of a <a href="http://gruntjs.com/" title="Grunt" target="_blank" rel="external">Grunt</a> build and end up with a page assembled from bits and pieces with the help of Assemble. Along the way, we’ll be taking a look at what goes in to working with an Assemble project.</p>
+<h2 id="config-yml-and-Gruntfile-js"><a href="#config-yml-and-Gruntfile-js" class="headerlink" title="_config.yml and Gruntfile.js"></a>_config.yml and Gruntfile.js</h2><ol>
+<li><code>npm init &amp;&amp; npm i --save-dev grunt grunt-contrib-clean assemble</code></li>
+<li><code>vim _config.yml</code><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">root:             public</span><br><span class="line">dest:             &lt;%= site.root %&gt;</span><br><span class="line">assets:           &lt;%= site.dest %&gt;/assets</span><br><span class="line"></span><br><span class="line">data:             data/*.&#123;json,yml&#125;</span><br><span class="line"></span><br><span class="line">templates:        templates</span><br><span class="line">includes:         &lt;%= site.templates %&gt;/includes/*.hbs</span><br><span class="line">layouts:          &lt;%= site.templates %&gt;/layouts</span><br><span class="line">layout:           default.hbs</span><br><span class="line"></span><br><span class="line">helpers:          </span><br><span class="line">  - &lt;%= site.templates %&gt;/helpers/*.js</span><br><span class="line"></span><br><span class="line">description:      &lt;%= pkg.description %&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Apart from pulling in some dependencies we’re setting up a _config.yml from which we’ll be accessing values to set up our Assemble configuration in the Gruntfile. Speaking of which, lets get a minimal Gruntfile in place. From the snippet below, notice how the <em>site</em> variable references the object built from parsing _config.yml. So when used in _config.yml above, you can think of <em>site</em> as being sort of like <em>this</em>, a reference to itself - again I am basing my approach off of the grunt-init-assemble example above.</p>
+<p><code>vim Gruntfile.js</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">grunt</span>) </span>&#123;</span><br><span class="line"><span class="pi">'use strict'</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Project configuration.</span></span><br><span class="line">  grunt.initConfig(&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Project metadata</span></span><br><span class="line">    pkg   : grunt.file.readJSON(<span class="string">'package.json'</span>),</span><br><span class="line">    site  : grunt.file.readYAML(<span class="string">'_config.yml'</span>),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Before generating any new files, remove files from previous build.</span></span><br><span class="line">    clean: &#123;</span><br><span class="line">      example: [<span class="string">'&lt;%= site.dest %&gt;/*'</span>]</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Build output from templates and data</span></span><br><span class="line">    assemble: &#123;</span><br><span class="line">      options: &#123;</span><br><span class="line">        flatten: <span class="literal">true</span>,</span><br><span class="line">        production: <span class="literal">false</span>,</span><br><span class="line">        assets: <span class="string">'&lt;%= site.assets %&gt;'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Metadata</span></span><br><span class="line">        pkg: <span class="string">'&lt;%= pkg %&gt;'</span>,</span><br><span class="line">        site: <span class="string">'&lt;%= site %&gt;'</span>,</span><br><span class="line">        data: [<span class="string">'&lt;%= site.data %&gt;'</span>],</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Templates</span></span><br><span class="line">        partials: <span class="string">'&lt;%= site.includes %&gt;'</span>,</span><br><span class="line">        layoutdir: <span class="string">'&lt;%= site.layouts %&gt;'</span>,</span><br><span class="line">        layout: <span class="string">'&lt;%= site.layout %&gt;'</span>,</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Extensions</span></span><br><span class="line">        helpers: <span class="string">'&lt;%= site.helpers %&gt;'</span></span><br><span class="line">      &#125;,</span><br><span class="line">      example: &#123;</span><br><span class="line">        files: &#123;</span><br><span class="line">          <span class="string">'&lt;%= site.dest %&gt;'</span>: [<span class="string">'&lt;%= site.templates %&gt;/example.hbs'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  grunt.loadNpmTasks(<span class="string">'grunt-contrib-clean'</span>);</span><br><span class="line">  grunt.loadNpmTasks(<span class="string">'assemble'</span>);</span><br><span class="line"></span><br><span class="line">  grunt.registerTask(<span class="string">'default'</span>, [<span class="string">'clean'</span>, <span class="string">'assemble'</span>]);</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>As you can see, we’re freely making use of the <em>site</em> and <em>pkg</em> variables in both _config.yml and Gruntfile.js, accessing them within <a href="https://lodash.com/" title="Lo-Dash" target="_blank" rel="external">Lo-Dash</a> / <a href="http://underscorejs.org/" title="Underscore" target="_blank" rel="external">Underscore</a> templating.</p>
+<h2 id="Layouts-and-Partials"><a href="#Layouts-and-Partials" class="headerlink" title="Layouts and Partials"></a>Layouts and Partials</h2><p>Next we’ll create the <em>layoutdir</em> and <em>partials</em> directories which will house our <a href="http://assemble.io/docs/Layouts.html" target="_blank" rel="external">layouts</a> and <a href="http://assemble.io/docs/Partials.html" target="_blank" rel="external">partials</a> respectively. A layout is a full page with placeholders to fill in. Partials are re-usable parts of pages which can be included within other pages.</p>
+<p>The <a href="http://assemble.io/docs/" target="_blank" rel="external">Assemble</a> documentation lists both <em>layouts</em> and <em>partials</em>, along with some other concepts, under the “Templates” heading. From this we can assume that all these parts of Assemble can be grouped under the term “Template”. Hence, our directory structure will reflect this (plus I’m just copying the grunt-init-assemble project again):</p>
+<ol>
+<li><code>mkdir -p templates/layouts templates/includes</code></li>
+<li><p><code>vim templates/layouts/default.hbs</code></p>
+ <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&gt; preamble&#125;&#125;</span><br><span class="line"><span class="header">### Begin</span></span><br><span class="line">&#123;&#123;&gt; body &#125;&#125;</span><br><span class="line"><span class="header">### End</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>vim templates/includes/preamble.hbs</code></p>
+ <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;filename&#125;&#125; is just an example.</span><br><span class="line"></span><br><span class="line"><span class="horizontal_rule">---</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+As you might have guessed, <code>{{> preamble}}</code> and <code>{{> body}}</code> are placeholders which will get filled in with contents from other files, as we'll see later on. <code>{{filename}}</code> is a variable which will resolve to the name of the file being generated.
+
+<h2 id="The-example-hbs-page"><a href="#The-example-hbs-page" class="headerlink" title="The example.hbs page"></a>The example.hbs page</h2><p>Lets now fill in another missing piece from our Grunt configuration, the <em>example.hbs</em> file. Note the <em>example</em> target in the <em>assemble</em> <a href="http://gruntjs.com/creating-tasks" target="_blank" rel="external">multi task</a>. In the <em>example</em> target we are specifying that we want a file to be generated from <code>[&#39;&lt;%= site.templates %&gt;/example.hbs&#39;]</code> i.e. from <em>templates/example.hbs</em>.  Of course, we could have added more input files in the array and/or made use of <a href="http://gruntjs.com/configuring-tasks#globbing-patterns" target="_blank" rel="external">globbing patterns</a> to match multiple files - but lets keep things simple.</p>
+<ol>
+<li><code>echo &quot;testing testing&quot; &gt; templates/example.hbs</code></li>
+<li><code>grunt</code><ul>
+<li>Note, you will need to install <em>grunt-cli</em> globally if you don’t already have it: <code>npm i -g grunt-cli</code></li>
+</ul>
+</li>
+</ol>
+<p>Assuming the directory <em>public</em> does not already exist, the file <em>public.html</em> is created. If the <em>public</em> directory exists when you run the Assemble build, then <em>public/example.html</em> is created. I find this a bit confusing so I prefer to explicitly name the generated file in the <em>assemble.example</em> target like so:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">      example: &#123;</span><br><span class="line">        files: &#123;</span><br><span class="line">          <span class="string">'&lt;%= site.dest %&gt;/example'</span>: [<span class="string">'&lt;%= site.templates %&gt;/example.hbs'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<p>I exclude the file extension because it is not picked up from here. The <em>ext</em> option is used for this. <em>assemble.options</em> configures the global settings for the <em>assemble</em> target. These are settings which will apply to all targets in this task unless the task itself overwrites certain settings, like so:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">      example: &#123;</span><br><span class="line">        options: &#123;</span><br><span class="line">          ext: <span class="string">'.md'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        files: &#123;</span><br><span class="line">          <span class="string">'&lt;%= site.dest %&gt;/example'</span>: [<span class="string">'&lt;%= site.templates %&gt;/example.hbs'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<p>Up until now, because we weren’t specifying the ‘ext’ option globally, the default <em>‘.html’</em> has always been applied. However, since we’re now overwritting this option at the target level, running <code>grunt</code> gives us <em>public/example.md</em> with the contents shown below: </p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">example.md is just an example.</span><br><span class="line"></span><br><span class="line"><span class="horizontal_rule">---</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="header">### Begin</span></span><br><span class="line">testing testing</span><br><span class="line"></span><br><span class="line"><span class="header">### End</span></span><br></pre></td></tr></table></figure>
+
+<code>{{> preamble}}</code> in default.hbs was substituted with the contents of the preamble.hbs partial and <code>{{> body}}</code> was substituted with the contents of example.hbs, the page that was rendered using the default.hbs layout. 
+<br>
+Also, there's a small example of using <a href="http://assemble.io/docs/Built-in-Variables.html" target="_blank" rel="external">variables</a> in the preamble partial i.e. <code>{{filename}}</code> which resolves to example.md, the name of the file being generated.
+
+<h2 id="Spicing-up-example-hbs"><a href="#Spicing-up-example-hbs" class="headerlink" title="Spicing up example.hbs"></a>Spicing up example.hbs</h2><p>Finally, lets change example.hbs and make it slightly more interesting:</p>
+<p><code>vim templates/example.hbs</code></p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line"><span class="symbol">title:</span> <span class="constant">Example</span></span><br><span class="line"><span class="symbol">content:</span> [<span class="string">'content/todo-today.md'</span>, <span class="string">'content/todo-tomorrow.md'</span>]</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment">### &#123;&#123;title&#125;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="expansion">&#123;&#123;site.description&#125;&#125;</span></span><br><span class="line"><span class="expansion">&#123;&#123;<span class="comment">#each content&#125;&#125;</span></span><br><span class="line">&#123;&#123;str this&#125;&#125;</span></span><br><span class="line"><span class="expansion">&#123;&#123;/each&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>The file starts out by defining two variables, <em>title</em> and <em>content</em>, in the <a href="http://assemble.io/docs/YAML-front-matter.html" title="YAML front matter" target="_blank" rel="external">YAML front matter</a>. Both these variables, as well as the <em>site</em> variable defined in our Gruntfile, are used in the page. You will want to make sure your package.json has a value for the <em>description</em> key if you want anything to show up for <code>{{site.description}}</code>. In my case, I have: </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"description": "This is a dummy project meant to explore Assemble."</span><br></pre></td></tr></table></figure>
+<p>The <em>content</em> variable is being used in a <a href="http://handlebarsjs.com/block_helpers.html" title="Handlebars block helper" target="_blank" rel="external">Handlebars block helper</a> to iterate over its values. <code>{{str}}</code> is a <a href="http://assemble.io/docs/Custom-Helpers.html" title="custom helper" target="_blank" rel="external">custom helper</a> which just reads the contents of the file whose path is in <em>this</em> and includes it in the page being built:</p>
+<p><code>vim templates/helpers/str.js</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports.register = <span class="function"><span class="keyword">function</span> (<span class="params">Handlebars, options, params</span>) </span>&#123;</span><br><span class="line"><span class="pi">  'use strict'</span>;</span><br><span class="line"></span><br><span class="line">  Handlebars.registerHelper(<span class="string">'str'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">filePath</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> res = fs.readFileSync(filePath, <span class="string">'utf8'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Handlebars.SafeString(res);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>Most likely, there is already a helper which does this for us. I have not yet been through the helpers in the <a href="https://github.com/assemble/handlebars-helpers" title="handlebars-helpers" target="_blank" rel="external">handlebars-helpers</a> project. I figured it was just as well to do this “by hand” so to speak, to at least get some experience doing it and demoing it here.</p>
+<p>After filling in our two content files, we can kick off the build process again and get some more interesting results:</p>
+<p><code>vim content/todo-today.md</code><br><figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">* </span>Finish documenting Assemble findings in blog post</span><br><span class="line"><span class="bullet">* </span>Answer emails</span><br></pre></td></tr></table></figure></p>
+<p><code>vim content/todo-tomorrow.md</code><br><figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">* </span>Spend 30 mins on X</span><br><span class="line"><span class="bullet">* </span>Review this week's progress on Y</span><br></pre></td></tr></table></figure></p>
+<p><code>grunt &amp;&amp; cat public/example.md</code><br><figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">example.md is just an example.</span><br><span class="line"></span><br><span class="line"><span class="horizontal_rule">---</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="header">### Begin</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="header">### Example</span></span><br><span class="line"></span><br><span class="line">This is a dummy project meant to explore Assemble.</span><br><span class="line"></span><br><span class="line"><span class="bullet">* </span>Finish documenting Assemble findings in blog post</span><br><span class="line"><span class="bullet">* </span>Answer emails</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="bullet">* </span>Spend 30 mins on X</span><br><span class="line"><span class="bullet">* </span>Review this week's progress on Y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="header">### End</span></span><br></pre></td></tr></table></figure></p>
+<p>A bit more whitespace than I would have liked, but given how customizable all this seems to be, something can most likely be done about that (or maybe pass the output through some kind of postprocessing).</p>
+<p>If you’ve used Assemble before and know how this can be improved (in general, but specifically the <code>{{str}}</code> and whitespace parts), please leave a comment below. I will update and give attribution. Thanks!</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/assemble/">assemble</a> <a class="tag tag--primary tag--small t-link" href="/tags/grunt/">grunt</a> <a class="tag tag--primary tag--small t-link" href="/tags/node/">node</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/01/18/grunt-watch-those-templates/"  data-tooltip="Grunt watch those templates">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/" data-tooltip="Setting up Karma with Mocha, Chai, and RequireJS">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/01/18/grunt-watch-those-templates/"  data-tooltip="Grunt watch those templates">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/" data-tooltip="Setting up Karma with Mocha, Chai, and RequireJS">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/01/10/getting-started-with-assemble/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

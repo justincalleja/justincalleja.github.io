@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Using plain pg with Nest.js - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="IntroThis is going to be a quick demo of how to get started using plain pg (node-postgres) with Nest.js — no ORMs in sight. Having found no simple guide on how to do this when I was looking for it — I">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Using plain pg with Nest.js">
+<meta property="og:url" content="http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="IntroThis is going to be a quick demo of how to get started using plain pg (node-postgres) with Nest.js — no ORMs in sight. Having found no simple guide on how to do this when I was looking for it — I">
+<meta property="og:updated_time" content="2020-03-26T15:04:39.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Using plain pg with Nest.js">
+<meta name="twitter:description" content="IntroThis is going to be a quick demo of how to get started using plain pg (node-postgres) with Nest.js — no ORMs in sight. Having found no simple guide on how to do this when I was looking for it — I">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Using plain pg with Nest.js</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Thu Mar 26 2020 14:19:25 GMT+0100">
+        Mar 26, 2020
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Demo-on-Github"><span class="toc-number">2.</span> <span class="toc-text">Demo on Github:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-plain-pg-with-Nest-js"><span class="toc-number">3.</span> <span class="toc-text">Using plain pg with Nest.js</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-Nest-js-app-—-install-pg-—-generate-db-module"><span class="toc-number">3.1.</span> <span class="toc-text">Create a new Nest.js app — install pg — generate db module</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Register-a-Provider"><span class="toc-number">3.2.</span> <span class="toc-text">Register a Provider</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Use-the-Provider"><span class="toc-number">3.3.</span> <span class="toc-text">Use the Provider</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Start-and-seed-postgres"><span class="toc-number">3.4.</span> <span class="toc-text">Start and seed postgres</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Start-the-app-and-GET-users"><span class="toc-number">3.5.</span> <span class="toc-text">Start the app and GET /users</span></a></li></ol></li></ol>
+          
+            <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>This is going to be a quick demo of how to get started using plain <a href="https://node-postgres.com/" target="_blank" rel="external">pg (node-postgres)</a> with <a href="https://nestjs.com/" target="_blank" rel="external">Nest.js</a> — no ORMs in sight. Having found no simple guide on how to do this when I was looking for it — I figured it’d be worth writing about.</p>
+<h2 id="Demo-on-Github"><a href="#Demo-on-Github" class="headerlink" title="Demo on Github:"></a>Demo on Github:</h2><p><a href="https://github.com/justin-calleja/nest-pg-demo" target="_blank" rel="external">https://github.com/justin-calleja/nest-pg-demo</a></p>
+<h2 id="Using-plain-pg-with-Nest-js"><a href="#Using-plain-pg-with-Nest-js" class="headerlink" title="Using plain pg with Nest.js"></a>Using plain pg with Nest.js</h2><h3 id="Create-a-new-Nest-js-app-—-install-pg-—-generate-db-module"><a href="#Create-a-new-Nest-js-app-—-install-pg-—-generate-db-module" class="headerlink" title="Create a new Nest.js app — install pg — generate db module"></a>Create a new Nest.js app — install pg — generate db module</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npx nest new nest-pg-demo</span><br><span class="line"><span class="built_in">cd</span> nest-pg-demo</span><br><span class="line">npm i pg</span><br><span class="line">npx nest g module db</span><br></pre></td></tr></table></figure>
+<h3 id="Register-a-Provider"><a href="#Register-a-Provider" class="headerlink" title="Register a Provider"></a>Register a Provider</h3><p>We’ll use a constants.ts file in /src to be able to import the DI token for our postgres connection (or pool of connections):</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/constants.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> PG_CONNECTION = <span class="string">'PG_CONNECTION'</span>;</span><br></pre></td></tr></table></figure>
+<p>The DI token (dependency injection token) is how you’ll declaratively tell the <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="external">Inversion of Control (IoC)</a> container which dependency you’d like injected. So you’ll use it to pull in a dependency from the container.</p>
+<p>You’ll also use it when you register a provider with the container. Registering a provider is basically associating a DI token (which will be a string in our case) with a way to get a dependency. The container will use this “way to get a dependency” when you request the relevant dependency be injected.</p>
+<p>Registering a provider looks like this:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Module &#125; from <span class="string">'@nestjs/common'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PG_CONNECTION &#125; from <span class="string">'../constants'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dbProvider = &#123;</span><br><span class="line">    provide: PG_CONNECTION,</span><br><span class="line">    <span class="comment">// useValue / useFacotry / useClass: …</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">@Module(&#123;</span><br><span class="line">    providers: [dbProvider],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> DbModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>i.e. we need an object with the DI token and the way to get the dependency — the dbProvider — and pass it to <strong>providers</strong> in the Module configuration as shown above.</p>
+<p>There’s a couple of ways to specify how to get the dependency in Nest.js. We’ll be using <a href="https://docs.nestjs.com/fundamentals/custom-providers#value-providers-usevalue" target="_blank" rel="external">useValue</a>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Pool &#125; from <span class="string">'pg'</span>;</span><br><span class="line"><span class="keyword">const</span> dbProvider = &#123;</span><br><span class="line">  provide: PG_CONNECTION,</span><br><span class="line">  useValue: <span class="keyword">new</span> Pool(&#123;</span><br><span class="line">    user: <span class="string">'postgres'</span>,</span><br><span class="line">    host: <span class="string">'localhost'</span>,</span><br><span class="line">    database: <span class="string">'somedb'</span>,</span><br><span class="line">    password: <span class="string">'meh'</span>,</span><br><span class="line">    port: <span class="number">5432</span>,</span><br><span class="line">  &#125;),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Finally, we’ll also include the dbProvider in the DbModule’s exports so we’ll be able to use it in other modules importing <code>DbModule</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Module &#125; from <span class="string">'@nestjs/common'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Pool &#125; from <span class="string">'pg'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PG_CONNECTION &#125; from <span class="string">'../constants'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dbProvider = &#123;</span><br><span class="line">    provide: PG_CONNECTION,</span><br><span class="line">    useValue: <span class="keyword">new</span> Pool(&#123;</span><br><span class="line">        user: <span class="string">'postgres'</span>,</span><br><span class="line">        host: <span class="string">'localhost'</span>,</span><br><span class="line">        database: <span class="string">'somedb'</span>,</span><br><span class="line">        password: <span class="string">'meh'</span>,</span><br><span class="line">        port: <span class="number">5432</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">@Module(&#123;</span><br><span class="line">    providers: [dbProvider],</span><br><span class="line">    exports: [dbProvider],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> DbModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Use-the-Provider"><a href="#Use-the-Provider" class="headerlink" title="Use the Provider"></a>Use the Provider</h3><p>You’ll notice that the <code>AppModule</code> is already importing <code>DbModule</code> (at least if you generated DbModule with the <code>nest cli</code> that should be the case):</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app.module.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Module &#125; from <span class="string">'@nestjs/common'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppController &#125; from <span class="string">'./app.controller'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppService &#125; from <span class="string">'./app.service'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DbModule &#125; from <span class="string">'./db/db.module'</span>;</span><br><span class="line"></span><br><span class="line">@Module(&#123;</span><br><span class="line">  imports: [DbModule],</span><br><span class="line">  controllers: [AppController],</span><br><span class="line">  providers: [AppService],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>This means that — in our AppModule i.e. in e.g. controllers and providers defined as part of AppModule) we’ll be able to ask Nest’s IoC container to inject a connection for us using the <code>PG_CONNECTION</code> DI token (string).</p>
+<p>Doing so in our <code>AppService</code> looks something like this:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app.service.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Injectable, Inject &#125; from <span class="string">'@nestjs/common'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PG_CONNECTION &#125; from <span class="string">'./constants'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppService &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(@Inject(PG_CONNECTION) private conn: any) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">  async getUsers() &#123;</span><br><span class="line">    <span class="keyword">const</span> res = await <span class="keyword">this</span>.conn.query(<span class="string">'SELECT * FROM users'</span>);</span><br><span class="line">    <span class="keyword">return</span> res.rows;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Notice that we annotate <code>conn</code> with <code>Inject</code> and make it private in the <code>constructor</code>. This is significant at it allows Nest to know that <em>it</em> should be the one to supply a value for <code>conn</code> and it also knows what to inject via the DI token.</p>
+<p><code>getUsers</code> is just a simple query to use as a sanity check. We’ll use it in <code>AppController</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app.controller.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Controller, Get &#125; from <span class="string">'@nestjs/common'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppService &#125; from <span class="string">'./app.service'</span>;</span><br><span class="line"></span><br><span class="line">@Controller()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppController &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private readonly appService: AppService) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">  @Get(<span class="string">'users'</span>)</span><br><span class="line">  getUsers() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.appService.getUsers();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>I guess you might be wondering how we’re able to inject <code>AppService</code> here without the <code>Inject</code> annotation… That’s thanks to a shortcut (or “syntactic sugar” if you prefer). In Nest.js, registering a Provider with a class name:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; AppService &#125; from <span class="string">'./app.service'</span>;</span><br><span class="line">@Module(&#123;</span><br><span class="line">  providers: [AppService],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>… is equivalent to:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; AppService &#125; from <span class="string">'./app.service'</span>;</span><br><span class="line">@Module(&#123;</span><br><span class="line">  providers: [&#123;</span><br><span class="line">    provider: AppService,</span><br><span class="line">    useClass: AppService,</span><br><span class="line">  &#125;],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>… which means — the DI token doesn’t have to be a string and now Nest.js knows what to inject when we type the <code>private appService</code> in <code>AppController</code> with the type <code>AppService</code>.</p>
+<h3 id="Start-and-seed-postgres"><a href="#Start-and-seed-postgres" class="headerlink" title="Start and seed postgres"></a>Start and seed postgres</h3><p>Of course, you’re going to want postgres running if you want to try this out. If you have docker installed, take a look at the <code>scripts</code> and <code>sql</code> directories in the <a href="https://github.com/justin-calleja/nest-pg-demo" target="_blank" rel="external">repo</a> for this demo — but the gist is:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">docker run --rm \</span><br><span class="line">    --name somedb \</span><br><span class="line">    <span class="operator">-e</span> POSTGRES_PASSWORD=meh \</span><br><span class="line">    <span class="operator">-e</span> POSTGRES_USER=postgres \</span><br><span class="line">    <span class="operator">-e</span> POSTGRES_DB=somedb \</span><br><span class="line">    -p <span class="number">5432</span>:<span class="number">5432</span> \</span><br><span class="line">    -v somedb-vol:/var/lib/postgresql/data \</span><br><span class="line">    postgres</span><br></pre></td></tr></table></figure>
+<p><code>scripts/start-db.sh</code> starts postgres. <code>--rm</code> will remove the container when we stop it. By virtue of passing in the env vars we do — the container will auto create the somedb database. The volume mapping is so we keep our data even when we stop the container (and have it auto-removed).</p>
+<p>After the db is up — you can run <code>scripts/sync-db.sh</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">SCRIPTS_DIR=`dirname <span class="string">"<span class="variable">$0</span>"</span>`</span><br><span class="line">cat <span class="string">"<span class="variable">$SCRIPTS_DIR</span>/../sql/schema.sql"</span> <span class="string">"<span class="variable">$SCRIPTS_DIR</span>/../sql/dev-seeds.sql"</span> \</span><br><span class="line">    | psql -U postgres <span class="operator">-d</span> somedb -p <span class="number">5432</span> -h localhost -<span class="number">1</span> <span class="operator">-f</span> -</span><br></pre></td></tr></table></figure>
+<p>This should work regardless of your <code>pwd</code> when you run the script since we’re referencing the sql files relative to the location of the <code>sync-db.sh</code> file on disk (consider this to be an equivalent of <code>__dirname</code> in Node.js). Since <code>schema.sql</code> drops and re-creates the public schema every time — it’s safe to re-run <code>sync-db.sh</code> when you change your table definitions etc…</p>
+<h3 id="Start-the-app-and-GET-users"><a href="#Start-the-app-and-GET-users" class="headerlink" title="Start the app and GET /users"></a>Start the app and GET /users</h3><p>Finally, it’s time to run our app with <code>npm run start:dev</code> and hit the <code>/users</code> endpoint with:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl localhost:<span class="number">3000</span>/users</span><br><span class="line">[&#123;<span class="string">"id"</span>:<span class="number">1</span>,<span class="string">"email"</span>:<span class="string">"tmp@gmail.com"</span>&#125;,&#123;<span class="string">"id"</span>:<span class="number">2</span>,<span class="string">"email"</span>:<span class="string">"user@gmail.com"</span>&#125;,&#123;<span class="string">"id"</span>:<span class="number">3</span>,<span class="string">"email"</span>:<span class="string">"anotheruser@gmail.com"</span>&#125;]</span><br></pre></td></tr></table></figure>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/nestjs/">nestjs</a> <a class="tag tag--primary tag--small t-link" href="/tags/node/">node</a> <a class="tag tag--primary tag--small t-link" href="/tags/pg/">pg</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/05/28/trying-out-typescript/" data-tooltip="Trying out Typescript">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/05/28/trying-out-typescript/" data-tooltip="Trying out Typescript">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

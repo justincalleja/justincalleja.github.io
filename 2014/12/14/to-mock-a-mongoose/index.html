@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>To mock a Mongoose - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="PurposeUse Mongoose in a test without having to have MongoDB running. Mocking done with Mockgoose.
+Setting upSetting up can take a while sometimes so I decided to give a different approach a go this t">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="To mock a Mongoose">
+<meta property="og:url" content="http://justincalleja.com/2014/12/14/to-mock-a-mongoose/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="PurposeUse Mongoose in a test without having to have MongoDB running. Mocking done with Mockgoose.
+Setting upSetting up can take a while sometimes so I decided to give a different approach a go this t">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.764Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="To mock a Mongoose">
+<meta name="twitter:description" content="PurposeUse Mongoose in a test without having to have MongoDB running. Mocking done with Mockgoose.
+Setting upSetting up can take a while sometimes so I decided to give a different approach a go this t">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">To mock a Mongoose</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sun Dec 14 2014 01:00:00 GMT+0100">
+        Dec 14, 2014
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <h1 id="Purpose"><a href="#Purpose" class="headerlink" title="Purpose"></a>Purpose</h1><p>Use <a href="https://github.com/learnboost/mongoose" title="Mongoose" target="_blank" rel="external">Mongoose</a> in a test without having to have MongoDB running. Mocking done with <a href="https://github.com/mccormicka/Mockgoose" title="Mockgoose" target="_blank" rel="external">Mockgoose</a>.</p>
+<h1 id="Setting-up"><a href="#Setting-up" class="headerlink" title="Setting up"></a>Setting up</h1><p>Setting up can take a while sometimes so I decided to give a different approach a go this time round. I have created a simple <a href="https://github.com/gruntjs/grunt-init" title="grunt-init" target="_blank" rel="external">grunt-init</a> <a href="https://github.com/justin-calleja/mongoose-blog-template-1" title="mongoose-blog-template-1" target="_blank" rel="external">template</a> which will do most of the grunt work for us (such pun!). Install grunt-init globally with <code>npm i -g grunt-init</code> if you don’t already have it. To use the template, simply clone it into your <em>~/.grunt-init/</em> directory (creating the directory if need be):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~$ mkdir .grunt-init &amp;&amp; <span class="built_in">cd</span> .grunt-init</span><br><span class="line">~$ git <span class="built_in">clone</span> https://github.com/justin-calleja/mongoose-blog-template-<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>Automation time - simply cd into an empty directory and type the magic words:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">to-mock<span class="operator">-a</span>-mongoose$ grunt-init mongoose-blog-template-<span class="number">1</span></span><br><span class="line">to-mock<span class="operator">-a</span>-mongoose$ npm install</span><br></pre></td></tr></table></figure>
+<h1 id="What-have-we-got-here"><a href="#What-have-we-got-here" class="headerlink" title="What have we got here?"></a>What have we got here?</h1><p>First off, install mocha globally if you don’t already have it: <code>npm i -g mocha</code> and run <code>mocha</code>.</p>
+<p>Open up <em>model/db.js</em>. This is where we’re establishing our db connection (and registering some event handlers). The connection will actually be mocked out in our <em>test/test.js</em>. That’s pretty useful. Now we don’t need MongoDB to be running to make some assertions on our code, code that would normally be interacting with the database.</p>
+<p>To get the mocking done right, make sure you mock Mongoose before setting it up:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mockgoose = <span class="built_in">require</span>(<span class="string">'mockgoose'</span>);</span><br><span class="line"><span class="keyword">var</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// mock mongoose before requiring the script which establishes the connection (to mock the connection)</span></span><br><span class="line">mockgoose(mongoose);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'../model/db'</span>);</span><br></pre></td></tr></table></figure>
+<p><em>model/item.js</em> defines the structure (the schema) of an Item document which we’d like to store in our db. We’re also creating a model from our schema. This is basically a constructor we can use to create Item objects which will map to documents in our db. i.e. instances created from our Item model will be important to us if we care about interacting with our db.</p>
+<p><em>test/test.js</em>, after mocking our Mongoose, simply requires and makes use.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code abbreviated... see generated test.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// get a reference to our Item schema/model</span></span><br><span class="line"><span class="keyword">var</span> item = <span class="built_in">require</span>(<span class="string">'../model/item'</span>);</span><br><span class="line"></span><br><span class="line">beforeEach(<span class="function"><span class="keyword">function</span>(<span class="params">done</span>) </span>&#123;</span><br><span class="line">  mockgoose.reset();</span><br><span class="line">  <span class="comment">// create and insert two dummy docs</span></span><br><span class="line">  item.model.create(&#123; text: <span class="string">'write blog on A'</span> &#125;, &#123; text: <span class="string">'write blog on B'</span> &#125;, <span class="function"><span class="keyword">function</span>(<span class="params">err, blogOnA, blogOnB</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Error creating documents in beforeEach: '</span> + error);</span><br><span class="line">      <span class="keyword">throw</span>(err);</span><br><span class="line">    &#125;</span><br><span class="line">    done();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'Blah'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  describe(<span class="string">'Bleh'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    it(<span class="string">'item.model.find() should give 2 documents back'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">done</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> query = item.model.find();</span><br><span class="line">      query.exec(<span class="function"><span class="keyword">function</span>(<span class="params">err, docs</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// expect to find the documents inserted in beforeEach</span></span><br><span class="line">        expect(docs.length).to.equal(<span class="number">2</span>);</span><br><span class="line">        done();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/mockgoose/">mockgoose</a> <a class="tag tag--primary tag--small t-link" href="/tags/mongoose/">mongoose</a> <a class="tag tag--primary tag--small t-link" href="/tags/node/">node</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/"  data-tooltip="Setting up Karma with Mocha, Chai, and RequireJS">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/06/taking-the-express-route-out/" data-tooltip="Taking the Express route out">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/"  data-tooltip="Setting up Karma with Mocha, Chai, and RequireJS">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/06/taking-the-express-route-out/" data-tooltip="Taking the Express route out">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2014/12/14/to-mock-a-mongoose/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

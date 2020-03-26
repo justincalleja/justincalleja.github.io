@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Sequential control flow with Lo-Dash or Underscore.js - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="IntroThis post is based on Simple async with only underscore by Adrian Rossouw. Yes, I did read the following disclaimer regarding this approach:
+I don’t recommend this approach much anymore, because">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Sequential control flow with Lo-Dash or Underscore.js">
+<meta property="og:url" content="http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="IntroThis post is based on Simple async with only underscore by Adrian Rossouw. Yes, I did read the following disclaimer regarding this approach:
+I don’t recommend this approach much anymore, because">
+<meta property="og:image" content="http://justincalleja.com/seq-fail.png">
+<meta property="og:image" content="http://justincalleja.com/sync-file-read.png">
+<meta property="og:image" content="http://seajones.co.uk/content/images/2014/12/callback-hell.png">
+<meta property="og:image" content="http://justincalleja.com/example.png">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.757Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sequential control flow with Lo-Dash or Underscore.js">
+<meta name="twitter:description" content="IntroThis post is based on Simple async with only underscore by Adrian Rossouw. Yes, I did read the following disclaimer regarding this approach:
+I don’t recommend this approach much anymore, because">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Sequential control flow with Lo-Dash or Underscore.js</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sun Mar 08 2015 01:00:00 GMT+0100">
+        Mar 08, 2015
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-need"><span class="toc-number">2.</span> <span class="toc-text">The need</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Sync-vs-Async-in-a-single-threaded-environment"><span class="toc-number">2.1.</span> <span class="toc-text">Sync vs Async in a single threaded environment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Callbacks"><span class="toc-number">2.2.</span> <span class="toc-text">Callbacks</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-approach"><span class="toc-number">3.</span> <span class="toc-text">The approach</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#reduce"><span class="toc-number">3.1.</span> <span class="toc-text">_.reduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wrap"><span class="toc-number">3.2.</span> <span class="toc-text">_.wrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Putting-it-all-together"><span class="toc-number">3.3.</span> <span class="toc-text">Putting it all together</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Final-example"><span class="toc-number">3.4.</span> <span class="toc-text">Final example</span></a></li></ol></li></ol>
+          
+            <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p>This post is based on <a href="http://daemon.co.za/2012/04/simple-async-with-only-underscore/" title="Simple async with only underscore" target="_blank" rel="external">Simple async with only underscore</a> by <a href="http://daemon.co.za/portfolio/" title="Adrian Rossouw" target="_blank" rel="external">Adrian Rossouw</a>. Yes, I did read the following disclaimer regarding this approach:</p>
+<blockquote><p>I don’t recommend this approach much anymore, because I have come to the conclusion that the async.js module is by far the best tool for the job</p><footer><cite><a href="http://daemon.co.za/2012/04/simple-async-with-only-underscore/" target="_blank" rel="external">Simple async with only underscore</a></cite></footer></blockquote>
+
+<p>It’s hard to disagree with that. <a href="https://github.com/caolan/async" title="async.js" target="_blank" rel="external">Async.js</a> is specifically designed to cater for asynchronous control flow. However, I think there is value in using the approach suggested by Adrian when you’re already depending on <a href="https://lodash.com/" title="Lo-Dash" target="_blank" rel="external">Lo-Dash</a>/<a href="http://underscorejs.org/" title="Underscore.js" target="_blank" rel="external">Underscore.js</a> and do not want to bring in a separate library to handle a one-off control flow need.</p>
+<p>In this post I’ll be explaining the suggested solution in more detail. But before doing that, I will give some background so you might want to skip over to <a href="#toc_2">The approach</a> if you’re already familiar with the need for asynchronous control flow in Node.js / <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop" title="event loop" target="_blank" rel="external">event loop</a> environments.</p>
+<h1 id="The-need"><a href="#The-need" class="headerlink" title="The need"></a>The need</h1><h2 id="Sync-vs-Async-in-a-single-threaded-environment"><a href="#Sync-vs-Async-in-a-single-threaded-environment" class="headerlink" title="Sync vs Async in a single threaded environment"></a>Sync vs Async in a single threaded environment</h2><p>So what’s this all about? Lets set up an example. In an empty directory do the following:</p>
+<ul>
+<li><code>npm i inquirer</code></li>
+<li><code>vim index.js</code></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> inquirer = <span class="built_in">require</span>(<span class="string">"inquirer"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> questions = [</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"input"</span>,</span><br><span class="line">    name: <span class="string">"username"</span>,</span><br><span class="line">    message: <span class="string">"Enter username"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"password"</span>,</span><br><span class="line">    name: <span class="string">"password"</span>,</span><br><span class="line">    message: <span class="string">"Enter password"</span></span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">inquirer.prompt(questions, <span class="function"><span class="keyword">function</span>(<span class="params"> answers </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"answers were:"</span>, answers);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"I want this to be done after prompt"</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="seq-fail.png" alt="Sequential execution fail" title="Sequential execution fail"></p>
+<p>Nevermind the duplicate “Enter username” prompt - notice that the final <code>console.log</code> statement executed before <code>inquirer.prompt</code> was done.</p>
+<p>The code above assumes that expressing the two function invocations in sequence implies sequential execution. In other (multi-threaded) environments, where threads block on I/O, this is a reasonable assumption to make. In these environments, context switching allows one thread to block on I/O, switch over to another thread to keep processing, and switch back when data to process becomes available from the I/O source in question.</p>
+<p>In a single threaded environment, however, you generally don’t <em>want</em> to block. For example, imagine uploading a couple of files from a web application. You wouldn’t want to “stop the world” while this data is still in transit. Instead, you would want to keep processing - for e.g. the user’s input when they decide to stop the upload.</p>
+<p>So we can agree that blocking is not what we generally want to do in a single threaded environment. In the user prompt example above, you do not expect <code>inquirer.prompt</code> to “stop the world” while it fetches data from the user via <a href="http://nodejs.org/api/process.html#process_process_stdin" title="process.stdin" target="_blank" rel="external">process.stdin</a>. The code <code>inquirer.prompt</code> uses to get data from the user does so in an asynchronous manner. It <em>could</em> do the same thing in a synchronous manner instead, but that is not good manners in a single threaded environment. If <code>inquirer.prompt</code> fetched its data synchronously and returned it, then the code above would work as expected but <code>inquirer</code> is not that selfish. It will wait on the stack for data to come in, allowing the processor to go do something useful in the meantime.</p>
+<p>For instance, if we replaced user prompting with a function which reads from disk in a synchronous manner then we get something like this:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">"path"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> data = fs.readFileSync(path.resolve(__dirname, __filename), <span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"I want this to be done after readFileSync\n"</span>, data);</span><br></pre></td></tr></table></figure>
+<p><img src="sync-file-read.png" alt="Sync file reading" title="Sync file reading"></p>
+<p>To summarize, the key points are:</p>
+<ul>
+<li>In a single threaded environment asynchronous I/O becomes essential if you want concurrency.</li>
+<li>If you have statements which execute asynchronously, the order in which you write your statements does not imply the order in which these statements are executed.</li>
+</ul>
+<p>OK, so we know asynchronous I/O is important here, but the order of execution is something we need control over as sometimes we don’t really care, but sometimes there’s no way around it. This means that we need to be able to express sequential execution when it matters - i.e. “do this <em>after</em> that”. If the order of statements won’t cut it, what will?</p>
+<h2 id="Callbacks"><a href="#Callbacks" class="headerlink" title="Callbacks"></a>Callbacks</h2><p>Well, if the order of statements won’t cut it, maybe callbacks, events, Promises, ES6 Generators, or 3rd party libraries such as <a href="https://github.com/caolan/async" title="async.js" target="_blank" rel="external">Async.js</a> will? As you can see, there’s no shortage of tools to use. Let’s pick callbacks and see where that leads us.</p>
+<p>A callback is a function used to effect control flow. You generally pass a callback function to another function which is expected to perform some asynchronous operation and call the callback with the result of the asynchronous operation. This effectively adds another frame on the stack which needs to be cleared before the async-op-performing function itself is removed from the stack.</p>
+<p>If you take another look at <code>inquirer.prompt</code> above, you will see an example of callback usage. The second argument <code>inquirer.prompt</code> takes is a callback function which itself takes an argument which contains the data <code>inquirer.prompt</code> fetched from the user.</p>
+<p>Callbacks are nice, until they aren’t. You might have heard the term “callback hell”, but in any case, here’s a quick look down the abyss:</p>
+<p><img src="http://seajones.co.uk/content/images/2014/12/callback-hell.png" alt="callback hell" title="callback hell"></p>
+<p>Pretty isn’t it?</p>
+<p>The point here isn’t that you shouldn’t use callbacks - it’s that you should be careful not to overuse them. Mixu puts it nicely in his online <a href="http://book.mixu.net/node/ch7.html" title="Mixu&#39;s Node book" target="_blank" rel="external">Node book</a>:</p>
+<blockquote><p>When you start coding with Node.js, it’s a bit like learning programming the first time. Since you want everything to be asynchronous, you use a lot of callbacks without really thinking about how you should structure your code. It’s a bit like being overexcited about the if statement, and using it and only it to write complex programs.</p><footer><cite><a href="http://book.mixu.net/node/ch7.html" target="_blank" rel="external">Mixu’s Node book</a></cite></footer></blockquote>
+
+<p>OK, so with the background taken care of, let’s move on to one approach we can take to mitigate callback hell by using <a href="https://lodash.com/" title="Lo-Dash" target="_blank" rel="external">Lo-Dash</a>/<a href="http://underscorejs.org/" title="Underscore.js" target="_blank" rel="external">Underscore.js</a>, something you’re likely to already be depending on.</p>
+<h1 id="The-approach"><a href="#The-approach" class="headerlink" title="The approach"></a>The approach</h1><p>To start off with, consider the snippet used in <a href="http://daemon.co.za/2012/04/simple-async-with-only-underscore/" title="Simple async control flow using only underscore.js" target="_blank" rel="external">Adrian’s post</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// generate a callback</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cb</span>(<span class="params">text</span>) </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">next</span>) </span>&#123; </span><br><span class="line">        <span class="built_in">console</span>.warn(text); </span><br><span class="line">        next();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a list of things to call</span></span><br><span class="line"><span class="keyword">var</span> actions = [ cb(<span class="number">1</span>), cb(<span class="number">2</span>), cb(<span class="number">3</span>), cb(<span class="number">4</span>) ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// call the functions in the series array in order</span></span><br><span class="line">_(actions).reduceRight(_.wrap, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="built_in">console</span>.warn(<span class="string">'done'</span>) &#125;)(); </span><br><span class="line"></span><br><span class="line"><span class="comment">// prints out:</span></span><br><span class="line"><span class="comment">// ---</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"><span class="comment">// done</span></span><br></pre></td></tr></table></figure>
+<p>The general idea is to store the functions you want to have execute sequentially in an array (<code>actions</code>) and use <a href="http://underscorejs.org/#reduceRight" title="reduceRight" target="_blank" rel="external">reduceRight</a> and <a href="http://underscorejs.org/#wrap" title="wrap" target="_blank" rel="external">wrap</a> to give you back a function which you can invoke to kick off the sequential execution of the functions in <code>actions</code>.</p>
+<p>That’s the general idea. Let’s start breaking things down. (Note: I am quoting bits and pieces from the <a href="https://lodash.com/docs" title="Lo-Dash docs" target="_blank" rel="external">Lo-Dash docs</a> below).</p>
+<h2 id="reduce"><a href="#reduce" class="headerlink" title="_.reduce"></a>_.reduce</h2><blockquote>
+<p>_.reduce(collection, [iteratee=_.identity], [accumulator], [thisArg])</p>
+</blockquote>
+<p>This tells us that <code>_.reduce</code> can take 4 arguments, the <code>collection</code> to iterate over, the <code>iteratee</code> function, the <code>accumulator</code> which is the initial value the “reduction” starts with, and <code>thisArg</code> which is the <code>this</code> binding of <code>iteratee</code>.</p>
+<blockquote>
+<p>The <code>iteratee</code> is bound to <code>thisArg</code> and invoked with four arguments; (accumulator, value, index|key, collection). </p>
+</blockquote>
+<p>So apart from knowing what <code>_.reduce</code> takes, you’ll also need to know what the <code>iteratee</code> function takes. </p>
+<ol>
+<li><blockquote>
+<p>If <code>accumulator</code> is not provided the first element of collection is used as the initial value.</p>
+</blockquote>
+<p>This is referring to <code>_.reduce</code>‘s 3rd argument. If you don’t supply an argument, then the first element of <code>collection</code> will be used as the 1st argument in <code>iteratee</code>‘s first invocation.</p>
+</li>
+<li><p><code>iteratee</code>‘s 2nd argument is <code>value</code>, i.e. it’s the next value in <code>collection</code> which hasn’t yet been through <code>iteratee</code>.</p>
+</li>
+<li><p><code>iteratee</code>‘s 3rd argument is the <strong>index</strong> of <code>value</code> in the <code>collection</code> (“index” when the <code>collection</code> is an array, or “key” when the <code>collection</code> is an object).</p>
+</li>
+<li><p><code>iteratee</code>‘s 4th argument is the <code>collection</code> itself (i.e. <code>_.reduce</code>‘s first argument).</p>
+</li>
+</ol>
+<p>Here’s a look at <code>_.reduce</code> in action:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _ = <span class="built_in">require</span>(<span class="string">"lodash"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> nums = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">accumulator, value, index, collection</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"acc"</span>, accumulator, <span class="string">"value"</span>, value, <span class="string">"index"</span>, index, <span class="string">"collection"</span>, collection);</span><br><span class="line">  <span class="keyword">return</span> accumulator + value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fromFirstEl = _.reduce(nums, sum);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"fromFirstEl:"</span>, fromFirstEl);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> from5 = _.reduce(nums, sum, <span class="number">5</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"from5:"</span>, from5);</span><br><span class="line"></span><br><span class="line"><span class="comment">// acc 1 value 2 index 1 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 3 value 3 index 2 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 6 value 4 index 3 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 10 value 5 index 4 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// fromFirstEl: 15</span></span><br><span class="line"><span class="comment">// acc 5 value 1 index 0 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 6 value 2 index 1 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 8 value 3 index 2 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 11 value 4 index 3 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 15 value 5 index 4 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// from5: 20</span></span><br></pre></td></tr></table></figure>
+<p>Notice how the value returned from the <code>iteratee</code> function (i.e. <code>sum</code>) becomes the <code>iteratee</code>‘s <code>accumulator</code> the next time it is invoked on the next item in the <code>collection</code>.</p>
+<p>Also notice how, in the case of no initial <code>accumulator</code>, it’s as if <code>nums</code> is one element short, and the element taken out of <code>nums</code> is used as the initial <code>accumulator</code>.</p>
+<p><code>_.reduceRight</code> is the exact operation but in reverse:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> rightFrom10 = _.reduceRight(nums, sum, <span class="number">10</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"rightFrom10:"</span>, rightFrom10);</span><br><span class="line"></span><br><span class="line"><span class="comment">// acc 10 value 5 index 4 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 15 value 4 index 3 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 19 value 3 index 2 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 22 value 2 index 1 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// acc 24 value 1 index 0 collection [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line"><span class="comment">// rightFrom10: 25</span></span><br></pre></td></tr></table></figure>
+<p>So basically, we now know that <code>_.reduce</code> is a function which takes a collection and reduces the values in that collection to a single value based on the logic in its given <code>iteratee</code>.</p>
+<h2 id="wrap"><a href="#wrap" class="headerlink" title="_.wrap"></a>_.wrap</h2><p>Let’s now turn our attention to <a href="https://lodash.com/docs#wrap" title="wrap" target="_blank" rel="external">wrap</a>.</p>
+<blockquote>
+<p>_.wrap(value, wrapper)</p>
+</blockquote>
+<blockquote>
+<p>Creates a function that provides <code>value</code> to the <code>wrapper</code> function as its first argument. Any additional arguments provided to the function are appended to those provided to the wrapper function. The wrapper is invoked with the <code>this</code> binding of the created function.</p>
+</blockquote>
+<p>An example is probably better (based off of <a href="http://underscorejs.org/#wrap" title="Underscore.js doc" target="_blank" rel="external">Underscore.js’s doc</a> as I felt it was easier than the one given in Lo-Dash’s):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _ = <span class="built_in">require</span>(<span class="string">"lodash"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params">name, surname</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"hello: "</span> + name + (surname ? <span class="string">" "</span> + surname : <span class="string">""</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> wrappedHello = _.wrap(hello, <span class="function"><span class="keyword">function</span>(<span class="params">func</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"before, "</span> + func(<span class="string">"moe"</span>) + <span class="string">", after"</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(wrappedHello());</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> wrappedHello2 = _.wrap(hello, <span class="function"><span class="keyword">function</span>(<span class="params">func, name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"before, "</span> + func(name) + <span class="string">", after"</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(wrappedHello2(<span class="string">"joe"</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> wrappedHello3 = _.wrap(hello, <span class="function"><span class="keyword">function</span>(<span class="params">func, name, surname</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"before, "</span> + func(name, surname) + <span class="string">", after"</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(wrappedHello3(<span class="string">"joe"</span>, <span class="string">"doe"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// before, hello: moe, after</span></span><br><span class="line"><span class="comment">// before, hello: joe, after</span></span><br><span class="line"><span class="comment">// before, hello: joe doe, after</span></span><br></pre></td></tr></table></figure>
+<p>Essentially, <code>wrap</code> takes the first argument given to it and passes it to it’s second argument which is expected to be the wrapper function (in which you can do any logic around <code>value</code>). Any arguments you pass to the created wrapper functions (e.g. <code>wrappedHello2</code>) get passed as arguments to the <code>wrapper</code> function used in <code>_.wrap</code>.</p>
+<h2 id="Putting-it-all-together"><a href="#Putting-it-all-together" class="headerlink" title="Putting it all together"></a>Putting it all together</h2><p>Revisiting Adrian’s example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cb</span>(<span class="params">text</span>) </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">next</span>) </span>&#123; </span><br><span class="line">        <span class="built_in">console</span>.warn(text); </span><br><span class="line">        next();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a list of things to call</span></span><br><span class="line"><span class="keyword">var</span> actions = [ cb(<span class="number">1</span>), cb(<span class="number">2</span>), cb(<span class="number">3</span>), cb(<span class="number">4</span>) ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// call the functions in the series array in order</span></span><br><span class="line">_.reduceRight(actions, _.wrap, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="built_in">console</span>.warn(<span class="string">'done'</span>) &#125;)(); </span><br><span class="line"><span class="comment">// the above is equivalent to what's used in Adrian's example:</span></span><br><span class="line"><span class="comment">// _(actions).reduceRight(_.wrap, function() &#123; console.warn('done') &#125;)();</span></span><br></pre></td></tr></table></figure>
+<p>Consider the first reduction:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// _.wrap is the iteratee</span></span><br><span class="line"><span class="keyword">var</span> reduced1 = _.wrap(</span><br><span class="line">  <span class="comment">// iteratee's accumulator</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="string">'done'</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// iteratee's value</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params">next</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="number">4</span>);</span><br><span class="line">    next();</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment">// reduced1 = function() &#123;</span></span><br><span class="line"><span class="comment">//   console.warn(4);</span></span><br><span class="line"><span class="comment">//   (function() &#123;</span></span><br><span class="line"><span class="comment">//     console.warn('done');</span></span><br><span class="line"><span class="comment">//   &#125;)();</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p>The second reduction:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// _.wrap is the iteratee</span></span><br><span class="line"><span class="keyword">var</span> reduced2 = _.wrap(</span><br><span class="line">  <span class="comment">// iteratee's accumulator is reduced1</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="number">4</span>);</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.warn(<span class="string">'done'</span>);</span><br><span class="line">    &#125;)();</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// iteratee's next value</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params">next</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="number">3</span>);</span><br><span class="line">    next();</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment">// reduced2 = function() &#123;</span></span><br><span class="line"><span class="comment">//   console.warn(3);</span></span><br><span class="line"><span class="comment">//   (function() &#123;</span></span><br><span class="line"><span class="comment">//     console.warn(4);</span></span><br><span class="line"><span class="comment">//     (function() &#123;</span></span><br><span class="line"><span class="comment">//       console.warn('done');</span></span><br><span class="line"><span class="comment">//     &#125;)();</span></span><br><span class="line"><span class="comment">//   &#125;)();</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p>etc… etc… until we finally get back a function that wraps all other functions in <code>actions</code>. Hopefully, you’re starting to see how this thing sticks together.</p>
+<h2 id="Final-example"><a href="#Final-example" class="headerlink" title="Final example"></a>Final example</h2><p>To drive the point home, let’s finish this with a less trivial, but completely useless, example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _ = <span class="built_in">require</span>(<span class="string">"lodash"</span>);</span><br><span class="line"><span class="keyword">var</span> inquirer = <span class="built_in">require</span>(<span class="string">"inquirer"</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">"path"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> questions = [</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"input"</span>,</span><br><span class="line">    name: <span class="string">"username"</span>,</span><br><span class="line">    message: <span class="string">"Enter username"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"password"</span>,</span><br><span class="line">    name: <span class="string">"password"</span>,</span><br><span class="line">    message: <span class="string">"Enter password"</span></span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> actions = [</span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params">next</span>) </span>&#123;</span><br><span class="line">    inquirer.prompt(questions, <span class="function"><span class="keyword">function</span>(<span class="params">answers</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"answers:"</span>, answers);</span><br><span class="line">      next(answers);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params">next, answers</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(answers.password === <span class="string">"sdf"</span>) &#123;</span><br><span class="line"></span><br><span class="line">      fs.readFile(path.resolve(__dirname, __filename), <span class="string">"utf-8"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(err) <span class="keyword">throw</span> err;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> re = <span class="keyword">new</span> <span class="built_in">RegExp</span>(answers.username);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(re.test(data)) &#123;</span><br><span class="line">          next(<span class="string">"there was a match"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          next(<span class="string">"there was no match"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params">next, matchRes</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"matchRes"</span>, matchRes);</span><br><span class="line">    next();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">_.reduceRight(actions, _.wrap, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"done"</span>);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>You should now have a good idea of what’s going on. Note how <code>next</code> is always bound to the next function in <code>actions</code> which needs to execute after the function in question does. Any arguments after <code>next</code> (e.g. <code>answers</code> in the second function in <code>actions</code>) are passed in when <code>next</code> is invoked in a previous function’s body (i.e. <code>next(answers)</code> in <code>actions</code>‘s first function).</p>
+<p>You can see that we are still using callbacks when using asynchronous functions like <code>inquirer.prompt</code> and <code>fs.readFile</code>, but we avoid nesting any deeper than the inital callback passed to these asynchronous functions.</p>
+<p>Basically, this example asks for a username and password and proceeds to read it’s own source code if password is equal to <code>&quot;sdf&quot;</code>. Also, assuming you get past the password check, an attempt to match the username against the contents of the file’s source code is carried out, and depending on the result, either <code>&quot;there was a match&quot;</code> or <code>&quot;there was no match&quot;</code> is passed to the next function in <code>actions</code>.</p>
+<p>Since we’re never calling <code>next</code> if password does not equal <code>&quot;sdf&quot;</code>, we’re effectively breaking the chain of wrapped functions.</p>
+<p><img src="example.png" alt="example" title="example"></p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/control-flow/">control flow</a> <a class="tag tag--primary tag--small t-link" href="/tags/lodash/">lodash</a> <a class="tag tag--primary tag--small t-link" href="/tags/node/">node</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/04/28/war-in-jar/"  data-tooltip="War in jar with Maven">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/02/08/marionette-compositeview-an-example/" data-tooltip="Marionette CompositeView an example">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/04/28/war-in-jar/"  data-tooltip="War in jar with Maven">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/02/08/marionette-compositeview-an-example/" data-tooltip="Marionette CompositeView an example">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Marionette CompositeView an example - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="IntroThis post is based off of an example used in the book Better Backbone Applications with MarionetteJS by Joe Zimmerman. More specifically, it’s the recursive data example rendered by a combination">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Marionette CompositeView an example">
+<meta property="og:url" content="http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="IntroThis post is based off of an example used in the book Better Backbone Applications with MarionetteJS by Joe Zimmerman. More specifically, it’s the recursive data example rendered by a combination">
+<meta property="og:image" content="http://justincalleja.com/marionette-compositeview-an-example/svg/views.svg">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.756Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Marionette CompositeView an example">
+<meta name="twitter:description" content="IntroThis post is based off of an example used in the book Better Backbone Applications with MarionetteJS by Joe Zimmerman. More specifically, it’s the recursive data example rendered by a combination">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Marionette CompositeView an example</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sun Feb 08 2015 01:00:00 GMT+0100">
+        Feb 08, 2015
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#High-level-aim"><span class="toc-number">1.1.</span> <span class="toc-text">High level aim</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Setting-up"><span class="toc-number">2.</span> <span class="toc-text">Setting up</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Time-to-get-cooking"><span class="toc-number">3.</span> <span class="toc-text">Time to get cooking</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-data"><span class="toc-number">3.1.</span> <span class="toc-text">The data</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-views"><span class="toc-number">3.2.</span> <span class="toc-text">The views</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CompositeView"><span class="toc-number">3.2.1.</span> <span class="toc-text">CompositeView</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CollectionView"><span class="toc-number">3.2.2.</span> <span class="toc-text">CollectionView</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-what-we’ve-got"><span class="toc-number">3.3.</span> <span class="toc-text">Using what we’ve got</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Wrapping-up"><span class="toc-number">4.</span> <span class="toc-text">Wrapping up</span></a></li></ol>
+          
+            <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p>This post is based off of an example used in the book <a href="https://shop.smashingmagazine.com/better-backbone-applications-with-marionettejs.html" title="Better Backbone Applications with MarionetteJS" target="_blank" rel="external">Better Backbone Applications with MarionetteJS</a> by <a href="http://www.joezimjs.com/" title="Joe Zimmerman" target="_blank" rel="external">Joe Zimmerman</a>. More specifically, it’s the recursive data example rendered by a combination of Collection and Composite views in Chapter 6 (itself based off of the following blog post by <a href="http://derickbailey.com/" title="Derick Bailey" target="_blank" rel="external">Derick Bailey</a>: <a href="http://lostechies.com/derickbailey/2012/04/05/composite-views-tree-structures-tables-and-more/" title="Composite Views: Tree Structures, Tables, And More" target="_blank" rel="external">Composite Views: Tree Structures, Tables, And More</a>).</p>
+<p>I wasn’t sure I understood what was really going on in that example, so after reading the chapter, I decided to type it in and play around a bit. This post is just a description of that process (the end result <a href="https://github.com/justin-calleja/compositeview-eg" title="compositeview-eg" target="_blank" rel="external">is up on Github</a>).</p>
+<p>I will be implementing it using AMD modules and including the few changes necessary to get it to work in <a href="http://marionettejs.com/" title="MarionetteJS" target="_blank" rel="external">Marionette</a> version 2.3.2 (the latest at time of writing). For a more detailed explanation of the example and the Marionette concepts used in it, have a look at <a href="https://shop.smashingmagazine.com/better-backbone-applications-with-marionettejs.html" title="Better Backbone Applications with MarionetteJS" target="_blank" rel="external">Better Backbone Applications with MarionetteJS</a>. I am in no way affilated with a third party and receive 0 benefit if you decide to purchase. That said, I feel confident recommending it based off of the value I’ve received from reading it.</p>
+<h2 id="High-level-aim"><a href="#High-level-aim" class="headerlink" title="High level aim"></a>High level aim</h2><p>Basically, we want to go from:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">      nodeName: <span class="string">"1"</span>,</span><br><span class="line">      nodes: [</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"1.1"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"1.1.1"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"1.1.2"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"1.1.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"1.2"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"1.2.1"</span> &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              nodeName: <span class="string">"1.2.2"</span>,</span><br><span class="line">              nodes: [</span><br><span class="line">                &#123; nodeName: <span class="string">"1.2.2.1"</span> &#125;,</span><br><span class="line">                &#123; nodeName: <span class="string">"1.2.2.2"</span> &#125;,</span><br><span class="line">                &#123; nodeName: <span class="string">"1.2.2.3"</span> &#125;</span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"1.2.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      nodeName: <span class="string">"2"</span>,</span><br><span class="line">      nodes: [</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"2.1"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"2.1.1"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.1.2"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.1.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"2.2"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"2.2.1"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.2.2"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.2.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
+<p>to:</p>
+<div data-tree-container></div>
+
+
+<h1 id="Setting-up"><a href="#Setting-up" class="headerlink" title="Setting up"></a>Setting up</h1><ul>
+<li>Install Bower globally if you don’t already have it: <code>npm i -g bower</code></li>
+<li><code>npm init</code></li>
+<li><code>mkdir -p app/lib app/js</code></li>
+<li><code>vim .bowerrc</code></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"directory"</span>: <span class="string">"app/lib"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>bower init</code></li>
+<li><code>bower i --save marionette lodash requirejs</code></li>
+</ul>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">compositeview-eg$ ls app/lib/</span><br><span class="line">backbone            backbone.wreqr      lodash              requirejs</span><br><span class="line">backbone.babysitter jquery              marionette          underscore</span><br></pre></td></tr></table></figure>
+<p>I am using both <a href="https://www.npmjs.com/" title="Npm" target="_blank" rel="external">Npm</a> and <a href="http://bower.io/" title="Bower" target="_blank" rel="external">Bower</a> to manage dependencies. Dependencies brought in by Npm will be used in developing the project (e.g. bringing in <a href="http://gruntjs.com/" title="Grunt" target="_blank" rel="external">Grunt</a> to automate tasks, or installing Bower so our project can use a different kind of dependency manager). Dependencies brought in by Bower will be used by the web application we’re building (i.e. these are the files consumed by the browser when it loads our application). If you’re thinking “why use 2 separate dependency managers?”, have a look at this <a href="http://stackoverflow.com/questions/18641899/difference-between-bower-and-npm" title="difference between bower and npm" target="_blank" rel="external">SO question</a>.</p>
+<p>Basically, Npm makes use of nested dependencies which allows each dependency to have a copy of its own dependencies while Bower uses flat dependencies which means that when you bring in a dependency with Bower it will not include its own dependencies. So in the e.g. above, using Bower to bring in Marionette also gives us its dependencies, e.g. <a href="http://underscorejs.org/" title="Underscore" target="_blank" rel="external">Underscore</a> and <a href="http://backbonejs.org/" title="Backbone" target="_blank" rel="external">Backbone</a>, but these dependencies are outside of Marionette. Backbone, which also depends on Underscore, does not have its own copy of Underscore. So Underscore is shared by any dependency which needs it. This is great for pulling in dependencies which will be consumed by a browser since you do not want to load in several copies of a dependency in your application. On the server side, however, size doesn’t matter as much and using Npm allows us to cleanly use dependencies which have the correct version of their own dependencies (there are cases when this is not possible, e.g. plugins. You can read more about this at the <a href="http://blog.nodejs.org/2013/02/07/peer-dependencies/" title="NodeJS Blog" target="_blank" rel="external">NodeJS blog</a>).</p>
+<p>Next up, we’ll configure our AMD loader and log out one of our dependencies to get some kind of indication that we’re on the right track.</p>
+<p><code>vim app/js/main.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*global require*/</span></span><br><span class="line"><span class="pi">"use strict"</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>.config(&#123;</span><br><span class="line">  paths: &#123;</span><br><span class="line">    jquery: <span class="string">"../lib/jquery/dist/jquery"</span>,</span><br><span class="line">    backbone: <span class="string">"../lib/backbone/backbone"</span>,</span><br><span class="line">    marionette: <span class="string">"../lib/marionette/lib/core/backbone.marionette"</span>,</span><br><span class="line">    <span class="string">"backbone.wreqr"</span>: <span class="string">"../lib/backbone.wreqr/lib/backbone.wreqr"</span>,</span><br><span class="line">    <span class="string">"backbone.babysitter"</span>: <span class="string">"../lib/backbone.babysitter/lib/backbone.babysitter"</span>,</span><br><span class="line">    underscore: <span class="string">"../lib/lodash/lodash"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>([</span><br><span class="line">  <span class="string">"marionette"</span></span><br><span class="line">], <span class="function"><span class="keyword">function</span> (<span class="params">Marionette</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Marionette:"</span>, Marionette);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>If you look inside <code>app/lib/marionette</code> you will notice that there are two Marionette scripts we could be pulling in, one in <code>marionette/lib</code> and one in <code>marionette/lib/core</code>. Both of these depend on <a href="https://github.com/marionettejs/backbone.babysitter" title="Babysitter" target="_blank" rel="external">Babysitter</a> and <a href="https://github.com/marionettejs/backbone.wreqr" title="Wreqr" target="_blank" rel="external">Wreqr</a> but the one in core pulls them in while the one outside core has these dependencies baked into its own source.</p>
+<blockquote><p>These pre-requisites are still required for Marionette to run, but this allows you to download them separately and update them independently.</p><footer><cite><a href="http://marionettejs.com/" target="_blank" rel="external">MarionetteJS</a></cite></footer></blockquote>
+
+<p>Also, if you open up <code>marionette/lib/core/backbone.marionette.js</code> you will notice that it is requiring these pre-requisites using the following aliases:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Wreqr = <span class="built_in">require</span>(<span class="string">'backbone.wreqr'</span>);</span><br><span class="line"><span class="keyword">var</span> BabySitter = <span class="built_in">require</span>(<span class="string">'backbone.babysitter'</span>);</span><br></pre></td></tr></table></figure>
+<p>… which is why we’re using the same alias names for the paths to these two dependencies in our AMD configuration.</p>
+<p>The last thing we need in place to have something to serve is our index file: <code>vim app/index.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">data-main</span>=<span class="value">"js/main"</span> <span class="attribute">src</span>=<span class="value">"lib/requirejs/require.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The <code>&lt;script&gt;</code> tag pulls in RequireJS from our Bower installed dependencies and configures it with the main.js file defined above. Finally, we can start some kind of server and check our progress:</p>
+<ul>
+<li><code>npm install -g live-server</code></li>
+<li><code>cd app &amp;&amp; live-server</code></li>
+</ul>
+<p>… and you should get the console output from our main.js file.</p>
+<h1 id="Time-to-get-cooking"><a href="#Time-to-get-cooking" class="headerlink" title="Time to get cooking"></a>Time to get cooking</h1><h2 id="The-data"><a href="#The-data" class="headerlink" title="The data"></a>The data</h2><p>We’ll start off by defining how our data will be stored as Models and Collections:</p>
+<p><code>vim app/js/tree/TreeNode.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*global define*/</span></span><br><span class="line"></span><br><span class="line">define([</span><br><span class="line">  <span class="string">"backbone"</span></span><br><span class="line">], <span class="function"><span class="keyword">function</span> (<span class="params">Backbone</span>) </span>&#123;</span><br><span class="line"><span class="pi">  "use strict"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> NodeModel = Backbone.Model.extend(&#123;</span><br><span class="line"></span><br><span class="line">    initialize: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> nodes = <span class="keyword">this</span>.get(<span class="string">"nodes"</span>);</span><br><span class="line">      <span class="comment">// Covert nodes to a NodeCollection</span></span><br><span class="line">      <span class="keyword">this</span>.set(<span class="string">"nodes"</span>, <span class="keyword">new</span> NodeCollection(nodes));</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    toJSON: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// Call parent's toJSON method</span></span><br><span class="line">      <span class="keyword">var</span> data = Backbone.Model.prototype.toJSON.call(<span class="keyword">this</span>);</span><br><span class="line">      <span class="keyword">if</span> (data.nodes &amp;&amp; data.nodes.toJSON) &#123;</span><br><span class="line">        <span class="comment">// If nodes is a collection, convert it to JSON</span></span><br><span class="line">        data.nodes = data.nodes.toJSON();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> NodeCollection = Backbone.Collection.extend(&#123;</span><br><span class="line">    model: NodeModel</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    Model: NodeModel,</span><br><span class="line">    Collection: NodeCollection</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Notice how we define both the Model and the Collection in the same module since they are interdependent. We could not separate these into their own separate module as each definition would depend on the other being loaded and this would inevitably lead to undefined imports when running it in our browser.</p>
+<p>Also notice that upon initialization, NodeModel will look for a <em>nodes</em> attribute and encapsulate it in a new <em>NodeCollection</em>. A NodeCollection is itself a collection of NodeModels and so the process will repeat as long a given NodeModel contains any nodes. A similar process takes place when deserializing the Model’s state in <em>toJSON</em>.</p>
+<p>With that in place, leave live-server running and change <em>main.js</em> to use TreeNode:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>([</span><br><span class="line">  <span class="string">"tree/TreeNode"</span></span><br><span class="line">], <span class="function"><span class="keyword">function</span> (<span class="params">TreeNode</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"TreeNode.Model:"</span>, TreeNode.Model);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"TreeNode.Collection:"</span>, TreeNode.Collection);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Again, you should see the relevant changes in the console.</p>
+<p>We’ll now add the data from which we will be creating our models and collections:</p>
+<p><code>vim app/js/tree/nodeData.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*global define*/</span></span><br><span class="line"></span><br><span class="line">define(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="pi">  "use strict"</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> [</span><br><span class="line">    &#123;</span><br><span class="line">      nodeName: <span class="string">"1"</span>,</span><br><span class="line">      nodes: [</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"1.1"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"1.1.1"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"1.1.2"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"1.1.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"1.2"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"1.2.1"</span> &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              nodeName: <span class="string">"1.2.2"</span>,</span><br><span class="line">              nodes: [</span><br><span class="line">                &#123; nodeName: <span class="string">"1.2.2.1"</span> &#125;,</span><br><span class="line">                &#123; nodeName: <span class="string">"1.2.2.2"</span> &#125;,</span><br><span class="line">                &#123; nodeName: <span class="string">"1.2.2.3"</span> &#125;</span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"1.2.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      nodeName: <span class="string">"2"</span>,</span><br><span class="line">      nodes: [</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"2.1"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"2.1.1"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.1.2"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.1.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          nodeName: <span class="string">"2.2"</span>,</span><br><span class="line">          nodes: [</span><br><span class="line">            &#123; nodeName: <span class="string">"2.2.1"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.2.2"</span> &#125;,</span><br><span class="line">            &#123; nodeName: <span class="string">"2.2.3"</span> &#125;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>At this stage, if you want to experiment a bit with what we have, you could create a TreeNode.Collection in main.js like so:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>([</span><br><span class="line">  <span class="string">"tree/TreeNode"</span>,</span><br><span class="line">  <span class="string">"tree/nodeData"</span></span><br><span class="line">], <span class="function"><span class="keyword">function</span> (<span class="params">TreeNode, nodeData</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> nodes = <span class="keyword">new</span> TreeNode.Collection(nodeData);</span><br><span class="line">  <span class="built_in">window</span>.nodes = nodes;</span><br><span class="line">  <span class="built_in">console</span>.log(nodes);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="The-views"><a href="#The-views" class="headerlink" title="The views"></a>The views</h2><p>We’ll now turn our attention to rendering our data in the browser. For this we’ll be using both Marionette’s <a href="http://marionettejs.com/docs/v2.3.2/marionette.compositeview.html" target="_blank" rel="external">CompositeView</a> and <a href="http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html" target="_blank" rel="external">CollectionView</a> capabilities.</p>
+<p>Take another look at the data structure shown at the beginning of <a href="#toc_1">High level aim</a>. You will notice that we’re working with an array with two objects inside it. Each object in the array may contain a <em>nodes</em> array which itself is made up of objects which may or may not contain a <em>nodes</em> array. We can consider each of these objects as nodes in a tree, with the node at the top level array as the root and any nodes with no children as leaves.</p>
+<p>This is probably easier to illustrate with a diagram than to describe in words:</p>
+<p><img id="views-diagram" src="/marionette-compositeview-an-example/svg/views.svg" onerror="this.onerror=null; this.src='/marionette-compositeview-an-example/img/views.png'"></p>
+<p>This diagram also shows where the Marionette Views come into play. Note that there is only one collection shown in this diagram which is backed by a CollectionView - the top level collection containing the root CompositeView nodes. The <em>nodes</em> collection within each CompositeView is not backed by a CollectionView. They are just the CompositeView’s collection.</p>
+<p>A CompositeView is made up of both a model <em>and</em> a collection. It has it’s own template, which is the “wrapper template” mentioned in this piece of documentation:</p>
+<blockquote><p>A CompositeView extends from CollectionView to be used as a composite view for scenarios where it should represent both a branch and leaf in a tree structure, or for scenarios where a collection needs to be rendered within a wrapper template.</p><footer><cite><a href="http://marionettejs.com/docs/v2.3.2/marionette.compositeview.html" target="_blank" rel="external">MarionetteJS Docs</a></cite></footer></blockquote>
+
+<p>Additionally, if you don’t specify what kind of view each element in a CompositeView’s collection is, it will be assumed to be the same as the CompositeView in question:</p>
+<blockquote><p>The default rendering mode for a CompositeView assumes a hierarchical, recursive structure. If you configure a composite view without specifying a childView, you’ll get the same composite view class rendered for each child in the collection.</p><footer><cite><a href="http://marionettejs.com/docs/v2.3.2/marionette.compositeview.html#recursive-by-default" target="_blank" rel="external">MarionetteJS Docs</a></cite></footer></blockquote>
+
+<p>This will make more sense when we take a look at the code below, but for now, keep in mind that a CollectionView renders our top level root nodes. The tree stemming from each root node is recursively rendered and the view used behind the scenes to do this is a CompositeView. </p>
+<h3 id="CompositeView"><a href="#CompositeView" class="headerlink" title="CompositeView"></a>CompositeView</h3><p><code>vim app/js/tree/TreeCompositeView.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*global define*/</span></span><br><span class="line"></span><br><span class="line">define([</span><br><span class="line">  <span class="string">"marionette"</span>,</span><br><span class="line">  <span class="string">"ejsTemplates"</span></span><br><span class="line">], <span class="function"><span class="keyword">function</span> (<span class="params">Marionette, JST</span>) </span>&#123;</span><br><span class="line"><span class="pi">  "use strict"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> CompositeView = Marionette.CompositeView.extend(&#123;</span><br><span class="line"></span><br><span class="line">    template: JST[<span class="string">"app/ejs/tree/treeViewComposite.ejs"</span>],</span><br><span class="line"></span><br><span class="line">    tagName: <span class="string">"li"</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// specifies a selector for the element we want the</span></span><br><span class="line">    <span class="comment">// child elements placed into</span></span><br><span class="line">    childViewContainer: <span class="string">"ul"</span>,</span><br><span class="line"></span><br><span class="line">    initialize: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// grab the child collection from the parent model</span></span><br><span class="line">      <span class="comment">// so that we can render the collection as children</span></span><br><span class="line">      <span class="comment">// of this parent node</span></span><br><span class="line">      <span class="keyword">this</span>.collection = <span class="keyword">this</span>.model.get(<span class="string">"nodes"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> CompositeView;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>With this definition, our TreeCompositeView’s model will be rendered using the specified template (more on this shortly) and placed in an <code>&lt;li&gt;</code> tag.</p>
+<p>Each element in our TreeCompositeView’s collection will also be rendered using TreeCompositeView’s template because, since we haven’t specified a childView, each element in TreeCompositeView’s collection is considered to be a TreeCompositeView.</p>
+<p>In addition, each TreeCompositeView in a given TreeCompositeView’s collection, once rendered, will be placed in a <code>&lt;ul&gt;</code> tag which the given TreeCompositeView is expected to render (that’s what the <code>childViewContainer</code> attribute is there for).</p>
+<p>Regarding the <code>&quot;ejsTemplates&quot;</code> import, you can have a look at a <a href="../grunt-watch-those-templates">previous post</a> on this blog which explains how you can get a compiled Javascript template from an EJS file like the following:</p>
+<p><code>vim app/ejs/tree/treeViewComposite.ejs</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span>(nodes.length &gt; <span class="number">0</span>) &#123; %&gt;</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="title">%=</span> <span class="attribute">nodeName</span> %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ul</span>&gt;</span><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">%</span> &#125; <span class="attribute">else</span> &#123; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">%=</span> <span class="attribute">nodeName</span> %&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">%</span> &#125; %&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p><em>The Gruntfile used in this step is up on <a href="https://github.com/justin-calleja/compositeview-eg" title="compositeview-eg" target="_blank" rel="external">Github</a></em></p>
+<p>After the compilation takes place (e.g using a Grunt watch task as described in the post linked to above), you will need to alias the path to <code>&quot;ejsTemplates&quot;</code> in your RequireJS main config file. Assuming, we’re compiling to <code>app/js/templates/ejsTemplates.js</code>, and since our main.js file is in <code>app/js</code>, the addition to our main.js file’s paths would be:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ejsTemplates: <span class="string">"./templates/ejsTemplates"</span></span><br></pre></td></tr></table></figure>
+<p>The EJS file itself is quite straightforward. We simply render the nodeName or a combination of the nodeName and an empty <code>&lt;ul&gt;</code> element depending on whether or not we have any nodes in the CompositeView’s model. This conditional logic will allow us to avoid having an empty <code>&lt;ul&gt;</code> element when rendering our leaf CompositeView nodes.</p>
+<p>It might be worth repeating that whatever gets rendered here is wrapped up in an <code>&lt;li&gt;</code> element, as per our CompositeView’s <code>tagName</code> attribute.</p>
+<h3 id="CollectionView"><a href="#CollectionView" class="headerlink" title="CollectionView"></a>CollectionView</h3><p><code>vim app/js/tree/TreeCollectionView.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*global define*/</span></span><br><span class="line"></span><br><span class="line">define([</span><br><span class="line">  <span class="string">"marionette"</span>,</span><br><span class="line">  <span class="string">"ejsTemplates"</span>,</span><br><span class="line">  <span class="string">"tree/TreeCompositeView"</span></span><br><span class="line">], <span class="function"><span class="keyword">function</span> (<span class="params">Marionette, JST, TreeCompositeView</span>) </span>&#123;</span><br><span class="line"><span class="pi">  "use strict"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> TreeCollectionView = Marionette.CollectionView.extend(&#123;</span><br><span class="line">      tagName: <span class="string">"ul"</span>,</span><br><span class="line">      childView: TreeCompositeView</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> TreeCollectionView;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>The first line in the online doc pretty much sums it up:</p>
+<blockquote><p>The <code>CollectionView</code> will loop through all of the models in the specified collection, render each of them using a specified <code>childView</code>, then append the results of the child view’s <code>el</code> to the collection view’s <code>el</code>.</p><footer><cite><a href="http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html" target="_blank" rel="external">MarionetteJS Docs</a></cite></footer></blockquote>
+
+<p>In our case, this translates to something along the lines of:</p>
+<blockquote>
+<p>The TreeCollectionView will loop through all of the models in its collection, render each of them as TreeCompositeViews (and hence get the <code>&lt;li&gt;...&lt;ul&gt;...&lt;/ul&gt;...&lt;/li&gt;</code> nested effect), then append the results of the root TreeCompositeViews <code>el</code> to the TreeCollectionView’s <code>el</code> which is a <code>&lt;ul&gt;</code> element.</p>
+</blockquote>
+<h2 id="Using-what-we’ve-got"><a href="#Using-what-we’ve-got" class="headerlink" title="Using what we’ve got"></a>Using what we’ve got</h2><p>We’re finally ready to pull things together in main.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*global require*/</span></span><br><span class="line"><span class="pi">"use strict"</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>.config(&#123;</span><br><span class="line">  paths: &#123;</span><br><span class="line">    jquery: <span class="string">"../lib/jquery/dist/jquery"</span>,</span><br><span class="line">    backbone: <span class="string">"../lib/backbone/backbone"</span>,</span><br><span class="line">    marionette: <span class="string">"../lib/marionette/lib/core/backbone.marionette"</span>,</span><br><span class="line">    <span class="string">"backbone.wreqr"</span>: <span class="string">"../lib/backbone.wreqr/lib/backbone.wreqr"</span>,</span><br><span class="line">    <span class="string">"backbone.babysitter"</span>: <span class="string">"../lib/backbone.babysitter/lib/backbone.babysitter"</span>,</span><br><span class="line">    underscore: <span class="string">"../lib/lodash/lodash"</span>,</span><br><span class="line">    ejsTemplates: <span class="string">"./templates/ejsTemplates"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>([</span><br><span class="line">  <span class="string">"tree/TreeNode"</span>,</span><br><span class="line">  <span class="string">"tree/nodeData"</span>,</span><br><span class="line">  <span class="string">"tree/TreeCollectionView"</span></span><br><span class="line">], <span class="function"><span class="keyword">function</span> (<span class="params">TreeNode, nodeData, TreeCollectionView</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> nodes = <span class="keyword">new</span> TreeNode.Collection(nodeData);</span><br><span class="line">  <span class="keyword">var</span> tree = <span class="keyword">new</span> TreeCollectionView(&#123;</span><br><span class="line">    collection: nodes</span><br><span class="line">  &#125;);</span><br><span class="line">  tree.render();</span><br><span class="line">  $(<span class="string">"[data-tree-container]"</span>).append(tree.el);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Notice that our trees will only grow in elements with the <code>data-tree-container</code> attribute so you’ll want to add something like this to your index.html:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">data-tree-container</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="Wrapping-up"><a href="#Wrapping-up" class="headerlink" title="Wrapping up"></a>Wrapping up</h1><p>I’m including this section mainly because the pieces it describes are included in the <a href="https://github.com/justin-calleja/compositeview-eg" title="compositeview-eg" target="_blank" rel="external">Github repo</a> for this post (i.e. for completeness sake).</p>
+<ul>
+<li><code>npm i --save-dev grunt-contrib-requirejs</code></li>
+<li><code>bower i --save almond</code></li>
+</ul>
+<p>We’ll be using <a href="https://github.com/gruntjs/grunt-contrib-requirejs" title="grunt-contrib-requirejs" target="_blank" rel="external">grunt-contrib-requirejs</a> to concatenate and uglify our scripts and <a href="https://github.com/jrburke/almond" title="Almond" target="_blank" rel="external">Almond</a> to do our module loading. In <a href="https://github.com/jrburke" title="jrburke" target="_blank" rel="external">James</a>‘s own words, Almond is:</p>
+<blockquote><p>A replacement AMD loader for RequireJS. It provides a minimal AMD API footprint that includes loader plugin support. Only useful for built/bundled AMD modules, does not do dynamic loading.</p><footer><cite><a href="https://github.com/jrburke/almond#almond" target="_blank" rel="external">Almond</a></cite></footer></blockquote>
+
+<p>Simply include the following configuration in your Gruntfile.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">requirejs: &#123;</span><br><span class="line">  compile: &#123;</span><br><span class="line">    options: &#123;</span><br><span class="line">      baseUrl: <span class="string">"app/js"</span>,</span><br><span class="line">      mainConfigFile: <span class="string">"app/js/main.js"</span>,</span><br><span class="line">      preserveLicenseComments: <span class="literal">false</span>,</span><br><span class="line">      useStrict: <span class="literal">true</span>,</span><br><span class="line">      include: [<span class="string">"../lib/almond/almond"</span>, <span class="string">"main"</span>],</span><br><span class="line">      out: <span class="string">"dist/main.min.js"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">grunt.registerTask(<span class="string">"build"</span>, [<span class="string">"jst:compile"</span>, <span class="string">"requirejs:compile"</span>]);</span><br></pre></td></tr></table></figure>
+<p>We’re using our <code>app/js/main.js</code> file as part of the build configuration and we’re including the Almond fetched by bower in our built artifact - <code>dist/main.min.js</code>.</p>
+<p>You’re now ready to build with <code>grunt build</code> and include the generated script in your own files. It is being used in the page you’re viewing:</p>
+<div data-tree-container></div>
+
+<style>
+img#views-diagram {
+    width: 85%;
+}
+</style>
+
+<script src="/marionette-compositeview-an-example/js/main.min.js"></script>
+
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/marionette-js/">marionette.js</a> <a class="tag tag--primary tag--small t-link" href="/tags/requirejs/">requirejs</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/03/08/sequential-control-flow-with-lodash-or-underscore/"  data-tooltip="Sequential control flow with Lo-Dash or Underscore.js">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/01/18/grunt-watch-those-templates/" data-tooltip="Grunt watch those templates">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/03/08/sequential-control-flow-with-lodash-or-underscore/"  data-tooltip="Sequential control flow with Lo-Dash or Underscore.js">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/01/18/grunt-watch-those-templates/" data-tooltip="Grunt watch those templates">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

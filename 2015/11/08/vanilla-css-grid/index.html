@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Vanilla CSS grid - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="IntroPulling in a CSS framework such as Bootstrap, or even just it’s grid system, can be overkill when all you want is a simple page with a couple of columns in it.
+In this post we’ll be using plain C">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Vanilla CSS grid">
+<meta property="og:url" content="http://justincalleja.com/2015/11/08/vanilla-css-grid/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="IntroPulling in a CSS framework such as Bootstrap, or even just it’s grid system, can be overkill when all you want is a simple page with a couple of columns in it.
+In this post we’ll be using plain C">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.772Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vanilla CSS grid">
+<meta name="twitter:description" content="IntroPulling in a CSS framework such as Bootstrap, or even just it’s grid system, can be overkill when all you want is a simple page with a couple of columns in it.
+In this post we’ll be using plain C">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Vanilla CSS grid</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sun Nov 08 2015 01:00:00 GMT+0100">
+        Nov 08, 2015
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Setting-up-the-markup"><span class="toc-number">2.</span> <span class="toc-text">Setting up the markup</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Styles"><span class="toc-number">3.</span> <span class="toc-text">Styles</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Adding-media-queries"><span class="toc-number">3.1.</span> <span class="toc-text">Adding media queries</span></a></li></ol></li></ol>
+          
+            <link rel="stylesheet" href="/vanilla-css-grid/css/styles.css">
+
+<h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p>Pulling in a CSS framework such as <a href="http://getbootstrap.com/" target="_blank" rel="external">Bootstrap</a>, or even just it’s grid system, can be overkill when all you want is a simple page with a couple of columns in it.</p>
+<p>In this post we’ll be using plain CSS to get some responsive columns on our page, effectively writing a minimal grid system.</p>
+<h1 id="Setting-up-the-markup"><a href="#Setting-up-the-markup" class="headerlink" title="Setting up the markup"></a>Setting up the markup</h1><p>To follow along, you can start with a basic page as shown below:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"//cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"css/styles.css"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>After pulling in <code>reset.css</code> (to remove inconsistencies in default styles across different browsers), we’re simply linking to our custom styles in <code>styles.css</code>.</p>
+<p>Next, you need to decide on a class name to give to your containing element. Frameworks like Bootstrap use the class name “container” so it’s best to choose another name just in case you later decide to use such a framework. I’ll be using “grid-container”:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"grid-container"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Inside the grid container, we’ll be adding rows as shown in the example below:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 3. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 4. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-sm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-sm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-sm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-sm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Here we have 2 rows, the first made up of 4 <em>col-xsm</em> columns, while the second, of 2 <em>col-sm</em> columns.</p>
+<h1 id="Styles"><a href="#Styles" class="headerlink" title="Styles"></a>Styles</h1><p>The first thing we’ll do in our <code>styles.css</code> is target the grid container, as well as anything within it, and set the <code>box-sizing</code> property to <code>border-box</code>:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.grid-container</span>, <span class="class">.grid-container</span> * <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">-webkit-box-sizing</span>:<span class="value"> border-box</span></span>;</span><br><span class="line">  <span class="rule"><span class="attribute">-moz-box-sizing</span>:<span class="value"> border-box</span></span>;</span><br><span class="line">  <span class="rule"><span class="attribute">box-sizing</span>:<span class="value"> border-box</span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>This will include the padding and border in each element’s total width and height (so later, when we’ll be sepecifying widths in percentages, padding and boarder will be included).</p>
+<p>Targetting the grid container again, we can center it by setting it’s left and right margins to <code>auto</code>. I’m also setting it’s max width to <code>750px</code> here as I’ll be using these styles on this page and that’s the max width of my post content. Feel free to increase this for your purposes. Setting the width to <code>100%</code> means the grid will take up all available space until the viewport reaches a width of 750px, at which point the grid’s width will stop expanding: </p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.grid-container</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;</span><br><span class="line">  <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span> auto</span></span>; </span><br><span class="line">  <span class="rule"><span class="attribute">max-width</span>:<span class="value"> <span class="number">750px</span></span></span>;      </span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<!-- you could add clearfix hack here or add it later after demoing what can happen without it -->
+<p>We’ll now target <em>all</em> our columns using an <a href="http://www.w3.org/TR/selectors/#selectors" target="_blank" rel="external">attribute selector</a> on classes which begin with “col-“. As we’re going to start styling with the smallest viewport in mind, all our columns will be 100% wide (except for <code>col-xsm</code> which will be 50%). Floating our columns to the left will allow us to lay them out as columns on the page, and adding some padding is in order after resetting our styles:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr_selector">[class^='col-']</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">float</span>:<span class="value"> left</span></span>; </span><br><span class="line">    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;</span><br><span class="line">    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">10px</span></span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="class">.col-xsm</span> <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">50%</span></span></span>; &#125;</span></span><br></pre></td></tr></table></figure>
+<p>Before our first preview, lets go ahead and add an outline around all our elements to get a better idea of the spacing between them:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.outline</span>, <span class="class">.outline</span> *<span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">outline</span>:<span class="value"> <span class="number">1px</span> solid <span class="hexcolor">#d6d6d6</span></span></span>; </span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>At this point, given the HTML below:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"grid-container outline"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row-noclearfix"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Sit facilis nulla accusamus veniam at, corrupti cupiditate! Eveniet aliquam aspernatur ipsum vitae molestias similique eum perferendis sunt sit minus. Rem cupiditate optio rem omnis.<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row-noclearfix"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 3. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 4. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row-noclearfix"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-sm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-sm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-sm"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-sm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>we get something like this:</p>
+
+<div class="grid-container outline">
+  <div class="row-noclearfix">
+      <div class="col-xsm"><p>col-xsm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Sit facilis nulla accusamus veniam at, corrupti cupiditate! Eveniet aliquam aspernatur ipsum vitae molestias similique eum perferendis sunt sit minus. Rem cupiditate optio rem omnis.</p></div> 
+      <div class="col-xsm"><p>col-xsm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+  <div class="row-noclearfix">
+      <div class="col-xsm"><p>col-xsm 3. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+      <div class="col-xsm"><p>col-xsm 4. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+  <div class="row-noclearfix">
+      <div class="col-sm"><p>col-sm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+      <div class="col-sm"><p>col-sm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+</div>
+<div class="clear">
+<br>
+
+<p>As you can see, the second row starting with <code>col-xsm</code> 3 is not in place. The reason this is happening is becuase we have not cleared our floats. So in order to fix this, we can add the following <a href="http://nicolasgallagher.com/micro-clearfix-hack/" target="_blank" rel="external">clearfix hack</a>:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.row</span><span class="pseudo">:before</span>, </span><br><span class="line"><span class="class">.row</span><span class="pseudo">:after</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">content</span>:<span class="value"><span class="string">" "</span></span></span>;</span><br><span class="line">    <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="class">.row</span><span class="pseudo">:after</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">clear</span>:<span class="value">both</span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>After changing the row classes back to “row” in the example above, we get the desired effect:</p>
+
+<div class="grid-container outline">
+  <div class="row">
+      <div class="col-xsm"><p>col-xsm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Sit facilis nulla accusamus veniam at, corrupti cupiditate! Eveniet aliquam aspernatur ipsum vitae molestias similique eum perferendis sunt sit minus. Rem cupiditate optio rem omnis.</p></div> 
+      <div class="col-xsm"><p>col-xsm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+  <div class="row">
+      <div class="col-xsm"><p>col-xsm 3. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+      <div class="col-xsm"><p>col-xsm 4. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+  <div class="row">
+      <div class="col-sm"><p>col-sm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+      <div class="col-sm"><p>col-sm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+</div>
+
+<h2 id="Adding-media-queries"><a href="#Adding-media-queries" class="headerlink" title="Adding media queries"></a>Adding media queries</h2><p>So far we’ve been styling with mobile in mind, which is why we’ve specified all our columns to be 100% wide except for our extra small ones (<code>col-xsm</code>) which are 50% wide. It’s now time to change that, but before doing so, we need to figure out at which breakpoints we want our column widths to change. I’ll be using <code>min-width</code>s of 480px and 768px:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="at_rule">@<span class="keyword">media</span> screen and (min-width: <span class="number">480px</span>) </span>&#123;</span><br><span class="line">  <span class="class">.grid-container</span><span class="class">.r</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">background</span>:<span class="value"> tomato</span></span>;</span><br><span class="line">  &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="at_rule">@<span class="keyword">media</span> screen and (min-width: <span class="number">768px</span>) </span>&#123;</span><br><span class="line">  <span class="class">.grid-container</span><span class="class">.r</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">background</span>:<span class="value"> tan</span></span>;</span><br><span class="line">  &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This means something like: “when the browser width is greater than or equal to 480px, apply the styles in the first media query; then when it gets greater or equal to 768px, override/add with the styles in the second media query”.</p>
+<p>You will notice I’m applying the styles only to elements which have both the class of <code>grid-container</code> as well as the class <code>r</code> on them. I’m doing this in order to leave previous examples on this page uneffected, and I’ll be doing the same when making our columns responsive as we go forward. Obviously, you should remove the <code>.r</code> part in your selectors and avoid littering your HTML with these extra classes on your own pages.</p>
+<p>One other thing to note as we go forward. When resizing Chrome with the developer tools open, you will notice “width x height” dimensions given in the top right of the browser. Make sure you’re at 100% zoom of the page if you want the width shown in Chrome to match up to the breakpoints used in your media queries.</p>
+<p>Ok, so lets quickly check that our media queries are working:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"grid-container r"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span>Sit autem iure eum voluptates possimus. Voluptas illo quod dolorem?<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<div class="grid-container r">
+  <p>Sit autem iure eum voluptates possimus. Voluptas illo quod dolorem?</p>
+</div>
+<!-- keep as div followed by br -->
+<div class="clear">
+<br>
+
+<p>At a viewport of over 768px wide, you should see the lorem ipsum above with a <code>tan</code> background. At over 480px but less than 768px it should be <code>tomato</code>, and at under 480px neither will apply leaving us back with our mobile styles.</p>
+<p>With that in place, we can go ahead and fill in our desired column widths:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="at_rule">@<span class="keyword">media</span> screen and (min-width : <span class="number">480px</span>) </span>&#123;</span><br><span class="line">  <span class="class">.grid-container</span><span class="class">.r</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">background</span>:<span class="value"> tomato</span></span>;</span><br><span class="line">  &#125;</span></span><br><span class="line">  <span class="class">.col-xsm</span><span class="class">.r</span>  <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">33.33%</span></span></span>;  &#125;</span></span><br><span class="line">  <span class="class">.col-sm</span><span class="class">.r</span>   <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">50%</span></span></span>;     &#125;</span></span><br><span class="line">  <span class="class">.col-md</span><span class="class">.r</span>   <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">83.33%</span></span></span>;  &#125;</span></span><br><span class="line">  <span class="class">.col-lg</span><span class="class">.r</span>   <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;    &#125;</span></span><br><span class="line">  <span class="class">.col-xlg</span><span class="class">.r</span>  <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;    &#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="at_rule">@<span class="keyword">media</span> screen and (min-width: <span class="number">768px</span>) </span>&#123;</span><br><span class="line">  <span class="class">.grid-container</span><span class="class">.r</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">background</span>:<span class="value"> tan</span></span>;</span><br><span class="line">  &#125;</span></span><br><span class="line">  <span class="class">.col-xsm</span><span class="class">.r</span>  <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">25%</span></span></span>;  &#125;</span></span><br><span class="line">  <span class="class">.col-sm</span><span class="class">.r</span>   <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">33.33%</span></span></span>;     &#125;</span></span><br><span class="line">  <span class="class">.col-md</span><span class="class">.r</span>   <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">50%</span></span></span>;  &#125;</span></span><br><span class="line">  <span class="class">.col-lg</span><span class="class">.r</span>   <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">83.33%</span></span></span>;    &#125;</span></span><br><span class="line">  <span class="class">.col-xlg</span><span class="class">.r</span>  <span class="rules">&#123; <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We’re setting <code>col-xsm</code> to take up 1/3 of my <code>max-width</code> of 750px (my blog post width) when the viewport’s width is between 480px and 767px inclusive. It’s going to change to be 25% that width when the viewport is 768px wide or wider, and it’s going to go back to 50% when the viewport is 479px wide or less.</p>
+<p>Try changing the browser’s width to see the result in the following:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"grid-container r"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm r"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Sit facilis nulla accusamus veniam at, corrupti cupiditate! Eveniet aliquam aspernatur ipsum vitae molestias similique eum perferendis sunt sit minus. Rem cupiditate optio rem omnis.<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xsm r"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xsm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-sm r"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-sm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-sm r"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-sm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-md r"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-md 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-lg r"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-lg 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"row"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"col-xlg r"</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>col-xlg 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<div class="grid-container r">
+  <div class="row">
+      <div class="col-xsm r"><p>col-xsm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Sit facilis nulla accusamus veniam at, corrupti cupiditate! Eveniet aliquam aspernatur ipsum vitae molestias similique eum perferendis sunt sit minus. Rem cupiditate optio rem omnis.</p></div> 
+      <div class="col-xsm r"><p>col-xsm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+  <div class="row">
+      <div class="col-sm r"><p>col-sm 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!</p></div> 
+      <div class="col-sm r"><p>col-sm 2. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi?</p></div> 
+  </div>
+  <div class="row">
+      <div class="col-md r"><p>col-md 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!</p></div> 
+  </div>
+  <div class="row">
+      <div class="col-lg r"><p>col-lg 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!</p></div> 
+  </div>
+  <div class="row">
+      <div class="col-xlg r"><p>col-xlg 1. Adipisicing delectus nisi sequi placeat amet! Quasi ullam nulla iure saepe velit eos doloremque facere modi? Consectetur nulla possimus sequi? Consectetur alias quos minima quae at! Consequuntur repellendus laboriosam laborum fugiat similique pariatur. Quidem repellat necessitatibus sed saepe voluptatum obcaecati modi maxime cum vero autem. Odit molestiae labore laudantium odit!</p></div> 
+  </div>
+</div>
+<div class="clear">
+<br>
+
+</div></div></div>
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/css/">css</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/12/26/ruby-on-rails-vagrant-box/"  data-tooltip="Creating a Ruby on Rails Vagrant box">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/04/28/war-in-jar/" data-tooltip="War in jar with Maven">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/12/26/ruby-on-rails-vagrant-box/"  data-tooltip="Creating a Ruby on Rails Vagrant box">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/04/28/war-in-jar/" data-tooltip="War in jar with Maven">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2015/11/08/vanilla-css-grid/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Serving a Webpack bundle in Spring Boot - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="IntroThis post demos an example of using Webpack to bundle a frontend project and Maven to package it up in a jar and include it in a Spring Boot app to serve it.
+The example in its final state is up">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Serving a Webpack bundle in Spring Boot">
+<meta property="og:url" content="http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="IntroThis post demos an example of using Webpack to bundle a frontend project and Maven to package it up in a jar and include it in a Spring Boot app to serve it.
+The example in its final state is up">
+<meta property="og:image" content="http://justincalleja.com/hello-world-webpack.png">
+<meta property="og:image" content="http://justincalleja.com/cors-disabled.png">
+<meta property="og:image" content="http://justincalleja.com/cors-enabled.png">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.759Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Serving a Webpack bundle in Spring Boot">
+<meta name="twitter:description" content="IntroThis post demos an example of using Webpack to bundle a frontend project and Maven to package it up in a jar and include it in a Spring Boot app to serve it.
+The example in its final state is up">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Serving a Webpack bundle in Spring Boot</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sun Apr 17 2016 02:00:00 GMT+0200">
+        Apr 17, 2016
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Getting-started"><span class="toc-number">2.</span> <span class="toc-text">Getting started</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-frontend"><span class="toc-number">3.</span> <span class="toc-text">The frontend</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-backend"><span class="toc-number">4.</span> <span class="toc-text">The backend</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#webpack-dev-server"><span class="toc-number">5.</span> <span class="toc-text">webpack-dev-server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CORS-in-development"><span class="toc-number">6.</span> <span class="toc-text">CORS in development</span></a></li></ol>
+          
+            <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p>This post demos an example of using <a href="https://webpack.github.io/" target="_blank" rel="external">Webpack</a> to bundle a frontend project and <a href="https://maven.apache.org/" target="_blank" rel="external">Maven</a> to package it up in a <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/index.html" target="_blank" rel="external">jar</a> and include it in a <a href="http://projects.spring.io/spring-boot/" target="_blank" rel="external">Spring Boot</a> app to serve it.</p>
+<p>The example in its final state is up on <a href="https://github.com/justin-calleja/webpack-mvn" target="_blank" rel="external">Github</a>.</p>
+<h1 id="Getting-started"><a href="#Getting-started" class="headerlink" title="Getting started"></a>Getting started</h1><p>We’ll start by creating the 3 following projects:</p>
+<ul>
+<li>parent</li>
+<li>fe</li>
+<li>be</li>
+</ul>
+<p><code>parent</code> is just a convenient way to package both our other 2 modules up in one go. It only consists of the following <code>pom.xml</code> file:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">project</span> <span class="attribute">xmlns</span>=<span class="value">"http://maven.apache.org/POM/4.0.0"</span> <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="title">modelVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.tmp<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>parent<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="title">packaging</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">modules</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">module</span>&gt;</span>../fe<span class="tag">&lt;/<span class="title">module</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">module</span>&gt;</span>../be<span class="tag">&lt;/<span class="title">module</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">modules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>That way we can <code>mvn clean install</code> and it will install both our other 2 modules.</p>
+<h1 id="The-frontend"><a href="#The-frontend" class="headerlink" title="The frontend"></a>The frontend</h1><p><code>fe</code> will be our frontend module. It’ll mostly feature JavaScript technology, but since we’re aiming to include this in a Spring Boot app, we’ll need to package it up in a jar file. We’ll be using the <a href="https://github.com/eirslett/frontend-maven-plugin" target="_blank" rel="external">frontend-maven-plugin</a> to do this as shown in <code>fe/pom.xml</code> below:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">project</span> <span class="attribute">xmlns</span>=<span class="value">"http://maven.apache.org/POM/4.0.0"</span> <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="title">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.tmp<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>fe<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="title">packaging</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.github.eirslett<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>frontend-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">version</span>&gt;</span>0.0.27<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line"></span><br><span class="line">          <span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">id</span>&gt;</span>install node and npm<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">goal</span>&gt;</span>install-node-and-npm<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">nodeVersion</span>&gt;</span>v4.2.1<span class="tag">&lt;/<span class="title">nodeVersion</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">npmVersion</span>&gt;</span>3.5.3<span class="tag">&lt;/<span class="title">npmVersion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line"></span><br><span class="line">          <span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">id</span>&gt;</span>npm install<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">goal</span>&gt;</span>npm<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">arguments</span>&gt;</span>install<span class="tag">&lt;/<span class="title">arguments</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line"></span><br><span class="line">          <span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">id</span>&gt;</span>npm run build<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">goal</span>&gt;</span>npm<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">arguments</span>&gt;</span>run build<span class="tag">&lt;/<span class="title">arguments</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The gist is that this plugin will install Node and npm as well as our npm dependencies, and build the project via <code>npm run build</code>. As you can see, we’re specifying the Node and npm versions to install. These exact versions are downloaded if not found in the project in question irrespective of which versions of this software may (or may not) already exist on the machine you’re building on (making for repeatable builds on different machines).</p>
+<p>Next, we’ll define our <code>build</code> npm script in our <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"fe"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"0.0.1-SNAPSHOT"</span></span>,</span><br><span class="line">  "<span class="attribute">description</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">main</span>": <span class="value"><span class="string">"./app"</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">build</span>": <span class="value"><span class="string">"webpack -p"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">author</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"ISC"</span></span>,</span><br><span class="line">  "<span class="attribute">devDependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">webpack</span>": <span class="value"><span class="string">"1.12.9"</span></span>,</span><br><span class="line">    "<span class="attribute">webpack-dev-server</span>": <span class="value"><span class="string">"1.14.0"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>We’re simply running <code>webpack -p</code> to build for production (i.e. the bundle will be minified). Once you install the npm dependencies listed here (either through the Maven plugin or by running <code>npm install</code>), you’ll get a local copy of <code>webpack</code> in your <code>node_modules</code> directory. In <code>node_modules</code>, you’ll also get a <code>.bin</code> directory housing any scripts specified as binaries in any installed node modules.</p>
+<p>So for instance, <code>node_modules/webpack/package.json</code> has the following file specified as a binary:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">"bin": &#123;</span><br><span class="line">  "webpack": "./bin/webpack.js"</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>This means there will be a link to the file <code>node_modules/webpack/bin/webpack.js</code> in <code>node_modules/.bin/</code>, and this link will have the name <code>webpack</code> (the key used in the <code>bin</code> object above).</p>
+<p>Additionally, anything in <code>node_modules/.bin</code> will be on your PATH when you run the <code>npm scripts</code> specified in your <code>package.json</code>. i.e. <code>webpack</code> will be on your PATH when you run npm scripts through npm such that you don’t need to do the following:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">  "build": "./node_modules/.bin/webpack -p"</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>You can simply use <code>webpack</code>. npm effectively <a href="http://linux.die.net/man/1/env" target="_blank" rel="external">alters your environment</a> before running the scripts you tell it to run.</p>
+<p>But Webpack needs to be configured to do anything for us - so we’ll do that next (<code>fe/webpack.config.js</code>):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> packageJSON = <span class="built_in">require</span>(<span class="string">'./package.json'</span>);</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> PATHS = &#123;</span><br><span class="line">  build: path.join(__dirname, <span class="string">'target'</span>, <span class="string">'classes'</span>, <span class="string">'META-INF'</span>, <span class="string">'resources'</span>, <span class="string">'webjars'</span>, packageJSON.name, packageJSON.version)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">'./app/index.js'</span>,</span><br><span class="line"></span><br><span class="line">  output: &#123;</span><br><span class="line">    path: PATHS.build,</span><br><span class="line">    filename: <span class="string">'app-bundle.js'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>We’re specifying <code>./app/index.js</code> as our entry point. This script, along with anything else it pulls in by <code>require</code>ing it, will be bundled up in a file named <code>app-bundle.js</code> in the directory: <a href="https://nodejs.org/docs/latest/api/globals.html#globals_dirname" target="_blank" rel="external">__dirname</a> + <code>&#39;/target/classes/META-INF/resources/webjars/fe/0.0.1-SNAPSHOT&#39;</code>.</p>
+<p>This might seem like a peculiar output destination. By choosing <code>target/classes</code>, Maven will include Webpack’s output in the final product for this module, the jar file. We could have chosen something like <code>src/main/resources</code> which would have had a similar effect, but then running <code>mvn clean</code> would not delete Webpack’s output (something we want to do when cleaning).</p>
+<p>In passing, note the <code>/META-INF/resources</code> part of the path we’re using. Containers implementing the Servlet 3.0 specification should be able to serve assets in a jar’s <code>/META-INF/resources</code> without any configuration. However, we’ll be explicitly serving our Webpack build via Spring configuration.</p>
+<p>Next, let’s write some simple code just to have something to bundle up:</p>
+<p><code>fe/app/index.js</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> greeter = <span class="built_in">require</span>(<span class="string">'./greeter'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> greeting = greeter.greet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">document</span> !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(<span class="string">'h1'</span>);</span><br><span class="line">  el.innerHTML = greeting;</span><br><span class="line">  <span class="built_in">document</span>.body.appendChild(el);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(greeting);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>fe/app/greeter.js</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  greet: <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> name ? <span class="string">'Hello '</span> + name + <span class="string">'!'</span> : <span class="string">'Hello World!'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Notice how in <code>fe/app/index.js</code> we’re guarding against not having a <code>document</code> object. This isn’t really necessary as we intend to write a <strong>frontend</strong> app, but it’s interesting to note how we can get this code to work outside the browser. It is still an npm package and we could publish it to a private or public registry and re-use it elsewhere - maybe in an app that doesn’t use this module as a frontend.</p>
+<p>Running <code>mvn clean install</code> should now give you the jar we’ll be using from our backend.</p>
+<h1 id="The-backend"><a href="#The-backend" class="headerlink" title="The backend"></a>The backend</h1><p>Our backend’s <code>pom.xml</code>:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">project</span> <span class="attribute">xmlns</span>=<span class="value">"http://maven.apache.org/POM/4.0.0"</span> <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">  <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="title">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.tmp<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>be<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="title">java.version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.3.3.RELEASE<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-boot-devtools<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="title">optional</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.tmp<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>fe<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>With the pom in place, we can start our configuration in <code>be/src/main/java/com/tmp/App.java</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tmp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationListener;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.event.ContextRefreshedEvent;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.EnableWebMvc;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@EnableWebMvc</span></span><br><span class="line"><span class="annotation">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">implements</span> <span class="title">ApplicationListener</span>&lt;<span class="title">ContextRefreshedEvent</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOG = LoggerFactory.getLogger(App.class);</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Value</span>(<span class="string">"$&#123;spring.profiles.active&#125;"</span>)</span><br><span class="line">    <span class="keyword">protected</span> String springProfilesActive;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(ContextRefreshedEvent event)</span> </span>&#123;</span><br><span class="line">        LOG.info(<span class="string">"======================================="</span>);</span><br><span class="line">        LOG.info(<span class="string">"App running with active profiles: &#123;&#125;"</span>, springProfilesActive);</span><br><span class="line">        LOG.info(<span class="string">"======================================="</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        SpringApplication.run(App.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>It’s mostly annotation driven:</p>
+<p><a href="http://docs.spring.io/spring-boot/docs/current/api/" target="_blank" rel="external">@SpringBootApplication</a> = <a href="http://docs.spring.io/spring-framework/docs/4.2.5.RELEASE/javadoc-api/org/springframework/context/annotation/Configuration.html" target="_blank" rel="external">@Configuration</a> + <a href="http://docs.spring.io/spring-boot/docs/current/api/" target="_blank" rel="external">@EnableAutoConfiguration</a> + <a href="http://docs.spring.io/spring-framework/docs/4.2.5.RELEASE/javadoc-api/org/springframework/context/annotation/ComponentScan.html" target="_blank" rel="external">@ComponentScan</a>.</p>
+<p><a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/EnableWebMvc.html" target="_blank" rel="external">@EnableWebMvc</a> = Adds the configuration in <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/WebMvcConfigurationSupport.html" target="_blank" rel="external">WebMvcConfigurationSupport</a> which you can then override as necessary.</p>
+<p>I’m also adding some superfluous things like implementing <code>ApplicationListener&lt;ContextRefreshedEvent&gt;</code> to log out the active profile when the <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/ApplicationContext.html" target="_blank" rel="external">ApplicationContext</a> gets initialized or is refreshed (i.e. to log on server startup). We don’t actually need this, but I’ll be going off on a bit of a tangent when using the <a href="https://webpack.github.io/docs/webpack-dev-server.html" target="_blank" rel="external">webpack-dev-server</a> later in this post. We’ll then need to enable <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank" rel="external">CORS</a> from our Spring Boot server. Hence, I’m logging out the active profile on start up to show the environment the server is running in (as CORS will only be enabled if the server is running in <code>dev</code> mode). Plus I just like logging things like this on startup.</p>
+<p>For more on logging info on app startup you might be interested in <a href="https://www.youtube.com/watch?v=UjYv7HfTrlc" target="_blank" rel="external">this</a> (what originally got me to start doing this in Spring apps).</p>
+<p>Our configuration continues in <code>be/src/main/java/com/tmp/WebMvcConfig.java</code> which is responsible for configuring beans to do with the web side of things:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tmp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Profile;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.CorsRegistry;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.WebMvcConfigurer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebMvcConfig</span> <span class="keyword">extends</span> <span class="title">WebMvcConfigurerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] CLASSPATH_RESOURCE_LOCATIONS = &#123; <span class="string">"classpath:/public/"</span> &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.addResourceHandlers(registry);</span><br><span class="line">        <span class="keyword">if</span> (!registry.hasMappingForPattern(<span class="string">"/webjars/**"</span>)) &#123;</span><br><span class="line">            registry.addResourceHandler(<span class="string">"/webjars/**"</span>).addResourceLocations(<span class="string">"classpath:/META-INF/resources/webjars/"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!registry.hasMappingForPattern(<span class="string">"/**"</span>)) &#123;</span><br><span class="line">            registry.addResourceHandler(<span class="string">"/**"</span>).addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We’re adding 2 static asset resource handlers. Our server will look in <code>classpath:/META-INF/resources/webjars/</code> for any requests starting with <code>/webjars/</code>. So when our <code>fe</code> project is all packaged up and on the classpath, since it contains the following file: <code>META-INF/resources/webjars/fe/0.0.1-SNAPSHOT/app-bundle.js</code>, a request such as <code>http://localhost:8090/webjars/fe/0.0.1-SNAPSHOT/app-bundle.js</code> should serve that file as expected.</p>
+<p>But doing so will only get you a bunch of JavaScript source code displayed in your browser - which is why I’ve added an “anything else” pattern (i.e. <code>/**</code>) and mapped it to search in <code>classpath:/public</code> (another example of this <a href="https://spring.io/blog/2013/12/19/serving-static-web-content-with-spring-boot" target="_blank" rel="external">here</a>).</p>
+<p>Now, since the contents of <code>src/main/resources</code> in Mavenized projects end up packaged in your jar file, we can put our static assets (like <code>index.html</code> below) in <code>be/src/main/resource/public/</code> and they will be served from the classpath by our server:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">title</span>&gt;</span>App<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"/webjars/fe/0.0.1-SNAPSHOT/app-bundle.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>One final thing, add <code>application.properties</code> to <code>src/main/resources</code>:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spring<span class="class">.profiles</span><span class="class">.active</span>=dev</span><br><span class="line">server.port=<span class="number">8090</span></span><br></pre></td></tr></table></figure>
+<p>This gets picked up auto-magically via Spring Boot configuration.</p>
+<p>At this point you should be able to start up the server (either through your IDE or by running <code>mvn clean package &amp;&amp; java -jar ./target/be-0.0.1-SNAPSHOT.jar</code> in <code>be</code>), hit <code>http://localhost:8090/index.html</code> and get “Hello World!” back.</p>
+<p>You will notice that leaving off the <code>index.html</code> part of the URL will break things. We can quickly fix this by following the advice in this <a href="http://stackoverflow.com/a/27383522" target="_blank" rel="external">SO answer by Dave Syer</a>.</p>
+<p>i.e. we can add the following to <code>WebMvcConfig</code> (note: if you’re using the <code>spring-boot-devtools</code> and it’s still not working after adding this change, try manually re-starting the server):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addViewControllers</span><span class="params">(ViewControllerRegistry registry)</span> </span>&#123;</span><br><span class="line">    registry.addViewController(<span class="string">"/"</span>).setViewName(<span class="string">"forward:/index.html"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h1><p>Fast feedback is cool and healthy. We currently have a process to bundle our <code>fe</code> app into a <code>jar</code> and serve these assets via our Boot app, which is great when we’re all done developing our frontend code. However, it’s not something you want to do while actually building your frontend code as it’s too time consuming and soul crushing.</p>
+<p>You might consider writing a simple <a href="http://expressjs.com/" target="_blank" rel="external">Express</a> app and serve your Webpack generated bundles from it while developing. At least you’d skip the Maven build. That would be a start. You’d also need to watch files and build them with Webpack unless you fancy manually running Webpack when you’re done changing files and possibly re-starting the Node server (unless this dev server is not caching the built files).</p>
+<p>Good thing this <a href="http://expressjs.com/" target="_blank" rel="external">Express</a> based server is already written for us. It’s called <a href="https://webpack.github.io/docs/webpack-dev-server.html" target="_blank" rel="external">webpack-dev-server</a> and we’ll use it to serve Webpack’s output as we make changes to our code. (Note: in case you already have an Express app and you want to bake in Webpack’s file watching and bundling, you can use the <a href="https://webpack.github.io/docs/webpack-dev-middleware.html" target="_blank" rel="external">webpack-dev-middleware</a>).</p>
+<p>To start the dev server you first need to install it. As we’ve listed it as a <code>devDependency</code> in our <code>package.json</code> above, you could run it with <code>./node_modules/.bin/webpack-dev-server</code>, or you could install it globally with <code>npm i -g webpack-dev-server</code> (after which you can just run <code>webpack-dev-server</code> to run it).</p>
+<p>Of course, before running the server, our frontend code needs to run on a web page so we’ll need some kind of HTML file to require the bundle we’re building through Webpack. To do this, we could use the <a href="https://github.com/ampedandwired/html-webpack-plugin" target="_blank" rel="external">html-webpack-plugin</a>, but for the sake of transparency, we’ll add the following in <code>fe/tmp/index.html</code>:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">title</span>&gt;</span>App<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"../assets/app-bundle.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Now you might be wondering where <code>assets</code> came from? It’s the <a href="https://github.com/webpack/docs/wiki/configuration#outputpublicpath" target="_blank" rel="external">output.publicPath</a> we’re still missing in our <code>webpack.config.js</code>, and which you can add like so:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">  output: &#123;</span><br><span class="line">    path: PATHS.build,</span><br><span class="line">    publicPath: <span class="string">'/assets/'</span>,</span><br><span class="line">    filename: <span class="string">'app-bundle.js'</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>From the docs, <code>publicPath</code> is the path from which the webpack-dev-server will serve the bundles created by Webpack:</p>
+<blockquote>The Webpack Dev Server also uses this to determine the path where the output files are expected to be served from<footer><cite><a href="https://github.com/webpack/docs/wiki/configuration#outputpublicpath" target="_blank" rel="external">output.publicPath doc</a></cite></footer></blockquote>
+
+<p>(Note: I used <code>/assets/</code> to keep with the example in the docs. In our case, since our HTML is in the <code>tmp</code> directory, it would probably make more sense to set the <code>publicPath</code> to <code>/tmp/</code>. The <code>src</code> in our script tag would then be a simpler: <code>app-bundle.js</code>).</p>
+<p>We’re finally ready to see this in action. Assuming you’re in <code>fe</code>, run the server with the <a href="https://webpack.github.io/docs/webpack-dev-server.html#inline-mode" target="_blank" rel="external">–inline</a> and <a href="https://webpack.github.io/docs/webpack-dev-server.html#hot-module-replacement" target="_blank" rel="external">–hot</a> arguments: <code>webpack-dev-server --inline --hot</code> (you might want to add this as an <a href="https://docs.npmjs.com/misc/scripts" target="_blank" rel="external">npm script</a> as we’ve done with <code>build</code> above).</p>
+<p>You should now be able to hit <code>http://localhost:8080/tmp/index.html</code> and get:</p>
+<p><img src="hello-world-webpack.png" alt="Hello World from webpack-dev-server" title="Hello World from webpack-dev-server"></p>
+<p><code>http://localhost:8080/assets/app-bundle.js</code> is the request our HTML file makes to get the bundle built by Webpack. Note that this is content which is served from memory i.e. when using <code>webpack-dev-server</code> bundles like <code>app-bundle.js</code> are not saved to disk. They are (re)generated on file changes (the files which make up our bundles). If you want to hit the disk, you can run Webpack itself - not the dev server - as we have through npm above.</p>
+<p>Now, notice the console output in the screen shot above. If you have that, then hot module replacement is in place and you can go ahead and change <code>fe/app/index.js</code> or <code>fe/app/greeter.js</code> and see the changes in your browser after saving and without re-loading the page… WIN!</p>
+<h1 id="CORS-in-development"><a href="#CORS-in-development" class="headerlink" title="CORS in development"></a>CORS in development</h1><p>Things are looking good. There is, however, one issue we’ll have to face as soon as our app graduates from the “hello world” level. Since our frontend assets are being served from a different server than the one serving our backend data (on a different port), we’re going to have to enable CORS requests originating from <code>localhost:8080</code> (our webpack-dev-server).</p>
+<p>Doing so is simple enough in Spring Boot. Just add the following to <code>be/src/main/java/com/tmp/WebMvcConfig.java</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Bean</span></span><br><span class="line"><span class="annotation">@Profile</span>(<span class="string">"dev"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> WebMvcConfigurer <span class="title">corsConfigurer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> WebMvcConfigurerAdapter() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addCorsMappings</span><span class="params">(CorsRegistry registry)</span> </span>&#123;</span><br><span class="line">            registry.addMapping(<span class="string">"/api/**"</span>).allowedOrigins(<span class="string">"http://localhost:8080"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>So, when our server is running in <code>dev</code> mode, any requests to <code>/api/**</code> coming from <code>http://localhost:8080</code> will be allowed.</p>
+<p>Next, if we want to try this out, we’re going to need at least one REST endpoint to work with:</p>
+<p><code>be/src/main/java/com/tmp/GreeterController.java</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tmp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalDateTime;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(value = <span class="string">"/api/greetings"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreeterController</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String template = <span class="string">"Hello, %s!"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@RequestMapping</span>(method = RequestMethod.GET, produces = &#123; <span class="string">"application/json"</span> &#125;)</span><br><span class="line">    <span class="keyword">public</span> <span class="annotation">@ResponseBody</span> <span class="function">Greeting <span class="title">greetNoName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Greeting(String.format(template, <span class="string">"World"</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@RequestMapping</span>(value = <span class="string">"/&#123;name&#125;"</span>, method = RequestMethod.GET, produces = &#123; <span class="string">"application/json"</span> &#125;)</span><br><span class="line">    <span class="keyword">public</span> <span class="annotation">@ResponseBody</span> <span class="function">Greeting <span class="title">greetName</span><span class="params">(<span class="keyword">final</span> @PathVariable String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Greeting(String.format(template, name));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Greeting</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> String content;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> LocalDateTime time;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Greeting</span><span class="params">(String content)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.content = content;</span><br><span class="line">            <span class="keyword">this</span>.time = LocalDateTime.now();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getContent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.content;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getTime</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.time.toString();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This is straightforward enough. We can hit <code>/api/greetings/{name}</code> with an optional <code>{name}</code> path parameter and get back some JSON.</p>
+<p>Finally, we can change our client (<code>fe/app/index.js</code>) to something like the following:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> greeter = <span class="built_in">require</span>(<span class="string">'./greeter'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> greeting = greeter.greet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">document</span> !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> apiEndpoint = <span class="string">'http://localhost:8090/api/greetings'</span>;</span><br><span class="line">  <span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(<span class="string">'h1'</span>);</span><br><span class="line"></span><br><span class="line">  fetch(apiEndpoint + <span class="string">'/webpack'</span>).then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> response.json();</span><br><span class="line">  &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    el.innerHTML = greeting + <span class="string">'&lt;br&gt;'</span> + obj.content + <span class="string">'&lt;br&gt;At '</span> + obj.time;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(el);</span><br><span class="line">  &#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">    el.innerHTML = <span class="string">'oh no…'</span>;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(el);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(greeting);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>You can try commenting out and undoing the CORS configuration in our Spring app to see it’s effect in the browser as shown below (Note: you don’t need to restart the Spring Boot server either thanks to the <code>spring-boot-devtools</code> plugin):</p>
+<p><img src="cors-disabled.png" alt="CORS disabled" title="CORS disabled"></p>
+<p><img src="cors-enabled.png" alt="CORS enabled" title="CORS enabled"></p>
+<p>Finally, to wrap things up, we can <code>cd</code> into our <code>parent</code> project and run <code>mvn clean install</code> to package and install our <code>fe</code> and <code>be</code>. You can then run the <code>be</code> jar with:</p>
+<p><code>java -jar ./$PATH_TO_JAR/be-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod</code></p>
+<p>where <code>$PATH_TO_JAR</code> is either <code>be/target</code> or its location in your local maven repo.</p>
+<p>Hitting <code>http://localhost:8090/index.html</code> should give you the same output as when running with both servers.</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/java/">java</a> <a class="tag tag--primary tag--small t-link" href="/tags/spring-boot/">spring boot</a> <a class="tag tag--primary tag--small t-link" href="/tags/webpack/">webpack</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/05/28/trying-out-typescript/"  data-tooltip="Trying out Typescript">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/01/26/elixir-streams-reload/" data-tooltip="Elixir Streams reload">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/05/28/trying-out-typescript/"  data-tooltip="Trying out Typescript">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/01/26/elixir-streams-reload/" data-tooltip="Elixir Streams reload">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>

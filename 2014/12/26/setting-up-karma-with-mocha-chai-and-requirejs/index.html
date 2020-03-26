@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Setting up Karma with Mocha, Chai, and RequireJS - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="Following alongIf you want to follow along with the end result at hand, the repo is up on Github. You will need to install dependencies with npm install &amp;amp;&amp;amp; bower install
+
+
+
+
+Versions
+
+
+
+
+
+Karm">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Setting up Karma with Mocha, Chai, and RequireJS">
+<meta property="og:url" content="http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="Following alongIf you want to follow along with the end result at hand, the repo is up on Github. You will need to install dependencies with npm install &amp;amp;&amp;amp; bower install
+
+
+
+
+Versions
+
+
+
+
+
+Karm">
+<meta property="og:updated_time" content="2020-03-26T13:17:33.763Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Setting up Karma with Mocha, Chai, and RequireJS">
+<meta name="twitter:description" content="Following alongIf you want to follow along with the end result at hand, the repo is up on Github. You will need to install dependencies with npm install &amp;amp;&amp;amp; bower install
+
+
+
+
+Versions
+
+
+
+
+
+Karm">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Setting up Karma with Mocha, Chai, and RequireJS</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Fri Dec 26 2014 01:00:00 GMT+0100">
+        Dec 26, 2014
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Following-along"><span class="toc-number">1.</span> <span class="toc-text">Following along</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Purpose"><span class="toc-number">2.</span> <span class="toc-text">Purpose</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other-resources"><span class="toc-number">3.</span> <span class="toc-text">Other resources</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Setting-up-Karma"><span class="toc-number">4.</span> <span class="toc-text">Setting up Karma</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#karma-conf-js"><span class="toc-number">4.1.</span> <span class="toc-text">karma.conf.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#test-main-js"><span class="toc-number">4.2.</span> <span class="toc-text">test-main.js</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Setting-up-front-end-dependencies"><span class="toc-number">5.</span> <span class="toc-text">Setting up front-end dependencies</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Dummy-test"><span class="toc-number">6.</span> <span class="toc-text">Dummy test</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Bringing-in-Chai-a-caveat-and-the-bacon"><span class="toc-number">7.</span> <span class="toc-text">Bringing in Chai, a caveat, and the bacon</span></a></li></ol>
+          
+            <h1 id="Following-along"><a href="#Following-along" class="headerlink" title="Following along"></a>Following along</h1><p>If you want to follow along with the end result at hand, the repo is up on <a href="https://github.com/justin-calleja/setting-up-karma-with-mocha-chai-requirejs" title="setting-up-karma-with-mocha-chai-requirejs" target="_blank" rel="external">Github</a>. You will need to install dependencies with <code>npm install &amp;&amp; bower install</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:center">Versions</th>
+<th style="text-align:right"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Karma</td>
+<td style="text-align:center"></td>
+<td style="text-align:right">0.12.28</td>
+</tr>
+<tr>
+<td style="text-align:left">Node</td>
+<td style="text-align:center"></td>
+<td style="text-align:right">0.10.33</td>
+</tr>
+<tr>
+<td style="text-align:left">NPM</td>
+<td style="text-align:center"></td>
+<td style="text-align:right">1.4.28</td>
+</tr>
+<tr>
+<td style="text-align:left">Bower</td>
+<td style="text-align:center"></td>
+<td style="text-align:right">1.3.12</td>
+</tr>
+</tbody>
+</table>
+<h1 id="Purpose"><a href="#Purpose" class="headerlink" title="Purpose"></a>Purpose</h1><p>Going from zero to a project which supports running <a href="http://mochajs.org/" title="Mocha" target="_blank" rel="external">Mocha</a>/<a href="http://chaijs.com/" title="Chai" target="_blank" rel="external">Chai</a> tests on a browser through <a href="http://karma-runner.github.io/0.12/index.html" title="Karma" target="_blank" rel="external">Karma</a>, with modularity concerns handled by <a href="http://requirejs.org/" title="RequireJS" target="_blank" rel="external">RequireJS</a>.</p>
+<h1 id="Other-resources"><a href="#Other-resources" class="headerlink" title="Other resources"></a>Other resources</h1><ul>
+<li><a href="http://karma-runner.github.io/0.12/plus/requirejs.html" target="_blank" rel="external">http://karma-runner.github.io/0.12/plus/requirejs.html</a> and accompanying repo <a href="https://github.com/kjbekkelund/karma-requirejs" target="_blank" rel="external">https://github.com/kjbekkelund/karma-requirejs</a><ul>
+<li>Great resources to start off with. It’s using Jasmine though. I’d like to set this up with Mocha/Chai so it’s not exactly what I’m looking for. I still borrow heavily from these two resources here.</li>
+</ul>
+</li>
+<li><a href="http://attackofzach.com/setting-up-a-project-using-karma-with-mocha-and-chai/" target="_blank" rel="external">http://attackofzach.com/setting-up-a-project-using-karma-with-mocha-and-chai/</a><ul>
+<li>This one is interesting and it works (I don’t remember if I had to change anything but if I did - nothing major). The only point where it fell short for me was that I needed to have RequireJS in the mix.</li>
+</ul>
+</li>
+<li><p><a href="https://github.com/x2es/boilerplate-karma-mocha-chai-requirejs.git" target="_blank" rel="external">https://github.com/x2es/boilerplate-karma-mocha-chai-requirejs.git</a></p>
+<ul>
+<li><p>This seemed really promising at first, but I’ve had no luck getting it to work. After <code>npm install</code> and <code>karma start</code> I get:</p>
+<blockquote>
+<p>/Users/justin/tmp/boilerplate-karma-mocha-chai-requirejs/node_modules/karma/node_modules/di/lib/injector.js:9</p>
+<p>throw error(‘No provider for “‘ + name + ‘“!’);</p>
+</blockquote>
+<p>Then I figure out it’s missing some dependencies (maybe it was made to work against an older version of Karma even though it’s set to ‘latest’ in package.json). So I <code>npm i --save-dev karma-requirejs karma-chai karma-chrome-launcher</code> to see what happens when the missing dependencies are installed, but running Karma again gives me:</p>
+<blockquote>
+<p>Chrome 39.0.2171 (Mac OS X 10.10.1) ERROR</p>
+<p>Uncaught Error: Mismatched anonymous define() module: function () {</p>
+<p>return (root.sinon = factory());</p>
+<p>}</p>
+<p><a href="http://requirejs.org/docs/errors.html#mismatch" target="_blank" rel="external">http://requirejs.org/docs/errors.html#mismatch</a></p>
+<p>at /Users/justin/tmp/boilerplate-karma-mocha-chai-requirejs/node_modules/requirejs/require.js:141</p>
+<p>ERROR [karma]: [TypeError: Cannot set property ‘results’ of undefined]</p>
+</blockquote>
+<p>At this point I decided it would be better to try set this up from scratch. I’d still have to do this to better understand what’s going on.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Setting-up-Karma"><a href="#Setting-up-Karma" class="headerlink" title="Setting up Karma"></a>Setting up Karma</h1><p>Install karma-cli globally if you don’t already have it <code>npm i -g karma-cli</code>. This will allow us to use <code>karma</code> from our projects which have karma installed locally (i.e. instead of <code>./node_modules/karma/bin/karma</code>). Then set up the project:</p>
+<ol>
+<li><code>npm init</code></li>
+<li><code>npm i --save-dev karma</code></li>
+<li><p><code>karma init</code></p>
+<blockquote>
+<p>Which testing framework do you want to use ?<br>Press tab to list possible options. Enter to move to the next question.</p>
+</blockquote>
+<blockquote>
+<p>> <strong>mocha</strong></p>
+</blockquote>
+<blockquote>
+<p>Do you want to use Require.js ?<br>This will add Require.js plugin.<br>Press tab to list possible options. Enter to move to the next question.</p>
+</blockquote>
+<blockquote>
+<p>> <strong>yes</strong></p>
+<p>Do you want to capture any browsers automatically ?<br>Press tab to list possible options. Enter empty string to move to the next question.</p>
+</blockquote>
+<blockquote>
+<p>> <strong>Chrome</strong></p>
+</blockquote>
+<blockquote>
+<p>></p>
+</blockquote>
+<blockquote>
+<p>What is the location of your source and test files ?<br>You can use glob patterns, eg. “js/*.js” or “test/**/*Spec.js”.<br>Enter empty string to move to the next question.</p>
+</blockquote>
+<blockquote>
+<p>> <strong>src/**/*.js</strong></p>
+</blockquote>
+<blockquote>
+<p>> <strong>test/**/*Spec.js</strong></p>
+</blockquote>
+<blockquote>
+<p>> <strong>lib/**/*.js</strong></p>
+</blockquote>
+<blockquote>
+<p>></p>
+</blockquote>
+<blockquote>
+<p>Should any of the files included by the previous patterns be excluded ?<br> You can use glob patterns, eg. “**/*.swp”.<br> Enter empty string to move to the next question.</p>
+</blockquote>
+<blockquote>
+<p><strong>src/main.js</strong></p>
+</blockquote>
+<blockquote>
+<p>></p>
+</blockquote>
+<blockquote>
+<p>Do you wanna generate a bootstrap file for RequireJS?<br> This will generate test-main.js/coffee that configures RequireJS and starts the tests.</p>
+</blockquote>
+<blockquote>
+<p>> <strong>yes</strong></p>
+</blockquote>
+<blockquote>
+<p>Do you want Karma to watch all the files and run the tests on change ?<br> Press tab to list possible options.</p>
+</blockquote>
+<blockquote>
+<p>> <strong>yes</strong></p>
+</blockquote>
+<p> Ignore any warning messages related to patterns not matching any files (they won’t since we don’t have them yet).</p>
+</li>
+</ol>
+<p>This will bring in the Node dependencies we need as well as set us up with a <em>karma.conf.js</em> and <em>test-main.js</em> file.</p>
+<h2 id="karma-conf-js"><a href="#karma-conf-js" class="headerlink" title="karma.conf.js"></a>karma.conf.js</h2><p>This file contains our Karma configuration as per the <code>karma init</code> choices we made. Note the <strong>files</strong> key which lists the files which are loaded by the Karma server (some are included in the browser, some are not depending on the ‘included’ key shown in the snippet below). ‘test-main.js’ has the default included value of true while the files matched by the other three patterns are <strong>not</strong> included in the browser using script tags (they are watched for changes though and can be served from the Karma server (e.g. by requiring them via RequireJS)). You can read up more on this part of the config file <a href="http://karma-runner.github.io/0.12/config/files.html" target="_blank" rel="external">here</a>. I’d rather have ‘test-main.js’ in the ‘test’ directory though, so lets move it and mirror the change in the config:</p>
+<ol>
+<li><code>mkdir test</code></li>
+<li><code>mv test-main.js test/test-main.js</code></li>
+<li><p><code>vim karma.conf.js</code></p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">files: [</span><br><span class="line">  <span class="string">'test/test-main.js'</span>,</span><br><span class="line">  &#123;pattern: <span class="string">'src/**/*.js'</span>, included: <span class="literal">false</span>&#125;,</span><br><span class="line">  &#123;pattern: <span class="string">'test/**/*Spec.js'</span>, included: <span class="literal">false</span>&#125;,</span><br><span class="line">  <span class="comment">// include lib/**/*.js otherwise trying to load jquery etc.. from test's RequireJS will fail</span></span><br><span class="line">  &#123;pattern: <span class="string">'lib/**/*.js'</span>, included: <span class="literal">false</span>&#125;</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Also note that we’re excluding ‘src/main.js’, the file that will contain our RequireJS configuration for when we’ll be bringing in our dependencies from our app’s HTML file. For the purposes of testing, that configuration will be done in ‘test/test-main.js’ instead.</p>
+<h2 id="test-main-js"><a href="#test-main-js" class="headerlink" title="test-main.js"></a>test-main.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> allTestFiles = [];</span><br><span class="line"><span class="keyword">var</span> TEST_REGEXP = <span class="regexp">/(spec|test)\.js$/i</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> pathToModule = <span class="function"><span class="keyword">function</span>(<span class="params">path</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> path.replace(<span class="regexp">/^\/base\//</span>, <span class="string">''</span>).replace(<span class="regexp">/\.js$/</span>, <span class="string">''</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.keys(<span class="built_in">window</span>.__karma__.files).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">file</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (TEST_REGEXP.test(file)) &#123;</span><br><span class="line">    <span class="comment">// Normalize paths to RequireJS module names.</span></span><br><span class="line">    allTestFiles.push(pathToModule(file));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>.config(&#123;</span><br><span class="line">  <span class="comment">// Karma serves files under /base, which is the basePath from your config file</span></span><br><span class="line">  <span class="comment">// Look at your browser's debugging console if you have trouble loading in files via RequireJS</span></span><br><span class="line">  <span class="comment">// (in our case, we are starting Chrome from Karma).</span></span><br><span class="line">  baseUrl: <span class="string">'/base'</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// dynamically load all test files</span></span><br><span class="line">  deps: allTestFiles,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// The tests are loaded in asynchronously via RequireJS </span></span><br><span class="line">  <span class="comment">// so we need to indicate which function to run to kick things off once they have been loaded.</span></span><br><span class="line">  <span class="comment">// i.e. if you don't include this callback, the tests will not run</span></span><br><span class="line">  <span class="comment">// In our case, Mocha will be running the tests and the karma-mocha adapter has mapped the function to</span></span><br><span class="line">  <span class="comment">// kick things off to window.__karma__.start</span></span><br><span class="line">  callback: <span class="built_in">window</span>.__karma__.start</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>The dependencies (i.e. the tests we want to run) are evaluated dynamically from the files we specified for inclusion in our karma.conf.js file. More specifically, we are filtering out from these files those which match the TEST_REGEXP expression (i.e. any files which end with ‘spec.js’ or ‘test.js’ irrespective of this suffix’s case). The final part of this dependency evaluation is noramlizing the file path to be a correct RequireJS module name by taking off the ‘/base/‘ prefix and ‘.js’ suffix.</p>
+<p>After these dependencies are loaded, we are executing the ‘window.__karma__.start’ function to run our tests as specified in the <a href="http://requirejs.org/docs/api.html#config-callback" target="_blank" rel="external">callback</a> key.</p>
+<h1 id="Setting-up-front-end-dependencies"><a href="#Setting-up-front-end-dependencies" class="headerlink" title="Setting up front-end dependencies"></a>Setting up front-end dependencies</h1><p>Now that Karma’s in place, we’ll want to start pulling in our front-end dependencies. I’ll be using Bower to do that, changing the directory in which Bower installs dependencies to ‘lib’:</p>
+<ol>
+<li>Install Bower globally if you don’t already have it (you’ll probably be using this in many projects so it’s best to have it globally installed anyway): <code>npm install -g bower</code></li>
+<li><code>bower init</code></li>
+<li><p><code>vim .bowerrc</code></p>
+ <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">directory</span>": <span class="value"><span class="string">"lib"</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>bower i --save-dev jquery lodash requirejs</code></p>
+<ul>
+<li>This will create the directory ‘lib’ if necessary</li>
+<li>Note: the ‘requirejs’ we’re pulling in here is not the one which will be used in our Karma tests.</li>
+</ul>
+</li>
+</ol>
+<p>You should now have some front-end packages in your lib directory and the appropriate changes in bower.json.</p>
+<p>Also, maybe this is worth addressing. As noted above, the RequireJS we’re pulling in for our front-end app is not the same RequireJS we’re running in our Karma test. When we’ll actually be taking Karma for a spin, you’ll be able to inspect your browser’s console and see that it’s loading the RequireJS in our node_modules. This is set up via the karma-requirejs plugin we’re referring to in our <strong>frameworks</strong> key in karma.conf.js.</p>
+<p>So basically, the RequireJS we’re pulling in via Bower is the one we’ll be making use of from our index.html.</p>
+<h1 id="Dummy-test"><a href="#Dummy-test" class="headerlink" title="Dummy test"></a>Dummy test</h1><p>For the sake of having something to run, I will bring in some code from this repo: <a href="https://github.com/kjbekkelund/karma-requirejs" target="_blank" rel="external">https://github.com/kjbekkelund/karma-requirejs</a></p>
+<p>I’d like to work with Mocha/Chai though, so I’ll be making some changes.</p>
+<p>Lets start with <a href="https://github.com/kjbekkelund/karma-requirejs/blob/master/src/app.js" target="_blank" rel="external">src/app.js</a> (also shown below):</p>
+<ol>
+<li><code>mkdir src</code></li>
+<li><p><code>vim src/app.js</code></p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> App = <span class="function"><span class="keyword">function</span>(<span class="params">el</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.el = el;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    App.prototype.render = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.el.html(<span class="string">'require.js up and running'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> App;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Next up, we’ll add <a href="https://github.com/kjbekkelund/karma-requirejs/blob/master/test/appSpec.js" target="_blank" rel="external">test/appSpec.js</a>, with some changes to use Chai’s syntax instead of Jasmine’s (and requiring Lo-Dash instead of Underscore):</p>
+<ul>
+<li><p><code>vim src/appSpec.js</code></p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">define([<span class="string">'app'</span>, <span class="string">'jquery'</span>, <span class="string">'lodash'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">App, $, _</span>) </span>&#123;</span><br><span class="line">  describe(<span class="string">'just checking'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    it(<span class="string">'works for app'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> el = $(<span class="string">'&lt;div&gt;&lt;/div&gt;'</span>);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">var</span> app = <span class="keyword">new</span> App(el);</span><br><span class="line">      app.render();</span><br><span class="line"></span><br><span class="line">      expect(el.text()).to.equal(<span class="string">'require.js up and running'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="string">'works for lodash'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      expect(_.size([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])).to.equal(<span class="number">3</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Note that we are accessing ‘describe’ and ‘expect’ globally since they’ve been bound to the ‘window’ in their respective Karma plugin files. Our modules and dependencies, though, are pulled in via RequireJS.</p>
+<h1 id="Bringing-in-Chai-a-caveat-and-the-bacon"><a href="#Bringing-in-Chai-a-caveat-and-the-bacon" class="headerlink" title="Bringing in Chai, a caveat, and the bacon"></a>Bringing in Chai, a caveat, and the bacon</h1><p>So now we’re just one step away from running our tests on Karma with this set-up. We still haven’t installed Chai and set it up in our Karma config, so go ahead and do that now:</p>
+<ol>
+<li><code>npm i --save-dev karma-chai chai</code></li>
+<li><p><code>vim karma.conf.js</code></p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frameworks: [<span class="string">'mocha'</span>, <span class="string">'requirejs'</span>, <span class="string">'chai'</span>],</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>Note:</strong> the order you list the plugins is important. Put ‘chai’ after ‘requirejs’. When I switch these around (as I had done originally), I get:</p>
+<blockquote>
+<p>Uncaught TypeError: Cannot read property ‘should’ of undefined</p>
+</blockquote>
+<blockquote>
+<p>  at /Users/justin/tmp/setting-up-karma/node_modules/karma-chai/adapter.js:4</p>
+</blockquote>
+<p>I found this out thanks to: <a href="https://github.com/xdissent/karma-chai/issues/5" target="_blank" rel="external">https://github.com/xdissent/karma-chai/issues/5</a></p>
+<p>Anyway, although it took longer than I would have liked (missing the ‘lib/**/*.js’ loading in karma.conf.js tripped me up quite a bit), we can kick off Karma with <code>karma start</code> and leave it running while we develop our tests and have them executed in real, possibly multiple, browsers.</p>
+<p>The repo for this example is up on <a href="https://github.com/justin-calleja/setting-up-karma-with-mocha-chai-requirejs" title="setting-up-karma-with-mocha-chai-requirejs" target="_blank" rel="external">Github</a> - remember to get the dependencies: <code>npm install &amp;&amp; bower install</code>. I have added the following two files to this repo which we haven’t talked about yet. Again they are based off of the ones in the <a href="https://github.com/kjbekkelund/karma-requirejs" title="karma-requirejs" target="_blank" rel="external">karma-requirejs</a> example but adapted a bit for this example:</p>
+<ul>
+<li><p><code>vim index.html</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Karma example setup with Require.js<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">data-main</span>=<span class="value">"src/main.js"</span> <span class="attribute">src</span>=<span class="value">"lib/requirejs/require.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>vim src/main.js</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">requirejs.config(&#123;</span><br><span class="line">    paths: &#123;</span><br><span class="line">        <span class="string">'jquery'</span>: <span class="string">'../lib/jquery/dist/jquery'</span>,</span><br><span class="line">        <span class="string">'lodash'</span>: <span class="string">'../lib/lodash/dist/lodash'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">define([<span class="string">'app'</span>, <span class="string">'jquery'</span>, <span class="string">'lodash'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">App, $, _</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> app = <span class="keyword">new</span> App($(<span class="string">'body'</span>));</span><br><span class="line">    app.render();</span><br><span class="line">    <span class="built_in">console</span>.log(_.size([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>If you open up index.html in a browser you should get the text “require.js up and running” and “3” in the console. This is using the RequireJS we pulled in via Bower.</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/chai/">chai</a> <a class="tag tag--primary tag--small t-link" href="/tags/karma/">karma</a> <a class="tag tag--primary tag--small t-link" href="/tags/mocha/">mocha</a> <a class="tag tag--primary tag--small t-link" href="/tags/node/">node</a> <a class="tag tag--primary tag--small t-link" href="/tags/requirejs/">requirejs</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/01/10/getting-started-with-assemble/"  data-tooltip="Getting started with Assemble">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/14/to-mock-a-mongoose/" data-tooltip="To mock a Mongoose">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/01/10/getting-started-with-assemble/"  data-tooltip="Getting started with Assemble">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2014/12/14/to-mock-a-mongoose/" data-tooltip="To mock a Mongoose">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>
