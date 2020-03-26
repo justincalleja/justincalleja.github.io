@@ -70,7 +70,7 @@ theme: tranquilpeak
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/justincalleja/justincalleja.github.io.git
+  repository: https://justincalleja@github.com/justincalleja/justincalleja.github.io.git
   branch: master
 
 sitemap:
