@@ -14,3 +14,7 @@ figure.highlight {
 ol {
   list-style: none;
   margin: 0 0 0 0; }
+
+#sidebar {
+  background-color: #252e38;
+}
