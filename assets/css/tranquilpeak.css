@@ -515,6 +515,7 @@ blockquote {
       transform: translate3d(75px, 0, 0); } }
 
 #sidebar {
+  background-color: #252e38;
   font-family: 'Open Sans', sans-serif;
   height: 100%;
   position: fixed;
