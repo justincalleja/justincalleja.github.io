@@ -4,126 +4,126 @@
   <url>
     <loc>http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/</loc>
     
-    <lastmod>2020-03-26T16:48:24.249Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2015/04/28/war-in-jar/</loc>
-    
-    <lastmod>2020-03-26T16:47:45.064Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/all-categories/index.html</loc>
-    
-    <lastmod>2020-03-26T16:47:45.064Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/all-archives/index.html</loc>
-    
-    <lastmod>2020-03-26T16:47:45.064Z</lastmod>
+    <lastmod>2020-03-26T16:54:19.722Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/all-tags/index.html</loc>
     
-    <lastmod>2020-03-26T16:47:45.064Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.645Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/all-categories/index.html</loc>
+    
+    <lastmod>2020-03-26T16:52:05.643Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/all-archives/index.html</loc>
+    
+    <lastmod>2020-03-26T16:52:05.642Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2015/04/28/war-in-jar/</loc>
+    
+    <lastmod>2020-03-26T16:52:05.638Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/11/08/vanilla-css-grid/</loc>
     
-    <lastmod>2020-03-26T16:47:45.063Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.638Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2014/10/25/using-viper-for-some-go-basics/</loc>
     
-    <lastmod>2020-03-26T16:47:45.061Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2016/05/28/trying-out-typescript/</loc>
-    
-    <lastmod>2020-03-26T16:47:45.052Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2014/12/14/to-mock-a-mongoose/</loc>
-    
-    <lastmod>2020-03-26T16:47:45.051Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/</loc>
-    
-    <lastmod>2020-03-26T16:47:45.051Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.637Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2014/12/06/taking-the-express-route-out/</loc>
     
-    <lastmod>2020-03-26T16:47:45.051Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.632Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2014/12/14/to-mock-a-mongoose/</loc>
+    
+    <lastmod>2020-03-26T16:52:05.632Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2016/05/28/trying-out-typescript/</loc>
+    
+    <lastmod>2020-03-26T16:52:05.632Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/</loc>
+    
+    <lastmod>2020-03-26T16:52:05.631Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/</loc>
     
-    <lastmod>2020-03-26T16:47:45.048Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/</loc>
-    
-    <lastmod>2020-03-26T16:47:45.046Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.623Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/</loc>
     
-    <lastmod>2020-03-26T16:47:45.046Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.621Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/</loc>
     
-    <lastmod>2020-03-26T16:47:45.046Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.620Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/</loc>
+    
+    <lastmod>2020-03-26T16:52:05.620Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/01/10/getting-started-with-assemble/</loc>
     
-    <lastmod>2020-03-26T16:47:45.045Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2015/01/18/grunt-watch-those-templates/</loc>
-    
-    <lastmod>2020-03-26T16:47:45.045Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.618Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2016/01/26/elixir-streams-reload/</loc>
     
-    <lastmod>2020-03-26T16:47:45.044Z</lastmod>
+    <lastmod>2020-03-26T16:52:05.618Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2015/01/18/grunt-watch-those-templates/</loc>
+    
+    <lastmod>2020-03-26T16:52:05.618Z</lastmod>
     
   </url>
   
