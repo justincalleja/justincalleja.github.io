@@ -2,128 +2,128 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/</loc>
+    <loc>http://justincalleja.com/all-tags/index.html</loc>
     
-    <lastmod>2020-03-26T15:04:39.331Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.060Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/all-categories/index.html</loc>
     
-    <lastmod>2020-03-26T13:17:33.773Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/all-tags/index.html</loc>
-    
-    <lastmod>2020-03-26T13:17:33.773Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2015/04/28/war-in-jar/</loc>
-    
-    <lastmod>2020-03-26T13:17:33.772Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.059Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/all-archives/index.html</loc>
     
-    <lastmod>2020-03-26T13:17:33.772Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.057Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2015/04/28/war-in-jar/</loc>
+    
+    <lastmod>2020-03-26T16:09:05.054Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/11/08/vanilla-css-grid/</loc>
     
-    <lastmod>2020-03-26T13:17:33.772Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.051Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2014/10/25/using-viper-for-some-go-basics/</loc>
     
-    <lastmod>2020-03-26T13:17:33.771Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.050Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://justincalleja.com/2014/12/06/taking-the-express-route-out/</loc>
+    <loc>http://justincalleja.com/2020/03/26/using-plain-pg-with-nestjs/</loc>
     
-    <lastmod>2020-03-26T13:17:33.764Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2014/12/14/to-mock-a-mongoose/</loc>
-    
-    <lastmod>2020-03-26T13:17:33.764Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.050Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2016/05/28/trying-out-typescript/</loc>
     
-    <lastmod>2020-03-26T13:17:33.764Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.045Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2014/12/14/to-mock-a-mongoose/</loc>
+    
+    <lastmod>2020-03-26T16:09:05.045Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2014/12/06/taking-the-express-route-out/</loc>
+    
+    <lastmod>2020-03-26T16:09:05.044Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2014/12/26/setting-up-karma-with-mocha-chai-and-requirejs/</loc>
     
-    <lastmod>2020-03-26T13:17:33.763Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.044Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2016/04/17/serving-a-webpack-bundle-in-spring-boot/</loc>
     
-    <lastmod>2020-03-26T13:17:33.759Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/</loc>
-    
-    <lastmod>2020-03-26T13:17:33.757Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.038Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/03/08/sequential-control-flow-with-lodash-or-underscore/</loc>
     
-    <lastmod>2020-03-26T13:17:33.757Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.035Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2015/12/26/ruby-on-rails-vagrant-box/</loc>
+    
+    <lastmod>2020-03-26T16:09:05.034Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/02/08/marionette-compositeview-an-example/</loc>
     
-    <lastmod>2020-03-26T13:17:33.756Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.034Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/01/18/grunt-watch-those-templates/</loc>
     
-    <lastmod>2020-03-26T13:17:33.756Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://justincalleja.com/2016/01/26/elixir-streams-reload/</loc>
-    
-    <lastmod>2020-03-26T13:17:33.755Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.033Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://justincalleja.com/2015/01/10/getting-started-with-assemble/</loc>
     
-    <lastmod>2020-03-26T13:17:33.755Z</lastmod>
+    <lastmod>2020-03-26T16:09:05.032Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://justincalleja.com/2016/01/26/elixir-streams-reload/</loc>
+    
+    <lastmod>2020-03-26T16:09:05.026Z</lastmod>
     
   </url>
   
