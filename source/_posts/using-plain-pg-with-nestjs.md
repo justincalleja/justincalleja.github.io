@@ -1,7 +1,7 @@
 ---
 title: Using plain pg with Nest.js
 date: 2020-03-26 14:19:25
-tags: [ "node", "nestjs", "pg", "postgres" ]
+tags: [ "node", "nestjs", "pg"]
 categories: [ "programming"]
 tocEnabled: true
 
