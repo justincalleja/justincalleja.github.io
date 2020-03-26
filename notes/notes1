@@ -19,3 +19,8 @@ themes $ git clone https://github.com/justincalleja/tranquilpeak-hexo-theme.git 
 ```
 
 Install hexo globally with `npm i -g hexo-cli`
+
+You also need to `bower install` in the `tranquilpeak` theme directory.
+
+I'm on branch `mydev` in `https://github.com/justincalleja/tranquilpeak-hexo-theme.git`
+
