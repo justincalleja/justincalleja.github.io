@@ -1,0 +1,10 @@
+{
+    "eslint.workingDirectories": ["./server", "./client"],
+    "workbench.colorCustomizations": {
+        "[Cobalt2]": {
+          //   "titleBar.activeBackground": "#4f5b66",
+          "titleBar.activeBackground": "#478ca7",
+          "titleBar.activeForeground": "#fff"
+        }
+      },
+}
