@@ -520,7 +520,6 @@ blockquote {
   height: 100%;
   position: fixed;
   top: 0;
-  background: rgba(17, 26, 35, 0);
   overflow: auto;
   z-index: 20;
   transition: transform .25s ease-in-out;

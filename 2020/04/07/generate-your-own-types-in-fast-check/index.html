@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yet another blog">
+    <title>Generate your own types in fast-check - Yet another blog</title>
+    <meta name="author" content="Justin Calleja">
+    <meta name="description" content="Yet another blog">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="TLDRIf your custom type is:
+123class ImaCustom &amp;#123;    constructor(public s: Set&amp;lt;string&amp;gt;, public a: string[]) &amp;#123;&amp;#125;&amp;#125;
+… and if you’re just getting started with this (like me) and th">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Generate your own types in fast-check">
+<meta property="og:url" content="http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/index.html">
+<meta property="og:site_name" content="Yet another blog">
+<meta property="og:description" content="TLDRIf your custom type is:
+123class ImaCustom &amp;#123;    constructor(public s: Set&amp;lt;string&amp;gt;, public a: string[]) &amp;#123;&amp;#125;&amp;#125;
+… and if you’re just getting started with this (like me) and th">
+<meta property="og:updated_time" content="2020-04-07T09:25:01.192Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Generate your own types in fast-check">
+<meta name="twitter:description" content="TLDRIf your custom type is:
+123class ImaCustom &amp;#123;    constructor(public s: Set&amp;lt;string&amp;gt;, public a: string[]) &amp;#123;&amp;#125;&amp;#125;
+… and if you’re just getting started with this (like me) and th">
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox-thumbs.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css" type="text/css">
+    <!--STYLES END-->
+    <link rel="stylesheet" href="/assets/css/blog.css" type="text/css">
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-57452463-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Yet another blog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="/#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justincalleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub (has blog)</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/justin-calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/justin_calleja" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://www.linkedin.com/pub/justin-calleja/29/334/b28" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Generate your own types in fast-check</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Tue Apr 07 2020 02:00:00 GMT+0200">
+        Apr 07, 2020
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/programming/">programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+          
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLDR"><span class="toc-number">1.</span> <span class="toc-text">TLDR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-slow-start-to-a-fast-check"><span class="toc-number">2.</span> <span class="toc-text">A slow start to a fast-check</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Show-me-da-code"><span class="toc-number">3.</span> <span class="toc-text">Show me da code!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generating-data"><span class="toc-number">4.</span> <span class="toc-text">Generating data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Expressing-the-property"><span class="toc-number">5.</span> <span class="toc-text">Expressing the property</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Putting-it-all-together"><span class="toc-number">5.1.</span> <span class="toc-text">Putting it all together</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#In-conclusion"><span class="toc-number">6.</span> <span class="toc-text">In conclusion</span></a></li></ol>
+          
+            <h3 id="TLDR"><a href="#TLDR" class="headerlink" title="TLDR"></a>TLDR</h3><p>If your custom type is:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> ImaCustom &#123;</span><br><span class="line">    <span class="constructor"><span class="keyword">constructor</span>(public s: Set&lt;string&gt;, public a: string[]) </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>… and if you’re just getting started with this (like me) and thinking: “ok, now how do I randomly generate my <code>ImaCustom</code> instances?”.</p>
+<p>Try generating random sets and arrays which you can then use to create your <code>ImaCustom</code>s.</p>
+<p>e.g.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> fc from <span class="string">"fast-check"</span>;</span><br><span class="line"></span><br><span class="line">test(<span class="string">"Some property you want to test"</span>, () =&gt; &#123;</span><br><span class="line">  fc.assert(</span><br><span class="line">    fc.property(</span><br><span class="line">      <span class="comment">// generate [Set&lt;string&gt;, string[]] tuples with some size constraints</span></span><br><span class="line">      fc.tuple(fc.set(fc.string(<span class="number">100</span>), <span class="number">25</span>), fc.array(fc.string(<span class="number">100</span>), <span class="number">50</span>)),</span><br><span class="line">      ([s, a]) =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> i = <span class="keyword">new</span> ImaCustom(s, a);</span><br><span class="line">        <span class="comment">// assert your property</span></span><br><span class="line">      &#125;</span><br><span class="line">    )</span><br><span class="line">  );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>That’s basically what I wanted to write about 😊</p>
+<h3 id="A-slow-start-to-a-fast-check"><a href="#A-slow-start-to-a-fast-check" class="headerlink" title="A slow start to a fast-check"></a>A slow start to a fast-check</h3><p>I guess you already know what property based testing is if you’re here. Recently, I was testing something… which tbh, I didn’t really know how I wanted to work. But in my mind, I could think of certain properties; certain things which had to hold on the datastructure in question when this operation happens. So - I figured I’d reach for that testing approach I know about; think is amazing; but almost never actually use 🤔</p>
+<p>Anyway - it didn’t take long to find <a href="https://github.com/dubzzz/fast-check#readme" target="_blank" rel="external">fast-check</a>. I had used <a href="https://github.com/jsverify/jsverify" target="_blank" rel="external">jsverify</a> before, but I’ve forgotten the API and who cares anyway - I just want to code a few properties and get on with my app… maybe actually get it to a usable state 😅</p>
+<p>So… I’m searching online:</p>
+<blockquote>
+<p>Ye, I know more or less what property based testing is. Great - first few examples show how to generate basic types. Cool, found the list of built-in… oh “arbitraries” they’re called… hmm fancy that - and I thought I had an arbitrary name. Now if I could only get to the “how to generate your own flippin’ types” in the documentation and give these stressed eyeballs a break.</p>
+</blockquote>
+<p>Far as I can tell - that section doesn’t exist in the docs. I did eventually have a 🤦‍♂️ moment and realised that any “custom” datastructure must be made up of more basic types.</p>
+<h3 id="Show-me-da-code"><a href="#Show-me-da-code" class="headerlink" title="Show me da code!"></a>Show me da code!</h3><p>This is basically the data I’m working with here (<a href="https://immutable-js.github.io/immutable-js/docs/#/" target="_blank" rel="external">Immutable.js</a> Set / OrderedSet):</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> ContentProps </span>&#123;</span><br><span class="line">  include?: OrderedSet&lt;<span class="built_in">string</span>&gt;;</span><br><span class="line">  exclude?: Set&lt;<span class="built_in">string</span>&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>… which is passed in to <code>Content</code>‘s constructor to create an instance. But the constructor has some constraints:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (include.has(<span class="string">""</span>) || exclude.has(<span class="string">""</span>)) &#123;</span><br><span class="line"><span class="comment">// ... throw Error</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> invalidValues = include.intersect(exclude);</span><br><span class="line"><span class="keyword">if</span> (invalidValues.size &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="comment">// ... throw Error</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>So basically, no empty string in the sets and they must be mutually exclusive.</p>
+<p>Finally, a <code>Content</code> can <code>sync</code> given a list of file paths <code>string[]</code>… and this is what I came up with for what I had in mind. <strong>NOTE:</strong> you do not need to understand or even read this code:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> sync(filePaths: <span class="built_in">string</span>[] = []): Content &#123;</span><br><span class="line">  <span class="keyword">const</span> filePathsAsSet = Set(filePaths);</span><br><span class="line">  <span class="keyword">const</span> setOfFilePathsNotAlreadyExcluded = filePathsAsSet.subtract(</span><br><span class="line">    <span class="keyword">this</span>.exclude</span><br><span class="line">  );</span><br><span class="line">  <span class="keyword">const</span> oldValidSectionsInRightOrder = <span class="keyword">this</span>.include.intersect(</span><br><span class="line">    setOfFilePathsNotAlreadyExcluded</span><br><span class="line">  );</span><br><span class="line">  <span class="keyword">const</span> newValidSections = setOfFilePathsNotAlreadyExcluded.subtract(</span><br><span class="line">    oldValidSectionsInRightOrder</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> include = oldValidSectionsInRightOrder.concat(newValidSections);</span><br><span class="line">  <span class="keyword">const</span> exclude = filePathsAsSet.intersect(<span class="keyword">this</span>.exclude);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> Content(&#123;</span><br><span class="line">    dirName: <span class="keyword">this</span>.dirName,</span><br><span class="line">    include,</span><br><span class="line">    exclude</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>One property I can think of is this:</p>
+<blockquote>
+<p>In <code>result = content.sync(filePaths: string[])</code> - any filePath in <code>filePaths</code> which is also in <code>content.exclude</code> should be in <code>result.exclude</code> and not in <code>result.include</code></p>
+</blockquote>
+<p>This is the property being demoed below, but if you want to get a feel of what <code>sync</code> is about, here are a couple more properties which come to mind:</p>
+<ul>
+<li>Any existing values in <code>content.exclude</code> which are not present in <code>filePaths</code> should not be in <code>result.exclude</code></li>
+<li>Any existing values in <code>content.include</code> which are not present in <code>filePaths</code> should not be in <code>result.include</code></li>
+<li>Any existing values in <code>content.include</code> which are in <code>filePaths</code> are kept in the same order in <code>result.include</code></li>
+</ul>
+<h3 id="Generating-data"><a href="#Generating-data" class="headerlink" title="Generating data"></a>Generating data</h3><p>To express this property, I first want to express how the “ingredients” are generated, i.e. the arbitrary data:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arbitrarySyncTestProps = fc.tuple(</span><br><span class="line">  fc.set(fc.string(<span class="number">100</span>), <span class="number">25</span>),</span><br><span class="line">  fc.set(fc.string(<span class="number">100</span>), <span class="number">25</span>),</span><br><span class="line">  fc.array(fc.string(<span class="number">100</span>), <span class="number">50</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>So - generate me a tuple of 2 sets of strings with a max size of 25 and whose strings are no more than 100 characters in length. Also, throw in an array of strings for good measure. Super simple - but now I want to get more specific… I should have no empty strings in either Set, nor in the array come to think of it - as those elements are meant to end up in a Set which doesn’t want empty strings. Also, I want the two Sets to be mutually exclusive… and while we’re at it - I think it won’t do to just have random strings. Taking another look at the property:</p>
+<blockquote>
+<p>any filePath in <code>filePaths</code> which is also in <code>content.exclude</code> </p>
+</blockquote>
+<p>So, maybe I should ensure I get some strings which are in both <code>filePaths</code> and <code>exclude</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arbitrarySyncTestProps = fc</span><br><span class="line">  .tuple(</span><br><span class="line">    fc.set(fc.string(<span class="number">100</span>), <span class="number">25</span>),</span><br><span class="line">    fc.set(fc.string(<span class="number">100</span>), <span class="number">25</span>),</span><br><span class="line">    fc.array(fc.string(<span class="number">100</span>), <span class="number">50</span>)</span><br><span class="line">  )</span><br><span class="line">  .map(([include, exclude, filePaths]) =&gt; &#123;</span><br><span class="line">    <span class="comment">// make filePathsToAddToExclude so tests can be more meaningful</span></span><br><span class="line">    <span class="keyword">let</span> filePathsToAddToExclude = [];</span><br><span class="line">    <span class="keyword">if</span> (filePaths.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> numberOfPathsToAddToExclude = <span class="built_in">Math</span>.floor(</span><br><span class="line">        <span class="built_in">Math</span>.random() * filePaths.length</span><br><span class="line">      );</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt;= numberOfPathsToAddToExclude; i++) &#123;</span><br><span class="line">        filePathsToAddToExclude.push(filePaths[i]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// transform the data so it meets Content's pre-conditions</span></span><br><span class="line">    <span class="keyword">const</span> includeOrderedSet = OrderedSet(</span><br><span class="line">      include.filter((x) =&gt; x !== <span class="string">""</span> &amp;&amp; !exclude.includes(x))</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">const</span> excludeSet = Set(</span><br><span class="line">      exclude.concat(filePathsToAddToExclude).filter((x) =&gt; x !== <span class="string">""</span>)</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">const</span> filePathsArray = filePaths.filter((x) =&gt; x !== <span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> [includeOrderedSet, excludeSet, filePathsArray];</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="Expressing-the-property"><a href="#Expressing-the-property" class="headerlink" title="Expressing the property"></a>Expressing the property</h3><p>Finally, the property can be expressed with a few simple assertions:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">([include, exclude, filePaths]: [</span><br><span class="line">  OrderedSet&lt;<span class="built_in">string</span>&gt;,</span><br><span class="line">  Set&lt;<span class="built_in">string</span>&gt;,</span><br><span class="line">  <span class="built_in">string</span>[]</span><br><span class="line">]) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> content = <span class="keyword">new</span> Content(&#123;</span><br><span class="line">    include,</span><br><span class="line">    exclude,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> result = content.sync(filePaths);</span><br><span class="line">  <span class="keyword">const</span> pathsInBothFilePathsAndExclude: Set&lt;<span class="built_in">string</span>&gt; = content.exclude.intersect(</span><br><span class="line">    Set(filePaths)</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  expect(pathsInBothFilePathsAndExclude.isSubset(content.exclude)).toBe(<span class="literal">true</span>);</span><br><span class="line">  expect(result.include.intersect(pathsInBothFilePathsAndExclude).size).toBe(<span class="number">0</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="Putting-it-all-together"><a href="#Putting-it-all-together" class="headerlink" title="Putting it all together"></a>Putting it all together</h4><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> fc from <span class="string">"fast-check"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Set, OrderedSet &#125; from <span class="string">"immutable"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Content &#125; from <span class="string">"./Content"</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">"Content"</span>, () =&gt; &#123;</span><br><span class="line">  describe(<span class="string">"content.sync(filePaths: string[])"</span>, () =&gt; &#123;</span><br><span class="line">    test(<span class="string">"Any filePath in filePaths which is also in content.exclude should be in result.exclude and not in result.include"</span>, () =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> arbitrarySyncTestProps = fc</span><br><span class="line">        .tuple(</span><br><span class="line">          fc.set(fc.string(<span class="number">100</span>), <span class="number">25</span>),</span><br><span class="line">          fc.set(fc.string(<span class="number">100</span>), <span class="number">25</span>),</span><br><span class="line">          fc.array(fc.string(<span class="number">100</span>), <span class="number">50</span>)</span><br><span class="line">        )</span><br><span class="line">        .map(([include, exclude, filePaths]) =&gt; &#123;</span><br><span class="line">          <span class="comment">// make filePathsToAddToExclude so tests can be more meaningful</span></span><br><span class="line">          <span class="keyword">let</span> filePathsToAddToExclude = [];</span><br><span class="line">          <span class="keyword">if</span> (filePaths.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">const</span> numberOfPathsToAddToExclude = <span class="built_in">Math</span>.floor(</span><br><span class="line">              <span class="built_in">Math</span>.random() * filePaths.length</span><br><span class="line">            );</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt;= numberOfPathsToAddToExclude; i++) &#123;</span><br><span class="line">              filePathsToAddToExclude.push(filePaths[i]);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="comment">// transform the data so it meets Content's pre-conditions</span></span><br><span class="line">          <span class="keyword">const</span> includeOrderedSet = OrderedSet(</span><br><span class="line">            include.filter((x) =&gt; x !== <span class="string">""</span> &amp;&amp; !exclude.includes(x))</span><br><span class="line">          );</span><br><span class="line">          <span class="keyword">const</span> excludeSet = Set(</span><br><span class="line">            exclude.concat(filePathsToAddToExclude).filter((x) =&gt; x !== <span class="string">""</span>)</span><br><span class="line">          );</span><br><span class="line">          <span class="keyword">const</span> filePathsArray = filePaths.filter((x) =&gt; x !== <span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">          <span class="keyword">return</span> [includeOrderedSet, excludeSet, filePathsArray];</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">      fc.assert(</span><br><span class="line">        fc.property(</span><br><span class="line">          arbitrarySyncTestProps,</span><br><span class="line">          ([include, exclude, filePaths]: [</span><br><span class="line">            OrderedSet&lt;<span class="built_in">string</span>&gt;,</span><br><span class="line">            Set&lt;<span class="built_in">string</span>&gt;,</span><br><span class="line">            <span class="built_in">string</span>[]</span><br><span class="line">          ]) =&gt; &#123;</span><br><span class="line">            <span class="keyword">const</span> content = <span class="keyword">new</span> Content(&#123;</span><br><span class="line">              include,</span><br><span class="line">              exclude,</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">const</span> result = content.sync(filePaths);</span><br><span class="line">            <span class="keyword">const</span> pathsInBothFilePathsAndExclude: Set&lt;<span class="built_in">string</span>&gt; = content.exclude.intersect(</span><br><span class="line">              Set(filePaths)</span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line">            expect(</span><br><span class="line">              pathsInBothFilePathsAndExclude.isSubset(content.exclude)</span><br><span class="line">            ).toBe(<span class="literal">true</span>);</span><br><span class="line">            expect(</span><br><span class="line">              result.include.intersect(pathsInBothFilePathsAndExclude).size</span><br><span class="line">            ).toBe(<span class="number">0</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        )</span><br><span class="line">      );</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="In-conclusion"><a href="#In-conclusion" class="headerlink" title="In conclusion"></a>In conclusion</h3><p>It was fun to revisit property based testing. One issue I know will come up is the matter of performance. This is taking circa <em>5 seconds</em> to run so I know its going to be problem. Maybe I’ll only run the property based tests when an env var is set, or configure <code>fast-check</code> to “be more fast!” … somehow (e.g. generate less tests). In any case, it’s still useful and I have already found a couple of issues with my implementation.</p>
+<p>Any feedback on this is more than welcome 👇</p>
+<p>🍻</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/fast-check/">fast-check</a> <a class="tag tag--primary tag--small t-link" href="/tags/property-based-testing/">property based testing</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2020/03/26/using-plain-pg-with-nestjs/" data-tooltip="Using plain pg with Nest.js">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Justin Calleja.
+    </span>
+    <small class="attribution">Powered by <a href="https://hexo.io/" title="Hexo" target="_blank" rel="external">Hexo</a> with <a href="https://github.com/LouisBarranqueiro/tranquilpeak-hexo-theme" title="Tranquilpeak" target="_blank" rel="external">Tranquilpeak</a> theme by <a href="https://github.com/LouisBarranqueiro" title="Louis Barranqueiro" target="_blank" rel="external">Louis Barranqueiro</a></small>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2020/03/26/using-plain-pg-with-nestjs/" data-tooltip="Using plain pg with Nest.js">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://justincalleja.com/2020/04/07/generate-your-own-types-in-fast-check/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Justin Calleja</h4>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Malta
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js" type="text/javascript"></script>
+<script src="/assets/js/tranquilpeak.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'justincalleja';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','11bRT8o5XAX6-5fzFhD7','2.0.0');
+    </script>
+
+
+</html>
